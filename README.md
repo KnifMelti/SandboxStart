@@ -6,7 +6,7 @@
 
 A standalone Windows Sandbox testing tool with GUI for easily testing applications, scripts, and installers in isolated environments. Features automatic WinGet installation, script mapping system, and customizable test scenarios.
 
-> **Note:** This project is extracted from [KnifMelti/WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool. Two files still need to be copied manually from the source project - see [Installation](#installation) below.
+> **Note:** This project is extracted from [KnifMelti/WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.
 
 ## ✨ Features
 
