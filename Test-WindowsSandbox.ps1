@@ -93,7 +93,7 @@ function Test-WindowsSandbox {
             try {
                 Write-Host "Enabling Windows Sandbox feature (this can take a while)..." -ForegroundColor Cyan
                 
-                $enableResult = Enable-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -All -NoRestart -ErrorAction Stop
+                Enable-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -All -NoRestart -ErrorAction Stop | Out-Null
                 
                 Write-Host "Windows Sandbox feature enabled successfully!" -ForegroundColor Green
                 
