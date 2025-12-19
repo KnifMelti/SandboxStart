@@ -1,0 +1,15 @@
+# Runtime-generated directories
+wsb/
+
+# Windows Sandbox configuration files (generated at runtime)
+*.wsb
+
+# PowerShell debug files
+*.ps1xml
+
+# Temporary files
+*.tmp
+*.temp
+
+# Log files
+*.log
