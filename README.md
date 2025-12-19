@@ -23,7 +23,6 @@ A standalone Windows Sandbox testing tool with GUI for easily testing applicatio
 
 - Windows 10/11 **Pro, Enterprise, or Education**
 - PowerShell 5.1 or later
-- Administrator privileges
 - Windows Sandbox feature (auto-prompt to install if missing)
 
 ## 🚀 Quick Start
@@ -50,45 +49,6 @@ cd SandboxStart
 
 Download the latest release and extract to your desired location.
 
-### ⚠️ Required Manual Steps
-
-Two files need to be copied from [KnifMelti/WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI):
-
-#### 1. Copy SandboxTest.ps1
-
-**Source:**
-```
-WAU-Settings-GUI/Sources/WAU Settings GUI/SandboxTest.ps1
-```
-
-**Destination:**
-```
-SandboxStart/SandboxTest.ps1
-```
-
-**Action:** Copy the entire file unchanged (~1800 lines)
-
-#### 2. Extract Show-SandboxTestDialog.ps1
-
-**Source:**
-```
-WAU-Settings-GUI/Sources/WAU Settings GUI/WAU-Settings-GUI.ps1
-```
-
-**Action:**
-1. Open `WAU-Settings-GUI.ps1`
-2. Search for: `function Show-SandboxTestDialog {` (around line 900)
-3. Copy the entire function to the matching closing `}` (~1400 lines)
-4. Save as: `SandboxStart/Show-SandboxTestDialog.ps1`
-5. Add at the top:
-   ```powershell
-   Add-Type -AssemblyName System.Windows.Forms
-   Add-Type -AssemblyName System.Drawing
-   ```
-6. Change `$WorkingDir` to `$Script:WorkingDir`
-
-See [EXTRACTION_GUIDE.md](EXTRACTION_GUIDE.md) for detailed instructions.
-
 ## 🎮 Configuration Dialog
 
 The GUI dialog allows you to configure:
@@ -106,7 +66,7 @@ The GUI dialog allows you to configure:
 - **Save**: Save current script for reuse
 
 ### 🔧 WinGet Options
-- **WinGet Version**: Specify version (e.g., "1.7.10514") or leave blank for latest
+- **WinGet Version**: Use the drop-down list, manually specify version (e.g., "1.11.510") or leave blank for latest
 - **Prerelease**: Include pre-release WinGet versions
 - **Clean**: Clear cached dependencies before starting
 
@@ -205,12 +165,11 @@ In dialog:
 ```
 SandboxStart/
 ├── SandboxStart.ps1              # Main launcher
-├── SandboxTest.ps1               # Core sandbox function (needs copying)
-├── Show-SandboxTestDialog.ps1    # GUI dialog (needs extraction)
+├── SandboxTest.ps1               # Core sandbox function
+├── Show-SandboxTestDialog.ps1    # GUI dialog
 ├── Test-WindowsSandbox.ps1       # WSB detection/installation
 ├── README.md                     # This file
-├── EXTRACTION_GUIDE.md           # Detailed extraction instructions
-├── SLUTLIG_SAMMANFATTNING.md     # Swedish summary
+instructions
 └── wsb/                          # Created at first run
     ├── script-mappings.txt       # Pattern→Script mappings
     ├── InstallWSB.ps1            # Default script
@@ -249,7 +208,6 @@ Restart-Computer
 
 ### Permission Errors
 
-- ✅ Run PowerShell as Administrator
 - ✅ Ensure Windows Sandbox feature is fully installed
 - ✅ Check that mapped folders are accessible
 
@@ -280,11 +238,7 @@ Restart-Computer
 - [Microsoft SandboxTest](https://github.com/microsoft/winget-cli/blob/master/Tools/SandboxTest.ps1) (Original inspiration)
 - [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) (Parent project)
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
+### 📄 License
 
 Same license as the parent [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) project.
 
