@@ -8,6 +8,10 @@
     Handles pending reboot scenarios.
 #>
 
+# Load Windows Forms assembly for MessageBox
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName PresentationFramework
+
 function Test-WindowsSandbox {
     <#
     .SYNOPSIS
@@ -56,8 +60,8 @@ function Test-WindowsSandbox {
             $result = [System.Windows.MessageBox]::Show(
                 $message,
                 "Restart Required",
-                [System.Windows.MessageBoxButtons]::OKCancel,
-                [System.Windows.MessageBoxIcon]::Information
+                [System.Windows.MessageBoxButton]::OKCancel,
+                [System.Windows.MessageBoxImage]::Information
             )
             
             if ($result -eq [System.Windows.MessageBoxResult]::OK) {
@@ -77,8 +81,8 @@ function Test-WindowsSandbox {
             $result = [System.Windows.MessageBox]::Show(
                 $message,
                 "Windows Sandbox Not Enabled",
-                [System.Windows.MessageBoxButtons]::OKCancel,
-                [System.Windows.MessageBoxIcon]::Question
+                [System.Windows.MessageBoxButton]::OKCancel,
+                [System.Windows.MessageBoxImage]::Question
             )
             
             if ($result -ne [System.Windows.MessageBoxResult]::OK) {
@@ -98,8 +102,8 @@ function Test-WindowsSandbox {
                 $rebootResult = [System.Windows.MessageBox]::Show(
                     $message,
                     "Restart Required",
-                    [System.Windows.MessageBoxButtons]::YesNo,
-                    [System.Windows.MessageBoxIcon]::Question
+                    [System.Windows.MessageBoxButton]::YesNo,
+                    [System.Windows.MessageBoxImage]::Question
                 )
                 
                 if ($rebootResult -eq [System.Windows.MessageBoxResult]::Yes) {
@@ -119,8 +123,8 @@ function Test-WindowsSandbox {
                 [System.Windows.MessageBox]::Show(
                     $errorMsg,
                     "Enable Failed",
-                    [System.Windows.MessageBoxButtons]::OK,
-                    [System.Windows.MessageBoxIcon]::Error
+                    [System.Windows.MessageBoxButton]::OK,
+                    [System.Windows.MessageBoxImage]::Error
                 )
                 
                 return $false
@@ -134,14 +138,10 @@ function Test-WindowsSandbox {
         [System.Windows.MessageBox]::Show(
             $errorMsg,
             "Error",
-            [System.Windows.MessageBoxButtons]::OK,
-            [System.Windows.MessageBoxIcon]::Error
+            [System.Windows.MessageBoxButton]::OK,
+            [System.Windows.MessageBoxImage]::Error
         )
         
         return $false
     }
 }
-
-# Load Windows Forms assembly for MessageBox
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName PresentationFramework
