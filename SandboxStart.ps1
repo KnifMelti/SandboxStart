@@ -42,30 +42,44 @@ function Start-SandboxApplication {
             exit 1
         }
         
-        # Show configuration dialog
-        $dialogResult = Show-SandboxTestDialog
-        
-        if (-not $dialogResult -or $dialogResult.DialogResult -ne 'OK') {
-            Write-Host "Operation cancelled by user." -ForegroundColor Yellow
-            exit 0
-        }
-        
-        # Validate WinGet version if specified
-        if (![string]::IsNullOrWhiteSpace($dialogResult.WinGetVersion)) {
-            $versionValid = Test-WinGetVersion -Version $dialogResult.WinGetVersion
+        # Show configuration dialog in a loop to allow re-entry if version is invalid
+        while ($true) {
+            $dialogResult = Show-SandboxTestDialog
             
-            if (-not $versionValid) {
-                $result = [System.Windows.Forms.MessageBox]::Show(
-                    "The specified WinGet version '$($dialogResult.WinGetVersion)' could not be validated.`n`nDo you want to continue anyway?",
-                    "Invalid WinGet Version",
-                    [System.Windows.Forms.MessageBoxButtons]::OKCancel,
-                    [System.Windows.Forms.MessageBoxIcon]::Warning
-                )
+            if (-not $dialogResult -or $dialogResult.DialogResult -ne 'OK') {
+                # User cancelled the dialog
+                Write-Host "Operation cancelled by user." -ForegroundColor Yellow
+                exit 0
+            }
+            
+            # Validate WinGet version if one was specified (skip validation if Pre-release is checked)
+            $versionValid = $true
+            if (![string]::IsNullOrWhiteSpace($dialogResult.WinGetVersion) -and -not $dialogResult.Prerelease) {
+                Write-Verbose "Validating WinGet version: $($dialogResult.WinGetVersion)"
+                $versionExists = Test-WinGetVersion -Version $dialogResult.WinGetVersion
                 
-                if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-                    Write-Host "Operation cancelled due to invalid WinGet version." -ForegroundColor Yellow
-                    exit 0
+                if (-not $versionExists) {
+                    $result = [System.Windows.Forms.MessageBox]::Show(
+                        "The specified WinGet version '$($dialogResult.WinGetVersion)' was not found in the GitHub repository.`n`nPlease choose an action:`n`nClick 'OK' to return to the configuration dialog and select a different version.`nClick 'Cancel' to exit the application.",
+                        "Invalid WinGet Version",
+                        [System.Windows.Forms.MessageBoxButtons]::OKCancel,
+                        [System.Windows.Forms.MessageBoxIcon]::Warning
+                    )
+                    
+                    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                        # Continue the loop to show the dialog again
+                        $versionValid = $false
+                    } else {
+                        # User chose Cancel - exit the script
+                        Write-Host "Operation cancelled by user." -ForegroundColor Yellow
+                        exit 0
+                    }
                 }
+            }
+            
+            # If version is valid (or not specified), proceed with SandboxTest
+            if ($versionValid) {
+                break
             }
         }
         
