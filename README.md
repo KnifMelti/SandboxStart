@@ -38,15 +38,6 @@ This will:
 
 ## 📦 Installation
 
-### Option 1: Clone the Repository
-
-```bash
-git clone https://github.com/YOUR-USERNAME/SandboxStart.git
-cd SandboxStart
-```
-
-### Option 2: Download ZIP
-
 Download the latest release and extract to your desired location.
 
 ## 🎮 Configuration Dialog
