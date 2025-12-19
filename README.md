@@ -243,7 +243,7 @@ Same license as the parent [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-S
 
 ## 🙏 Credits
 
-- Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-cli/blob/master/Tools/SandboxTest.ps1)
+- Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1)
 - Integrated into [KnifMelti/WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI)
 - Extracted and enhanced as standalone project
 
