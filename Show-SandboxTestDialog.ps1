@@ -1,6 +1,226 @@
+$Script:WorkingDir = $PSScriptRoot
+# Import required assemblies
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
+Add-Type -AssemblyName PresentationFramework
+. $WorkingDir\SandboxTest.ps1
 
+function Get-ScriptMappings {
+	<#
+	.SYNOPSIS
+	Reads script mapping configuration from external file
+	
+	.DESCRIPTION
+	Loads script-to-pattern mappings from wsb\script-mappings.txt.
+	Format: Pattern = ScriptName.ps1
+	Example: InstallWSB.cmd = InstallWSB.ps1
+	#>
+	
+	$mappingFile = Join-Path $Script:WorkingDir "wsb\script-mappings.txt"
+	$mappings = @()
+	
+	# Create default mapping file if it doesn't exist
+	if (-not (Test-Path $mappingFile)) {
+		$wsbDir = Split-Path $mappingFile -Parent
+		if (-not (Test-Path $wsbDir)) {
+			New-Item -ItemType Directory -Path $wsbDir -Force | Out-Null
+		}
+		
+		$defaultContent = @"
+# Script Mapping Configuration for Windows Sandbox Testing
+# Format: FilePattern = ScriptToExecute.ps1
+#
+# Patterns are evaluated in order. First match wins.
+# Wildcards: * (any characters), ? (single character)
+# The *.* pattern at the end acts as fallback.
+
+InstallWSB.cmd = InstallWSB.ps1
+*.installer.yaml = WinGetManifest.ps1
+Install.* = Installer.ps1
+*.* = Explorer.ps1
+"@
+		Set-Content -Path $mappingFile -Value $defaultContent -Encoding ASCII
+	}
+	
+	# Read and parse mapping file
+	try {
+		$lines = Get-Content -Path $mappingFile -Encoding UTF8 -ErrorAction Stop
+		
+		foreach ($line in $lines) {
+			$line = $line.Trim()
+			
+			# Skip comments and empty lines
+			if ($line.StartsWith('#') -or [string]::IsNullOrWhiteSpace($line)) {
+				continue
+			}
+			
+			# Parse: Pattern = Script.ps1
+			if ($line -match '^\s*(.+?)\s*=\s*(.+?)\s*$') {
+				$pattern = $matches[1].Trim()
+				$script = $matches[2].Trim()
+				
+				# Validate script name ends with .ps1
+				if ($script -like "*.ps1") {
+					$mappings += @{
+						Pattern = $pattern
+						Script = $script
+					}
+				}
+			}
+		}
+	}
+	catch {
+		Write-Warning "Failed to read script mappings: $($_.Exception.Message)"
+	}
+	
+	# Ensure fallback exists
+	if (-not ($mappings | Where-Object { $_.Pattern -eq "*.*" })) {
+		$mappings += @{
+			Pattern = "*.*"
+			Script = "Explorer.ps1"
+		}
+	}
+	
+	return $mappings
+}
+
+# Determine the appropriate script based on selected file or directory contents
+function Find-MatchingScript {
+	param(
+		[string]$Path,
+		[string]$FileName = $null
+	)
+	
+	$mappings = Get-ScriptMappings
+	
+	# If specific file selected, test against patterns
+	if ($FileName) {
+		foreach ($mapping in $mappings) {
+			if ($FileName -like $mapping.Pattern) {
+				return $mapping.Script
+			}
+		}
+	}
+	
+	# If no file or no match, scan directory for pattern matches
+	if (Test-Path $Path) {
+		# Exclude *.* fallback from directory scan
+		$scanMappings = $mappings | Where-Object { $_.Pattern -ne "*.*" }
+		
+		foreach ($mapping in $scanMappings) {
+			$matchingFiles = Get-ChildItem -Path $Path -Filter $mapping.Pattern -File -ErrorAction SilentlyContinue
+			if ($matchingFiles) {
+				return $mapping.Script
+			}
+		}
+	}
+	
+	# Fallback to last mapping (should be *.*)
+	$fallback = $mappings | Where-Object { $_.Pattern -eq "*.*" } | Select-Object -First 1
+	if ($fallback) {
+		return $fallback.Script
+	} else {
+		return "Explorer.ps1"
+	}
+}
+
+# Helper function to fetch stable WinGet versions from GitHub
+function Get-StableWinGetVersions {
+	<#
+	.SYNOPSIS
+	Fetches the 25 most recent stable WinGet versions from GitHub
+	
+	.DESCRIPTION
+	Queries the GitHub API for microsoft/winget-cli releases and returns
+	the tag names of the 25 most recent stable (non-prerelease) versions
+	that have assets available. Excludes releases without assets to prevent
+	installation failures.
+	
+	.OUTPUTS
+	Array of version strings (e.g., "v1.7.10514", "v1.7.10582")
+	#>
+	try {
+		# Request 100 releases to ensure we get 25 stable ones after filtering pre-releases and checking assets
+		# Assumption: Among the 100 most recent releases, at least 25 will be stable (non-prerelease) with assets
+		# This is typically true for the winget-cli repository which has regular stable releases
+		$releasesApiUrl = 'https://api.github.com/repos/microsoft/winget-cli/releases?per_page=100'
+		Write-Verbose "Fetching WinGet releases from GitHub API..."
+		
+		# Fetch releases from GitHub API with timeout and User-Agent header
+		$releases = Invoke-RestMethod -Uri $releasesApiUrl -TimeoutSec 10 -UserAgent "WAU-Settings-GUI" -UseBasicParsing -ErrorAction Stop
+		
+		# Filter to only stable releases (not prerelease) that have assets and get top 25
+		$stableReleases = $releases | Where-Object { 
+			(-not $_.prerelease) -and 
+			($_.assets) -and 
+			($_.assets.Count -gt 0) 
+		} | Select-Object -First 25
+		
+		# Extract tag names (e.g., "v1.7.10514")
+		$versions = $stableReleases | ForEach-Object { $_.tag_name }
+		
+		Write-Verbose "Found $($versions.Count) stable WinGet versions with assets"
+		return $versions
+	}
+	catch {
+		Write-Warning "Failed to fetch WinGet versions from GitHub: $($_.Exception.Message)"
+		return @()
+	}
+}
+
+# Helper function to validate WinGet version exists
+function Test-WinGetVersionExists {
+	<#
+	.SYNOPSIS
+	Validates if a WinGet version exists in the GitHub repository
+	
+	.PARAMETER Version
+	The version string to validate (e.g., "1.23", "v1.7.10514")
+	
+	.PARAMETER IncludePrerelease
+	Include prerelease versions in the search
+	
+	.OUTPUTS
+	Boolean indicating if the version exists
+	#>
+	param(
+		[Parameter(Mandatory = $true)]
+		[string]$Version,
+		
+		[Parameter(Mandatory = $false)]
+		[bool]$IncludePrerelease = $false
+	)
+	
+	try {
+		$releasesApiUrl = 'https://api.github.com/repos/microsoft/winget-cli/releases?per_page=100'
+		Write-Verbose "Validating WinGet version: $Version"
+
+		$releases = Invoke-RestMethod -Uri $releasesApiUrl -TimeoutSec 10 -UserAgent "WAU-Settings-GUI" -UseBasicParsing -ErrorAction Stop
+		
+		if (-not $IncludePrerelease) {
+			$releases = $releases | Where-Object { -not $_.prerelease }
+		}
+		
+		# Check if version matches any tag_name (with or without 'v' prefix)
+		$versionPattern = '^v?' + [regex]::Escape($Version)
+		$matchingRelease = $releases | Where-Object { $_.tag_name -match $versionPattern } | Select-Object -First 1
+		
+		if ($matchingRelease) {
+			Write-Verbose "Found matching release: $($matchingRelease.tag_name)"
+			return $true
+		} else {
+			Write-Verbose "No matching release found for version: $Version"
+			return $false
+		}
+	}
+	catch {
+		Write-Warning "Failed to validate WinGet version: $($_.Exception.Message)"
+		# On error, assume version might be valid (fail open)
+		return $true
+	}
+}
+
+# Define the dialog function here since it's needed before the main functions section
 function Show-SandboxTestDialog {
 	<#
 	.SYNOPSIS
@@ -629,3 +849,69 @@ Start-Process "`$env:USERPROFILE\Desktop\`$SandboxFolderName\$selectedFile" -Wor
 		if ($form) { $form.Dispose() }
 	}
 }
+
+# Show configuration dialog in a loop to allow re-entry if version is invalid
+while ($true) {
+	$dialogResult = Show-SandboxTestDialog
+	
+	if ($dialogResult.DialogResult -ne 'OK') {
+		# User cancelled the dialog
+		exit
+	}
+	
+	# Validate WinGet version if one was specified (skip validation if Pre-release is checked)
+	$versionValid = $true
+	if (![string]::IsNullOrWhiteSpace($dialogResult.WinGetVersion) -and -not $dialogResult.Prerelease) {
+		Write-Verbose "Validating WinGet version: $($dialogResult.WinGetVersion)"
+		$versionExists = Test-WinGetVersionExists -Version $dialogResult.WinGetVersion -IncludePrerelease $dialogResult.Prerelease
+		
+		if (-not $versionExists) {
+			$result = [System.Windows.Forms.MessageBox]::Show(
+				"The specified WinGet version '$($dialogResult.WinGetVersion)' was not found in the GitHub repository.`n`nPlease choose an action:`n`nClick 'OK' to return to the configuration dialog and select a different version.`nClick 'Cancel' to exit the application.",
+				"Invalid WinGet Version",
+				[System.Windows.Forms.MessageBoxButtons]::OKCancel,
+				[System.Windows.Forms.MessageBoxIcon]::Warning
+			)
+			
+			if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+				# Continue the loop to show the dialog again
+				$versionValid = $false
+			} else {
+				# User chose Cancel - exit the script
+				exit
+			}
+		}
+	}
+	
+	# If version is valid (or not specified), proceed with SandboxTest
+	if ($versionValid) {
+		break
+	}
+}
+
+# Build parameters for SandboxTest
+$sandboxParams = @{
+	MapFolder = $dialogResult.MapFolder
+	SandboxFolderName = $dialogResult.SandboxFolderName
+	Script = $dialogResult.Script
+}
+
+# Add optional parameters if they have values
+if (![string]::IsNullOrWhiteSpace($dialogResult.WinGetVersion)) {
+	$sandboxParams.WinGetVersion = $dialogResult.WinGetVersion
+}
+if ($dialogResult.Prerelease) { $sandboxParams.Prerelease = $true }
+if ($dialogResult.Clean) { $sandboxParams.Clean = $true }
+if ($dialogResult.Async) { $sandboxParams.Async = $true }
+if ($dialogResult.Verbose) { $sandboxParams.Verbose = $true }
+
+# Call SandboxTest with collected parameters
+SandboxTest @sandboxParams
+
+# Wait for key press if requested
+if ($dialogResult.Wait) {
+	Write-Host "`nPress any key to exit..." -ForegroundColor Yellow
+	$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+}
+
+exit
