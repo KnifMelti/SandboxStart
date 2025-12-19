@@ -234,7 +234,7 @@ Restart-Computer
 
 - [Windows Sandbox Overview](https://docs.microsoft.com/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview)
 - [WinGet Documentation](https://docs.microsoft.com/windows/package-manager/)
-- [Microsoft SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/doc/README.md#in-windows-sandbox) (Original inspiration)
+- [Testing a Manifest in Windows Sandbox](https://github.com/microsoft/winget-pkgs/blob/master/doc/README.md#in-windows-sandbox) (Original inspiration)
 - [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) (Parent project)
 
 ### 📄 License
