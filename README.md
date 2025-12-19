@@ -169,7 +169,6 @@ SandboxStart/
 ├── Show-SandboxTestDialog.ps1    # GUI dialog
 ├── Test-WindowsSandbox.ps1       # WSB detection/installation
 ├── README.md                     # This file
-instructions
 └── wsb/                          # Created at first run
     ├── script-mappings.txt       # Pattern→Script mappings
     ├── InstallWSB.ps1            # Default script
@@ -235,7 +234,7 @@ Restart-Computer
 
 - [Windows Sandbox Overview](https://docs.microsoft.com/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview)
 - [WinGet Documentation](https://docs.microsoft.com/windows/package-manager/)
-- [Microsoft SandboxTest](https://github.com/microsoft/winget-cli/blob/master/Tools/SandboxTest.ps1) (Original inspiration)
+- [Microsoft SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/doc/README.md#in-windows-sandbox) (Original inspiration)
 - [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) (Parent project)
 
 ### 📄 License
