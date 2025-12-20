@@ -1,0 +1,34 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code with submodules
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    
+    - name: Create release archive
+      run: |
+        $version = $env:GITHUB_REF -replace 'refs/tags/', ''
+        Compress-Archive -Path * -DestinationPath "SandboxStart-$version.zip" -Force
+      shell: pwsh
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: SandboxStart-*.zip
+        body: |
+          ## Release ${{ github.ref_name }}
+          
+          Download and extract the ZIP file.
+          All dependencies (including shared submodule) are included.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
