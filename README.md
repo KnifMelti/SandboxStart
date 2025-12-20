@@ -1,9 +1,7 @@
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-blue.svg)](https://github.com/PowerShell/PowerShell)
 [![Windows Sandbox](https://img.shields.io/badge/Windows%20Sandbox-Required-orange.svg)](https://docs.microsoft.com/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview)
 ![GitHub all releases](https://img.shields.io/github/downloads/KnifMelti/SandboxStart/total)
-<img src="Source/assets/icon.png" alt="GUI Dialog" width="128" align="right"><br><br>
-
-<img src="Source/assets/GUI.png" alt="GUI Dialog">
+<img src="Source/assets/icon.png" width="128" align="right"><br><br>
 
 # SandboxStart
 
@@ -11,6 +9,8 @@ A standalone Windows Sandbox testing tool with GUI for easily testing applicatio
 
 > **Note:** This project is extracted from [KnifMelti/WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
 > It depends on the [KnifMelti/SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**.
+
+<img src="Source/assets/GUI.png" alt="GUI Dialog">
 
 ## ✨ Features
 
