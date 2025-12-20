@@ -3,32 +3,32 @@ name: Create Release
 on:
   push:
     tags:
-      - 'v*'  # Triggers on version tags like v1.0.0
+      - 'v*'
 
 permissions:
-  contents: write  # Required to create releases and upload assets
+  contents: write
 
 jobs:
-  build:
+  release:
     runs-on: windows-latest
     
     steps:
-    - name: Checkout code with submodules
+    - name: Checkout with submodules
       uses: actions/checkout@v4
       with:
         submodules: recursive
     
-    - name: Get version from tag
-      id: get_version
-      run: |
-        $version = $env:GITHUB_REF -replace 'refs/tags/', ''
-        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+    - name: Create release ZIP
       shell: pwsh
-    
-    - name: Create release archive
       run: |
-        $version = "${{ steps.get_version.outputs.VERSION }}"
-        Write-Host "Creating archive for version: $version"
-        
-        # Simple approach: compress everything except .git
-        $tempDir = New-Item -ItemType Directory -Path "$env:TEMP\
+        $version = "${{ github.ref_name }}"
+        Compress-Archive -Path * -DestinationPath "SandboxStart-$version.zip" -Force
+    
+    - name: Upload release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: SandboxStart-*.zip
+        body: |
+          ## 🚀 SandboxStart ${{ github.ref_name }}
+          
+          Download the ZIP file below - includes all files and dependencies.
