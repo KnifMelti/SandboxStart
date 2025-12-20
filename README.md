@@ -23,6 +23,7 @@ Features automatic WinGet installation, script mapping system, and customizable 
 - ⚙️ **Version Control** - Select specific WinGet versions or use pre-release builds
 - 🚀 **Async Mode** - Launch sandbox in background and continue working
 - 🌓 **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if installed)
+- 🔗 **Desktop Shortcuts** - Creates useful shortcut links (Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 - 🔧 **Auto-Installation** - Prompts to enable Windows Sandbox if not available
 
 ## 📋 Requirements
