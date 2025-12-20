@@ -69,7 +69,6 @@ jobs:
         try {
           $release = gh release view $tag --json body --jq .body
           if ($release) {
-            # Save with proper encoding
             [System.IO.File]::WriteAllText("existing_notes.txt", $release, [System.Text.UTF8Encoding]::new($false))
             echo "HAS_NOTES=true" >> $env:GITHUB_OUTPUT
           } else {
@@ -83,14 +82,8 @@ jobs:
     - name: Prepare release body
       id: release_body
       run: |
-        # Use here-string with explicit line breaks
-        $header = "## 📦 Download`n`n"
-        $header += "**⬇️ Download:** ``SandboxStart-${{ github.ref_name }}.zip`` (includes all dependencies)`n`n"
-        $header += "### 📥 Quick Start`n`n"
-        $header += "1. Extract ZIP file`n"
-        $header += "2. Run ``SandboxStart.ps1```n"
-        $header += "3. Configure and launch sandbox`n`n"
-        $header += "---`n`n"
+        # Simple header
+        $header = "**📦 Download:** ``SandboxStart-${{ github.ref_name }}.zip`` (all dependencies included)`n`n---`n`n"
         
         if ("${{ steps.existing_notes.outputs.HAS_NOTES }}" -eq "true" -and (Test-Path "existing_notes.txt")) {
           $existingNotes = [System.IO.File]::ReadAllText("existing_notes.txt", [System.Text.UTF8Encoding]::new($false))
@@ -99,7 +92,6 @@ jobs:
           $fullBody = $header
         }
         
-        # Save with UTF8 encoding (no BOM)
         [System.IO.File]::WriteAllText("release_body.txt", $fullBody, [System.Text.UTF8Encoding]::new($false))
       shell: pwsh
     
@@ -110,7 +102,6 @@ jobs:
         $tag = "${{ github.ref_name }}"
         $bodyFile = "release_body.txt"
         
-        # Check if release exists
         $releaseExists = $false
         try {
           gh release view $tag | Out-Null
@@ -120,11 +111,9 @@ jobs:
         }
         
         if ($releaseExists) {
-          # Update existing release
           gh release upload $tag "SandboxStart-$tag.zip" --clobber
           gh release edit $tag --notes-file $bodyFile
         } else {
-          # Create new release
           gh release create $tag "SandboxStart-$tag.zip" --title $tag --notes-file $bodyFile
         }
       shell: pwsh
