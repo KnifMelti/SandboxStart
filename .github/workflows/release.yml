@@ -22,7 +22,19 @@ jobs:
       shell: pwsh
       run: |
         $version = "${{ github.ref_name }}"
-        Compress-Archive -Path * -DestinationPath "SandboxStart-$version.zip" -Force
+        
+        # Create temp directory with safe path
+        $tempPath = Join-Path ([System.IO.Path]::GetTempPath()) "SandboxStart-$version"
+        New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
+        
+        # Copy files (exclude .git and .github)
+        Get-ChildItem -Path . -Exclude '.git','.github' | Copy-Item -Destination $tempPath -Recurse -Force
+        
+        # Create ZIP
+        Compress-Archive -Path "$tempPath\*" -DestinationPath "SandboxStart-$version.zip" -Force
+        
+        # Cleanup
+        Remove-Item $tempPath -Recurse -Force
     
     - name: Upload release
       uses: softprops/action-gh-release@v2
@@ -31,4 +43,6 @@ jobs:
         body: |
           ## 🚀 SandboxStart ${{ github.ref_name }}
           
-          Download the ZIP file below - includes all files and dependencies.
+          Download and extract the ZIP file - all dependencies included.
+          
+          Run `SandboxStart.ps1` to get started.
