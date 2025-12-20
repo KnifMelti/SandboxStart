@@ -1,7 +1,7 @@
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-blue.svg)](https://github.com/PowerShell/PowerShell)
 [![Windows Sandbox](https://img.shields.io/badge/Windows%20Sandbox-Required-orange.svg)](https://docs.microsoft.com/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview)
 ![GitHub all releases](https://img.shields.io/github/downloads/KnifMelti/SandboxStart/total)
-<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/icon.png" width="128" align="right"><br><br>
+<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/icon.png" alt="Icon" width="128" align="right"><br><br>
 
 # SandboxStart
 
