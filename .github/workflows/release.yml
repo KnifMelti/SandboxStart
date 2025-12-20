@@ -23,26 +23,75 @@ jobs:
       run: |
         $version = "${{ github.ref_name }}"
         
-        # Create temp directory with safe path
+        # Create temp directory
         $tempPath = Join-Path ([System.IO.Path]::GetTempPath()) "SandboxStart-$version"
+        if (Test-Path $tempPath) {
+          Remove-Item $tempPath -Recurse -Force
+        }
         New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
         
-        # Copy files (exclude .git and .github)
-        Get-ChildItem -Path . -Exclude '.git','.github' | Copy-Item -Destination $tempPath -Recurse -Force
+        # Files to include
+        $filesToCopy = @(
+          'SandboxStart.ps1',
+          'Show-SandboxTestDialog.ps1',
+          'Test-WindowsSandbox.ps1',
+          'README.md'
+        )
         
-        # Create ZIP
+        foreach ($file in $filesToCopy) {
+          if (Test-Path $file) {
+            Copy-Item $file -Destination $tempPath -Force
+          }
+        }
+        
+        # Copy shared submodule
+        $sharedDest = Join-Path $tempPath "shared"
+        New-Item -ItemType Directory -Path $sharedDest -Force | Out-Null
+        Copy-Item "shared\SandboxTest.ps1" -Destination $sharedDest -Force
+        if (Test-Path "shared\README.md") {
+          Copy-Item "shared\README.md" -Destination $sharedDest -Force
+        }
+        
+        if (Test-Path "LICENSE") {
+          Copy-Item "LICENSE" -Destination $tempPath -Force
+        }
+        
         Compress-Archive -Path "$tempPath\*" -DestinationPath "SandboxStart-$version.zip" -Force
-        
-        # Cleanup
         Remove-Item $tempPath -Recurse -Force
     
-    - name: Upload release
+    - name: Get existing release body
+      id: get_release
+      continue-on-error: true
+      uses: actions/github-script@v7
+      with:
+        script: |
+          try {
+            const release = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: context.ref.replace('refs/tags/', '')
+            });
+            return release.data.body || '';
+          } catch (error) {
+            return '';
+          }
+    
+    - name: Create or Update Release
       uses: softprops/action-gh-release@v2
       with:
         files: SandboxStart-*.zip
         body: |
-          ## 🚀 SandboxStart ${{ github.ref_name }}
+          ## 📦 Download
           
-          Download and extract the ZIP file - all dependencies included.
+          **⬇️ Download:** `SandboxStart-${{ github.ref_name }}.zip` (includes all dependencies)
           
-          Run `SandboxStart.ps1` to get started.
+          ### 📥 Quick Start
+          1. Extract ZIP file
+          2. Run `SandboxStart.ps1`
+          3. Configure and launch sandbox
+          
+          ---
+          
+          ${{ steps.get_release.outputs.result }}
+        draft: false
+        prerelease: false
