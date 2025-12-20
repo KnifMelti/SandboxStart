@@ -1,3 +1,3 @@
-[submodule "shared"]
-	path = shared
+[submodule "Source/shared"]
+	path = Source/shared
 	url = https://github.com/KnifMelti/SandboxTest-Shared.git

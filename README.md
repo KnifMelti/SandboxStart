@@ -161,7 +161,7 @@ SandboxStart/
 ├── Test-WindowsSandbox.ps1       # WSB detection/installation
 ├── README.md                     # This file
 ├── shared/                       # Submodule
-|   └── SandboxTest.ps1           # Core sandbox function 
+|   └── SandboxTest.ps1           # Core sandbox function
 └── wsb/                          # Created at first run
     ├── script-mappings.txt       # Pattern→Script mappings
     ├── InstallWSB.ps1            # Default script
@@ -170,6 +170,28 @@ SandboxStart/
     ├── Explorer.ps1              # Default script
     └── [custom scripts]          # Your own scripts
 ```
+
+## 👨‍💻 For Developers
+
+Source code is located in the `Source/` directory:
+
+```
+Source/
+├── SandboxStart.ps1              # Main launcher
+├── Show-SandboxTestDialog.ps1    # GUI dialog
+├── Test-WindowsSandbox.ps1       # WSB detection
+└── shared/                       # Submodule
+    └── SandboxTest.ps1           # Core functionality
+```
+
+To run from the repository:
+
+```powershell
+cd Source
+.\SandboxStart.ps1
+```
+
+**Note:** Release ZIPs extract scripts to the root level (no Source/ folder for end users).
 
 ## 🔧 Troubleshooting
 

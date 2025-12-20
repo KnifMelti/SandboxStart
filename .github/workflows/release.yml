@@ -29,24 +29,31 @@ jobs:
         }
         New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
         
-        $filesToCopy = @(
+        # Copy PowerShell scripts from Source/ to root of release ZIP
+        $scriptsFromSource = @(
           'SandboxStart.ps1',
           'Show-SandboxTestDialog.ps1',
-          'Test-WindowsSandbox.ps1',
-          'README.md'
+          'Test-WindowsSandbox.ps1'
         )
-        
-        foreach ($file in $filesToCopy) {
-          if (Test-Path $file) {
-            Copy-Item $file -Destination $tempPath -Force
+
+        foreach ($script in $scriptsFromSource) {
+          $sourcePath = Join-Path "Source" $script
+          if (Test-Path $sourcePath) {
+            Copy-Item $sourcePath -Destination $tempPath -Force
           }
         }
-        
+
+        # Copy README from root
+        if (Test-Path "README.md") {
+          Copy-Item "README.md" -Destination $tempPath -Force
+        }
+
+        # Copy shared submodule to shared/ in release ZIP
         $sharedDest = Join-Path $tempPath "shared"
         New-Item -ItemType Directory -Path $sharedDest -Force | Out-Null
-        Copy-Item "shared\SandboxTest.ps1" -Destination $sharedDest -Force
-        if (Test-Path "shared\README.md") {
-          Copy-Item "shared\README.md" -Destination $sharedDest -Force
+        Copy-Item "Source\shared\SandboxTest.ps1" -Destination $sharedDest -Force
+        if (Test-Path "Source\shared\README.md") {
+          Copy-Item "Source\shared\README.md" -Destination $sharedDest -Force
         }
         
         if (Test-Path "LICENSE") {
