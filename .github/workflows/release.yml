@@ -23,14 +23,12 @@ jobs:
       run: |
         $version = "${{ github.ref_name }}"
         
-        # Create temp directory
         $tempPath = Join-Path ([System.IO.Path]::GetTempPath()) "SandboxStart-$version"
         if (Test-Path $tempPath) {
           Remove-Item $tempPath -Recurse -Force
         }
         New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
         
-        # Files to include
         $filesToCopy = @(
           'SandboxStart.ps1',
           'Show-SandboxTestDialog.ps1',
@@ -44,7 +42,6 @@ jobs:
           }
         }
         
-        # Copy shared submodule
         $sharedDest = Join-Path $tempPath "shared"
         New-Item -ItemType Directory -Path $sharedDest -Force | Out-Null
         Copy-Item "shared\SandboxTest.ps1" -Destination $sharedDest -Force
@@ -66,7 +63,6 @@ jobs:
           const fs = require('fs');
           const tag = context.ref.replace('refs/tags/', '');
           
-          // Get existing release if it exists
           let existingBody = '';
           try {
             const { data: release } = await github.rest.repos.getReleaseByTag({
@@ -79,16 +75,10 @@ jobs:
             console.log('No existing release found');
           }
           
-          // Create header with proper line breaks
-          const header = `**📦 Download:** \`SandboxStart-${tag}.zip\` (all dependencies included)
-
----
-
-`;
+          const header = '**📦 Download:** `SandboxStart-' + tag + '.zip` (all dependencies included)\n\n---\n\n';
           
           const fullBody = header + existingBody;
           
-          // Try to update or create release
           try {
             const { data: release } = await github.rest.repos.getReleaseByTag({
               owner: context.repo.owner,
@@ -96,7 +86,6 @@ jobs:
               tag: tag
             });
             
-            // Update existing
             await github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -104,13 +93,11 @@ jobs:
               body: fullBody
             });
             
-            // Upload asset
-            const zipPath = `SandboxStart-${tag}.zip`;
+            const zipPath = 'SandboxStart-' + tag + '.zip';
             const zipContent = fs.readFileSync(zipPath);
             
-            // Delete old asset
             for (const asset of release.assets) {
-              if (asset.name === `SandboxStart-${tag}.zip`) {
+              if (asset.name === 'SandboxStart-' + tag + '.zip') {
                 await github.rest.repos.deleteReleaseAsset({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -119,17 +106,15 @@ jobs:
               }
             }
             
-            // Upload new
             await github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: release.id,
-              name: `SandboxStart-${tag}.zip`,
+              name: 'SandboxStart-' + tag + '.zip',
               data: zipContent
             });
             
           } catch (error) {
-            // Create new release
             const { data: newRelease } = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -140,15 +125,14 @@ jobs:
               prerelease: false
             });
             
-            // Upload asset
-            const zipPath = `SandboxStart-${tag}.zip`;
+            const zipPath = 'SandboxStart-' + tag + '.zip';
             const zipContent = fs.readFileSync(zipPath);
             
             await github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: newRelease.id,
-              name: `SandboxStart-${tag}.zip`,
+              name: 'SandboxStart-' + tag + '.zip',
               data: zipContent
             });
           }
