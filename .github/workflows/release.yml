@@ -69,8 +69,8 @@ jobs:
         try {
           $release = gh release view $tag --json body --jq .body
           if ($release) {
-            # Save to file to preserve formatting
-            $release | Out-File -FilePath "existing_notes.txt" -Encoding UTF8 -NoNewline
+            # Save with proper encoding
+            [System.IO.File]::WriteAllText("existing_notes.txt", $release, [System.Text.UTF8Encoding]::new($false))
             echo "HAS_NOTES=true" >> $env:GITHUB_OUTPUT
           } else {
             echo "HAS_NOTES=false" >> $env:GITHUB_OUTPUT
@@ -83,30 +83,24 @@ jobs:
     - name: Prepare release body
       id: release_body
       run: |
-        $header = @"
-        ## 📦 Download
-        
-        **⬇️ Download:** ``SandboxStart-${{ github.ref_name }}.zip`` (includes all dependencies)
-        
-        ### 📥 Quick Start
-        
-        1. Extract ZIP file
-        2. Run ``SandboxStart.ps1``
-        3. Configure and launch sandbox
-        
-        ---
-        
-        "@
+        # Use here-string with explicit line breaks
+        $header = "## 📦 Download`n`n"
+        $header += "**⬇️ Download:** ``SandboxStart-${{ github.ref_name }}.zip`` (includes all dependencies)`n`n"
+        $header += "### 📥 Quick Start`n`n"
+        $header += "1. Extract ZIP file`n"
+        $header += "2. Run ``SandboxStart.ps1```n"
+        $header += "3. Configure and launch sandbox`n`n"
+        $header += "---`n`n"
         
         if ("${{ steps.existing_notes.outputs.HAS_NOTES }}" -eq "true" -and (Test-Path "existing_notes.txt")) {
-          $existingNotes = Get-Content "existing_notes.txt" -Raw
+          $existingNotes = [System.IO.File]::ReadAllText("existing_notes.txt", [System.Text.UTF8Encoding]::new($false))
           $fullBody = $header + $existingNotes
         } else {
           $fullBody = $header
         }
         
-        # Save to file
-        $fullBody | Out-File -FilePath "release_body.txt" -Encoding UTF8 -NoNewline
+        # Save with UTF8 encoding (no BOM)
+        [System.IO.File]::WriteAllText("release_body.txt", $fullBody, [System.Text.UTF8Encoding]::new($false))
       shell: pwsh
     
     - name: Create or Update Release
