@@ -1,8 +1,11 @@
-# SandboxStart
-
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-blue.svg)](https://github.com/PowerShell/PowerShell)
 [![Windows Sandbox](https://img.shields.io/badge/Windows%20Sandbox-Required-orange.svg)](https://docs.microsoft.com/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview)
 ![GitHub all releases](https://img.shields.io/github/downloads/KnifMelti/SandboxStart/total)
+<img src="Source/assets/icon.png" alt="GUI Dialog" width="128" align="right"><br><br>
+
+<img src="Source/assets/GUI.png" alt="GUI Dialog">
+
+# SandboxStart
 
 A standalone Windows Sandbox testing tool with GUI for easily testing applications, scripts, and installers in isolated environments. Features automatic WinGet installation, script mapping system, and customizable test scenarios.
 
