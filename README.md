@@ -7,7 +7,7 @@
 A standalone Windows Sandbox testing tool with GUI for easily testing applications, scripts, and installers in isolated environments. Features automatic WinGet installation, script mapping system, and customizable test scenarios.
 
 > **Note:** This project is extracted from [KnifMelti/WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
-> It depends on the [KnifMelti/SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**
+> It depends on the [KnifMelti/SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**.
 
 ## ✨ Features
 
