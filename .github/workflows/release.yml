@@ -59,7 +59,7 @@ jobs:
         Compress-Archive -Path "$tempPath\*" -DestinationPath "SandboxStart-$version.zip" -Force
         Remove-Item $tempPath -Recurse -Force
     
-    - name: Create or Update Release with API
+    - name: Create or Update Release
       uses: actions/github-script@v7
       with:
         script: |
@@ -76,7 +76,7 @@ jobs:
             });
             existingBody = release.body || '';
           } catch (error) {
-            console.log('No existing release found, will create new one');
+            console.log('No existing release found');
           }
           
           // Create header with proper line breaks
@@ -88,7 +88,7 @@ jobs:
           
           const fullBody = header + existingBody;
           
-          // Try to update existing release, or create new one
+          // Try to update or create release
           try {
             const { data: release } = await github.rest.repos.getReleaseByTag({
               owner: context.repo.owner,
@@ -96,7 +96,7 @@ jobs:
               tag: tag
             });
             
-            // Update existing release
+            // Update existing
             await github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -108,7 +108,7 @@ jobs:
             const zipPath = `SandboxStart-${tag}.zip`;
             const zipContent = fs.readFileSync(zipPath);
             
-            // Delete existing asset if it exists
+            // Delete old asset
             for (const asset of release.assets) {
               if (asset.name === `SandboxStart-${tag}.zip`) {
                 await github.rest.repos.deleteReleaseAsset({
@@ -119,7 +119,7 @@ jobs:
               }
             }
             
-            // Upload new asset
+            // Upload new
             await github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -128,7 +128,6 @@ jobs:
               data: zipContent
             });
             
-            console.log('Release updated successfully');
           } catch (error) {
             // Create new release
             const { data: newRelease } = await github.rest.repos.createRelease({
@@ -152,6 +151,4 @@ jobs:
               name: `SandboxStart-${tag}.zip`,
               data: zipContent
             });
-            
-            console.log('Release created successfully');
           }
