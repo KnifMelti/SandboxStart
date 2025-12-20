@@ -7,6 +7,8 @@
 A standalone Windows Sandbox testing tool with GUI for easily testing applications, scripts, and installers in isolated environments. Features automatic WinGet installation, script mapping system, and customizable test scenarios.
 
 > **Note:** This project is extracted from [KnifMelti/WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.
+> 
+> It depends on the [KnifMelti/SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**
 
 ## ✨ Features
 
@@ -156,10 +158,11 @@ In dialog:
 ```
 SandboxStart/
 ├── SandboxStart.ps1              # Main launcher
-├── SandboxTest.ps1               # Core sandbox function
 ├── Show-SandboxTestDialog.ps1    # GUI dialog
 ├── Test-WindowsSandbox.ps1       # WSB detection/installation
 ├── README.md                     # This file
+├── shared/                       # Submodule
+|   └── SandboxTest.ps1           # Core sandbox function 
 └── wsb/                          # Created at first run
     ├── script-mappings.txt       # Pattern→Script mappings
     ├── InstallWSB.ps1            # Default script
