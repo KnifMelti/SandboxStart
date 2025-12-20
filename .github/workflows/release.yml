@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'  # Triggers on version tags like v1.0.0
 
+permissions:
+  contents: write  # Required to create releases and upload assets
+
 jobs:
   build:
     runs-on: windows-latest
@@ -15,20 +18,21 @@ jobs:
       with:
         submodules: recursive
     
-    - name: Create release archive
+    - name: Get version from tag
+      id: get_version
       run: |
         $version = $env:GITHUB_REF -replace 'refs/tags/', ''
-        Compress-Archive -Path * -DestinationPath "SandboxStart-$version.zip" -Force
+        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
       shell: pwsh
     
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: SandboxStart-*.zip
-        body: |
-          ## Release ${{ github.ref_name }}
-          
-          Download and extract the ZIP file.
-          All dependencies (including shared submodule) are included.
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create release archive
+      run: |
+        $version = "${{ steps.get_version.outputs.VERSION }}"
+        
+        # Exclude unnecessary files
+        $excludePatterns = @('.git*', '.github', '*.zip')
+        
+        # Get all files except excluded
+        $files = Get-ChildItem -Path . -Recurse | Where-Object {
+            $item = $_
+            $exclude = $false
