@@ -59,61 +59,99 @@ jobs:
         Compress-Archive -Path "$tempPath\*" -DestinationPath "SandboxStart-$version.zip" -Force
         Remove-Item $tempPath -Recurse -Force
     
-    - name: Get existing release notes
-      id: existing_notes
-      continue-on-error: true
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        $tag = "${{ github.ref_name }}"
-        try {
-          $release = gh release view $tag --json body --jq .body
-          if ($release) {
-            [System.IO.File]::WriteAllText("existing_notes.txt", $release, [System.Text.UTF8Encoding]::new($false))
-            echo "HAS_NOTES=true" >> $env:GITHUB_OUTPUT
-          } else {
-            echo "HAS_NOTES=false" >> $env:GITHUB_OUTPUT
+    - name: Create or Update Release with API
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const tag = context.ref.replace('refs/tags/', '');
+          
+          // Get existing release if it exists
+          let existingBody = '';
+          try {
+            const { data: release } = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: tag
+            });
+            existingBody = release.body || '';
+          } catch (error) {
+            console.log('No existing release found, will create new one');
           }
-        } catch {
-          echo "HAS_NOTES=false" >> $env:GITHUB_OUTPUT
-        }
-      shell: pwsh
-    
-    - name: Prepare release body
-      id: release_body
-      run: |
-        # Simple header
-        $header = "**📦 Download:** ``SandboxStart-${{ github.ref_name }}.zip`` (all dependencies included)`n`n---`n`n"
-        
-        if ("${{ steps.existing_notes.outputs.HAS_NOTES }}" -eq "true" -and (Test-Path "existing_notes.txt")) {
-          $existingNotes = [System.IO.File]::ReadAllText("existing_notes.txt", [System.Text.UTF8Encoding]::new($false))
-          $fullBody = $header + $existingNotes
-        } else {
-          $fullBody = $header
-        }
-        
-        [System.IO.File]::WriteAllText("release_body.txt", $fullBody, [System.Text.UTF8Encoding]::new($false))
-      shell: pwsh
-    
-    - name: Create or Update Release
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        $tag = "${{ github.ref_name }}"
-        $bodyFile = "release_body.txt"
-        
-        $releaseExists = $false
-        try {
-          gh release view $tag | Out-Null
-          $releaseExists = $true
-        } catch {
-          $releaseExists = $false
-        }
-        
-        if ($releaseExists) {
-          gh release upload $tag "SandboxStart-$tag.zip" --clobber
-          gh release edit $tag --notes-file $bodyFile
-        } else {
-          gh release create $tag "SandboxStart-$tag.zip" --title $tag --notes-file $bodyFile
-        }
-      shell: pwsh
+          
+          // Create header with proper line breaks
+          const header = `**📦 Download:** \`SandboxStart-${tag}.zip\` (all dependencies included)
+
+---
+
+`;
+          
+          const fullBody = header + existingBody;
+          
+          // Try to update existing release, or create new one
+          try {
+            const { data: release } = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: tag
+            });
+            
+            // Update existing release
+            await github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.id,
+              body: fullBody
+            });
+            
+            // Upload asset
+            const zipPath = `SandboxStart-${tag}.zip`;
+            const zipContent = fs.readFileSync(zipPath);
+            
+            // Delete existing asset if it exists
+            for (const asset of release.assets) {
+              if (asset.name === `SandboxStart-${tag}.zip`) {
+                await github.rest.repos.deleteReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  asset_id: asset.id
+                });
+              }
+            }
+            
+            // Upload new asset
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.id,
+              name: `SandboxStart-${tag}.zip`,
+              data: zipContent
+            });
+            
+            console.log('Release updated successfully');
+          } catch (error) {
+            // Create new release
+            const { data: newRelease } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tag,
+              name: tag,
+              body: fullBody,
+              draft: false,
+              prerelease: false
+            });
+            
+            // Upload asset
+            const zipPath = `SandboxStart-${tag}.zip`;
+            const zipContent = fs.readFileSync(zipPath);
+            
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: newRelease.id,
+              name: `SandboxStart-${tag}.zip`,
+              data: zipContent
+            });
+            
+            console.log('Release created successfully');
+          }
