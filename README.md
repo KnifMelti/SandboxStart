@@ -2,7 +2,6 @@
 
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-blue.svg)](https://github.com/PowerShell/PowerShell)
 [![Windows Sandbox](https://img.shields.io/badge/Windows%20Sandbox-Required-orange.svg)](https://docs.microsoft.com/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview)
-[![License](https://img.shields.io/badge/License-Same%20as%20WAU--Settings--GUI-green.svg)](https://github.com/KnifMelti/WAU-Settings-GUI)
 
 A standalone Windows Sandbox testing tool with GUI for easily testing applications, scripts, and installers in isolated environments. Features automatic WinGet installation, script mapping system, and customizable test scenarios.
 
