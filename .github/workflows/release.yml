@@ -28,11 +28,7 @@ jobs:
     - name: Create release archive
       run: |
         $version = "${{ steps.get_version.outputs.VERSION }}"
+        Write-Host "Creating archive for version: $version"
         
-        # Exclude unnecessary files
-        $excludePatterns = @('.git*', '.github', '*.zip')
-        
-        # Get all files except excluded
-        $files = Get-ChildItem -Path . -Recurse | Where-Object {
-            $item = $_
-            $exclude = $false
+        # Simple approach: compress everything except .git
+        $tempDir = New-Item -ItemType Directory -Path "$env:TEMP\
