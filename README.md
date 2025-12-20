@@ -179,7 +179,7 @@ Source code is located in the `Source/` directory:
 Source/
 ├── SandboxStart.ps1              # Main launcher
 ├── Show-SandboxTestDialog.ps1    # GUI dialog
-├── Test-WindowsSandbox.ps1       # WSB detection
+├── Test-WindowsSandbox.ps1       # WSB detection/installation
 └── shared/                       # Submodule
     └── SandboxTest.ps1           # Core functionality
 ```
