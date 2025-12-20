@@ -23,7 +23,7 @@ $Script:WorkingDir = $PSScriptRoot
 # Load required functions
 . "$PSScriptRoot\Test-WindowsSandbox.ps1"
 . "$PSScriptRoot\Show-SandboxTestDialog.ps1"
-. "$PSScriptRoot\SandboxTest.ps1"
+. "$PSScriptRoot\shared\SandboxTest.ps1"
 
 function Start-SandboxApplication {
     <#

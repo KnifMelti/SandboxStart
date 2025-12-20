@@ -3,7 +3,7 @@ $Script:WorkingDir = $PSScriptRoot
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName PresentationFramework
-. $WorkingDir\SandboxTest.ps1
+. $WorkingDir\shared\SandboxTest.ps1
 
 function Get-ScriptMappings {
 	<#
