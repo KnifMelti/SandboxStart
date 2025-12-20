@@ -264,4 +264,4 @@ If you find this tool useful, please consider giving it a star on GitHub!
 
 ---
 
-**Made with ❤️ for the Windows development community**
+**Made for the Windows development community**
