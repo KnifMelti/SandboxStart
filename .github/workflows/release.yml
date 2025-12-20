@@ -59,39 +59,78 @@ jobs:
         Compress-Archive -Path "$tempPath\*" -DestinationPath "SandboxStart-$version.zip" -Force
         Remove-Item $tempPath -Recurse -Force
     
-    - name: Get existing release body
-      id: get_release
+    - name: Get existing release notes
+      id: existing_notes
       continue-on-error: true
-      uses: actions/github-script@v7
-      with:
-        script: |
-          try {
-            const release = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag: context.ref.replace('refs/tags/', '')
-            });
-            return release.data.body || '';
-          } catch (error) {
-            return '';
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        $tag = "${{ github.ref_name }}"
+        try {
+          $release = gh release view $tag --json body --jq .body
+          if ($release) {
+            # Save to file to preserve formatting
+            $release | Out-File -FilePath "existing_notes.txt" -Encoding UTF8 -NoNewline
+            echo "HAS_NOTES=true" >> $env:GITHUB_OUTPUT
+          } else {
+            echo "HAS_NOTES=false" >> $env:GITHUB_OUTPUT
           }
+        } catch {
+          echo "HAS_NOTES=false" >> $env:GITHUB_OUTPUT
+        }
+      shell: pwsh
+    
+    - name: Prepare release body
+      id: release_body
+      run: |
+        $header = @"
+        ## 📦 Download
+        
+        **⬇️ Download:** ``SandboxStart-${{ github.ref_name }}.zip`` (includes all dependencies)
+        
+        ### 📥 Quick Start
+        
+        1. Extract ZIP file
+        2. Run ``SandboxStart.ps1``
+        3. Configure and launch sandbox
+        
+        ---
+        
+        "@
+        
+        if ("${{ steps.existing_notes.outputs.HAS_NOTES }}" -eq "true" -and (Test-Path "existing_notes.txt")) {
+          $existingNotes = Get-Content "existing_notes.txt" -Raw
+          $fullBody = $header + $existingNotes
+        } else {
+          $fullBody = $header
+        }
+        
+        # Save to file
+        $fullBody | Out-File -FilePath "release_body.txt" -Encoding UTF8 -NoNewline
+      shell: pwsh
     
     - name: Create or Update Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: SandboxStart-*.zip
-        body: |
-          ## 📦 Download
-          
-          **⬇️ Download:** `SandboxStart-${{ github.ref_name }}.zip` (includes all dependencies)
-          
-          ### 📥 Quick Start
-          1. Extract ZIP file
-          2. Run `SandboxStart.ps1`
-          3. Configure and launch sandbox
-          
-          ---
-          
-          ${{ steps.get_release.outputs.result }}
-        draft: false
-        prerelease: false
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        $tag = "${{ github.ref_name }}"
+        $bodyFile = "release_body.txt"
+        
+        # Check if release exists
+        $releaseExists = $false
+        try {
+          gh release view $tag | Out-Null
+          $releaseExists = $true
+        } catch {
+          $releaseExists = $false
+        }
+        
+        if ($releaseExists) {
+          # Update existing release
+          gh release upload $tag "SandboxStart-$tag.zip" --clobber
+          gh release edit $tag --notes-file $bodyFile
+        } else {
+          # Create new release
+          gh release create $tag "SandboxStart-$tag.zip" --title $tag --notes-file $bodyFile
+        }
+      shell: pwsh
