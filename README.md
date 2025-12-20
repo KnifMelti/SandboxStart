@@ -230,10 +230,6 @@ Restart-Computer
 - [Testing a Manifest in Windows Sandbox](https://github.com/microsoft/winget-pkgs/blob/master/doc/README.md#in-windows-sandbox) (Original inspiration)
 - [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) (Parent project)
 
-### 📄 License
-
-Same license as the parent [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) project.
-
 ## 🙏 Credits
 
 - Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1)
