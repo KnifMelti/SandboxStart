@@ -1,8 +1,6 @@
 $Script:WorkingDir = $PSScriptRoot
 # Import required assemblies
-Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
-Add-Type -AssemblyName PresentationFramework
 . $WorkingDir\shared\SandboxTest.ps1
 
 function Get-ScriptMappings {
