@@ -55,11 +55,6 @@ The GUI dialog allows you to configure:
 ### 📄 File Selection
 - **Browse File**: Select a specific file to run (automatically maps its parent folder)
 
-### 📜 Script Configuration
-- **Script Editor**: PowerShell script to run after sandbox initialization
-- **Load**: Load saved custom scripts from `wsb\` directory
-- **Save**: Save current script for reuse
-
 ### 🔧 WinGet Options
 - **WinGet Version**: Use the drop-down list, manually specify version (e.g., "1.11.510") or leave blank for latest
 - **Prerelease**: Include pre-release WinGet versions
@@ -69,6 +64,11 @@ The GUI dialog allows you to configure:
 - **Async**: Launch sandbox and return immediately (don't wait for completion)
 - **Verbose**: Show detailed progress information
 - **Wait**: Wait for keypress before closing (useful for CLI scenarios)
+
+### 📜 Script Configuration
+- **Script Editor**: PowerShell script to run after sandbox initialization
+- **Load**: Load saved custom scripts from `wsb\` directory
+- **Save**: Save current script for reuse
 
 ## 🗺️ Script Mapping System
 
