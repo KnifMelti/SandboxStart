@@ -142,7 +142,7 @@ function Show-PackageListEditor {
 	# Create editor form
 	$editorForm = New-Object System.Windows.Forms.Form
 	$editorForm.Text = if ($ListName) { "Edit Package List: $ListName" } else { "Create New Package List" }
-	$editorForm.Size = New-Object System.Drawing.Size(420, 400)
+	$editorForm.Size = New-Object System.Drawing.Size(420, 370)
 	$editorForm.StartPosition = "CenterParent"
 	$editorForm.FormBorderStyle = "FixedDialog"
 	$editorForm.MaximizeBox = $false
@@ -190,7 +190,7 @@ function Show-PackageListEditor {
 
 	$txtPackages = New-Object System.Windows.Forms.TextBox
 	$txtPackages.Location = New-Object System.Drawing.Point($margin, ($y + 25))
-	$txtPackages.Size = New-Object System.Drawing.Size($controlWidth, 180)
+	$txtPackages.Size = New-Object System.Drawing.Size($controlWidth, 140)
 	$txtPackages.Multiline = $true
 	$txtPackages.ScrollBars = "Vertical"
 	$txtPackages.AcceptsReturn = $true
@@ -210,17 +210,17 @@ function Show-PackageListEditor {
 		}
 	}
 
-	$y += 215
+	$y += 175
 
 	# Help text
 	$lblHelp = New-Object System.Windows.Forms.Label
 	$lblHelp.Location = New-Object System.Drawing.Point($margin, $y)
-	$lblHelp.Size = New-Object System.Drawing.Size($controlWidth, 35)
-	$lblHelp.Text = "Example: Notepad++.Notepad++`nUse WinGet package IDs from winget search"
+	$lblHelp.Size = New-Object System.Drawing.Size($controlWidth, 50)
+	$lblHelp.Text = "Example: Notepad++.Notepad++`nUse WinGet package IDs from winget search`nComments: Lines starting with # are ignored"
 	$lblHelp.ForeColor = [System.Drawing.Color]::Gray
 	$editorForm.Controls.Add($lblHelp)
 
-	$y += 45
+	$y += 50
 
 	# Buttons
 	$btnSave = New-Object System.Windows.Forms.Button
@@ -539,7 +539,7 @@ Install.* = Installer.ps1
 		# Create the main form
 		$form = New-Object System.Windows.Forms.Form
 		$form.Text = "Windows Sandbox Test Configuration"
-		$form.Size = New-Object System.Drawing.Size(450, 715)
+		$form.Size = New-Object System.Drawing.Size(450, 725)
 		$form.StartPosition = "CenterScreen"
 		$form.FormBorderStyle = "FixedDialog"
 		$form.MaximizeBox = $false
