@@ -142,14 +142,28 @@ function Show-PackageListEditor {
 	# Create editor form
 	$editorForm = New-Object System.Windows.Forms.Form
 	$editorForm.Text = if ($ListName) { "Edit Package List: $ListName" } else { "Create New Package List" }
-	$editorForm.Size = New-Object System.Drawing.Size(500, 450)
+	$editorForm.Size = New-Object System.Drawing.Size(420, 400)
 	$editorForm.StartPosition = "CenterParent"
-	$editorForm.FormBorderStyle = "Sizable"
-	$editorForm.MinimumSize = New-Object System.Drawing.Size(400, 350)
+	$editorForm.FormBorderStyle = "FixedDialog"
+	$editorForm.MaximizeBox = $false
+	$editorForm.MinimizeBox = $false
+
+	# Use the same icon as main form
+	try {
+		if ($Script:AppIcon) {
+			$editorForm.Icon = $Script:AppIcon
+			$editorForm.ShowIcon = $true
+		} else {
+			$editorForm.ShowIcon = $false
+		}
+	}
+	catch {
+		$editorForm.ShowIcon = $false
+	}
 
 	$y = 15
 	$margin = 15
-	$controlWidth = 460
+	$controlWidth = 380
 
 	# List name field
 	$lblListName = New-Object System.Windows.Forms.Label
@@ -176,7 +190,7 @@ function Show-PackageListEditor {
 
 	$txtPackages = New-Object System.Windows.Forms.TextBox
 	$txtPackages.Location = New-Object System.Drawing.Point($margin, ($y + 25))
-	$txtPackages.Size = New-Object System.Drawing.Size($controlWidth, 250)
+	$txtPackages.Size = New-Object System.Drawing.Size($controlWidth, 180)
 	$txtPackages.Multiline = $true
 	$txtPackages.ScrollBars = "Vertical"
 	$txtPackages.AcceptsReturn = $true
@@ -196,7 +210,7 @@ function Show-PackageListEditor {
 		}
 	}
 
-	$y += 285
+	$y += 215
 
 	# Help text
 	$lblHelp = New-Object System.Windows.Forms.Label
@@ -513,10 +527,12 @@ Install.* = Installer.ps1
 		try {
 			$iconBytes = [System.Convert]::FromBase64String($iconBase64)
 			$memoryStream = New-Object System.IO.MemoryStream($iconBytes, 0, $iconBytes.Length)
-			$appIcon = New-Object System.Drawing.Icon($memoryStream)
+			$script:AppIcon = New-Object System.Drawing.Icon($memoryStream)
+			$appIcon = $script:AppIcon
 		}
 		catch {
 			Write-Warning "Failed to load embedded icon: $($_.Exception.Message)"
+			$script:AppIcon = $null
 			$appIcon = $null
 		}
 
