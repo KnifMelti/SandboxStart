@@ -29,6 +29,10 @@ Features automatic WinGet installation, script mapping system, and customizable 
 - Windows 10/11 **Pro, Enterprise, or Education**
 - Windows Sandbox feature (auto-prompt to install if missing)
 
+## 📦 Installation
+
+Download, unblock and extract the latest release: [SandboxStart-vX.X.X.X.zip](https://github.com/KnifMelti/SandboxStart//releases/latest)
+
 ## 🚀 Quick Start
 
 ```powershell
@@ -39,10 +43,6 @@ This will:
 1. ✅ Check if Windows Sandbox is available (prompt to install if not)
 2. 🎨 Show configuration dialog
 3. 🚀 Launch sandbox with your settings
-
-## 📦 Installation
-
-Download the latest release and extract to your desired location.
 
 ## 🎮 Configuration Dialog
 
