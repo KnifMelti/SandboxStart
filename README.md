@@ -27,7 +27,6 @@ Features automatic WinGet installation, script mapping system, and customizable 
 ## 📋 Requirements
 
 - Windows 10/11 **Pro, Enterprise, or Education**
-- PowerShell 5.1 or later
 - Windows Sandbox feature (auto-prompt to install if missing)
 
 ## 🚀 Quick Start
