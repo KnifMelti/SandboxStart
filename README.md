@@ -1,3 +1,4 @@
+[![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-blue.svg)](https://github.com/PowerShell/PowerShell)
 [![Windows Sandbox](https://img.shields.io/badge/Windows%20Sandbox-Required-orange.svg)](https://docs.microsoft.com/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview)
 ![GitHub all releases](https://img.shields.io/github/downloads/KnifMelti/SandboxStart/total)
 <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/icon.png" alt="Icon" width="128" align="right"><br><br>
@@ -5,7 +6,7 @@
 # SandboxStart
 
 A standalone Windows Sandbox testing tool with GUI for easily testing applications, scripts, and installers in an isolated environment.<br>
-Features automatic WinGet installation, package list installation, script mapping system, and customizable test scenarios.
+Features automatic WinGet installation, script mapping system, and customizable test scenarios.
 
 > **Note:** This project is extracted from [KnifMelti/WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
 > It depends on the [KnifMelti/SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**.
@@ -14,19 +15,22 @@ Features automatic WinGet installation, package list installation, script mappin
 
 ## ✨ Features
 
-- 🔧 **Auto-Installation** - Prompts to enable Windows Sandbox if not available
 - 🎯 **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters
 - 📁 **Folder/File Mapping** - Map any folder or select specific files to test
-- 📦 **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
-- ⚙️ **Version Control** - Select specific WinGet versions or use pre-release builds
 - 🎨 **Script Mapping System** - Automatic script selection based on file patterns
 - 📜 **Custom Scripts** - Create and save your own sandbox initialization scripts
+- 🔄 **WinGet Integration** - Automated WinGet installation in sandbox
+- 📦 **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
+- ⚙️ **Version Control** - Select specific WinGet versions or use pre-release builds
+- 🚀 **Async Mode** - Launch sandbox in background and continue working
 - 🌓 **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
 - 🔗 **Desktop Shortcuts** - Creates useful shortcut links (Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
+- 🔧 **Auto-Installation** - Prompts to enable Windows Sandbox if not available
 
 ## 📋 Requirements
 
 - Windows 10/11 **Pro, Enterprise, or Education**
+- PowerShell 5.1 or later
 - Windows Sandbox feature (auto-prompt to install if missing)
 
 ## 🚀 Quick Start
@@ -55,6 +59,14 @@ The GUI dialog allows you to configure:
 ### 📄 File Selection
 - **Browse File**: Select a specific file to run (automatically maps its parent folder)
 
+### 📦 Package Lists
+- **Install Package Lists**: Install predefined sets of applications via WinGet using custom package lists
+
+### 📜 Script Configuration
+- **Script Editor**: PowerShell script to run after sandbox initialization
+- **Load**: Load saved custom scripts from `wsb\` directory
+- **Save**: Save current script for reuse
+
 ### 🔧 WinGet Options
 - **WinGet Version**: Use the drop-down list, manually specify version (e.g., "1.11.510") or leave blank for latest
 - **Prerelease**: Include pre-release WinGet versions
@@ -64,11 +76,6 @@ The GUI dialog allows you to configure:
 - **Async**: Launch sandbox and return immediately (don't wait for completion)
 - **Verbose**: Show detailed progress information
 - **Wait**: Wait for keypress before closing (useful for CLI scenarios)
-
-### 📜 Script Configuration
-- **Script Editor**: PowerShell script to run after sandbox initialization
-- **Load**: Load saved custom scripts from `wsb\` directory
-- **Save**: Save current script for reuse
 
 ## 🗺️ Script Mapping System
 
