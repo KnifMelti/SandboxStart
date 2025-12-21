@@ -18,11 +18,10 @@ Features automatic WinGet installation, script mapping system, and customizable 
 - 🔧 **Auto-Installation** - Prompts to enable Windows Sandbox if not available
 - 🎯 **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters
 - 📁 **Folder/File Mapping** - Map any folder or select specific files to test
+- 🎨 **Script Mapping System** - Automatic script selection based on file patterns
 - 📦 **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
 - ⚙️ **Version Control** - Select specific WinGet versions or use pre-release builds
-- 🎨 **Script Mapping System** - Automatic script selection based on file patterns
 - 📜 **Custom Scripts** - Create and save your own sandbox initialization scripts
-- 🚀 **Async Mode** - Launch sandbox in background and continue working
 - 🌓 **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
 - 🔗 **Desktop Shortcuts** - Creates useful shortcut links (Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 
