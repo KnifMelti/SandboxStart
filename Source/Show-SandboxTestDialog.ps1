@@ -202,7 +202,7 @@ function Show-PackageListEditor {
 		$listPath = Join-Path (Join-Path $Script:WorkingDir "wsb") "$ListName.txt"
 		if (Test-Path $listPath) {
 			try {
-				$txtPackages.Text = (Get-Content -Path $listPath -Raw -Encoding UTF8).Trim()
+				$txtPackages.Text = (Get-Content -Path $listPath -Raw).Trim()
 			}
 			catch {
 				[System.Windows.Forms.MessageBox]::Show("Error loading list: $($_.Exception.Message)", "Load Error", "OK", "Error")
@@ -258,7 +258,7 @@ function Show-PackageListEditor {
 		$listPath = Join-Path $wsbDir "$listNameValue.txt"
 		try {
 			$packageContent = $txtPackages.Text.Trim()
-			Set-Content -Path $listPath -Value $packageContent -Encoding UTF8
+			Set-Content -Path $listPath -Value $packageContent
 
 			$script:__editorReturn = @{
 				DialogResult = 'OK'
