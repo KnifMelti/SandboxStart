@@ -82,6 +82,204 @@ Install.* = Installer.ps1
 	return $mappings
 }
 
+function Get-PackageLists {
+	<#
+	.SYNOPSIS
+	Retrieves all package list files from wsb directory
+
+	.DESCRIPTION
+	Scans the wsb directory for .txt files (excluding script-mappings.txt)
+	and returns their base names for use in the package list dropdown.
+
+	.OUTPUTS
+	Array of package list names (without .txt extension)
+	#>
+
+	$packageListDir = Join-Path $Script:WorkingDir "wsb"
+	$lists = @()
+
+	if (Test-Path $packageListDir) {
+		$txtFiles = Get-ChildItem -Path $packageListDir -Filter "*.txt" -File -ErrorAction SilentlyContinue
+		foreach ($file in $txtFiles) {
+			# Exclude script-mappings.txt from package lists
+			if ($file.Name -ne "script-mappings.txt") {
+				$lists += $file.BaseName
+			}
+		}
+	}
+
+	return $lists | Sort-Object
+}
+
+function Get-PackageListTooltip {
+	<#
+	.SYNOPSIS
+	Returns tooltip text based on whether package lists exist
+	#>
+
+	$lists = Get-PackageLists
+	if ($lists.Count -eq 0) {
+		return "No package lists found. Click '[Create new list...]' to create one."
+	}
+	return "Select a package list to install via WinGet"
+}
+
+function Show-PackageListEditor {
+	<#
+	.SYNOPSIS
+	Shows dialog for creating or editing package lists
+
+	.PARAMETER ListName
+	Optional list name to edit. If empty, creates new list.
+
+	.OUTPUTS
+	Hashtable with DialogResult and ListName
+	#>
+	param(
+		[string]$ListName = ""
+	)
+
+	# Create editor form
+	$editorForm = New-Object System.Windows.Forms.Form
+	$editorForm.Text = if ($ListName) { "Edit Package List: $ListName" } else { "Create New Package List" }
+	$editorForm.Size = New-Object System.Drawing.Size(500, 450)
+	$editorForm.StartPosition = "CenterParent"
+	$editorForm.FormBorderStyle = "Sizable"
+	$editorForm.MinimumSize = New-Object System.Drawing.Size(400, 350)
+
+	$y = 15
+	$margin = 15
+	$controlWidth = 460
+
+	# List name field
+	$lblListName = New-Object System.Windows.Forms.Label
+	$lblListName.Location = New-Object System.Drawing.Point($margin, $y)
+	$lblListName.Size = New-Object System.Drawing.Size(150, 20)
+	$lblListName.Text = "List Name:"
+	$editorForm.Controls.Add($lblListName)
+
+	$txtListName = New-Object System.Windows.Forms.TextBox
+	$txtListName.Location = New-Object System.Drawing.Point($margin, ($y + 20))
+	$txtListName.Size = New-Object System.Drawing.Size($controlWidth, 23)
+	$txtListName.Text = $ListName
+	$txtListName.ReadOnly = ($ListName -ne "")
+	$editorForm.Controls.Add($txtListName)
+
+	$y += 50
+
+	# Package IDs text area
+	$lblPackages = New-Object System.Windows.Forms.Label
+	$lblPackages.Location = New-Object System.Drawing.Point($margin, $y)
+	$lblPackages.Size = New-Object System.Drawing.Size(400, 20)
+	$lblPackages.Text = "Package IDs (one per line):"
+	$editorForm.Controls.Add($lblPackages)
+
+	$txtPackages = New-Object System.Windows.Forms.TextBox
+	$txtPackages.Location = New-Object System.Drawing.Point($margin, ($y + 25))
+	$txtPackages.Size = New-Object System.Drawing.Size($controlWidth, 250)
+	$txtPackages.Multiline = $true
+	$txtPackages.ScrollBars = "Vertical"
+	$txtPackages.AcceptsReturn = $true
+	$txtPackages.Font = New-Object System.Drawing.Font("Consolas", 9)
+	$editorForm.Controls.Add($txtPackages)
+
+	# Load existing content if editing
+	if ($ListName) {
+		$listPath = Join-Path (Join-Path $Script:WorkingDir "wsb") "$ListName.txt"
+		if (Test-Path $listPath) {
+			try {
+				$txtPackages.Text = (Get-Content -Path $listPath -Raw -Encoding UTF8).Trim()
+			}
+			catch {
+				[System.Windows.Forms.MessageBox]::Show("Error loading list: $($_.Exception.Message)", "Load Error", "OK", "Error")
+			}
+		}
+	}
+
+	$y += 285
+
+	# Help text
+	$lblHelp = New-Object System.Windows.Forms.Label
+	$lblHelp.Location = New-Object System.Drawing.Point($margin, $y)
+	$lblHelp.Size = New-Object System.Drawing.Size($controlWidth, 35)
+	$lblHelp.Text = "Example: Notepad++.Notepad++`nUse WinGet package IDs from winget search"
+	$lblHelp.ForeColor = [System.Drawing.Color]::Gray
+	$editorForm.Controls.Add($lblHelp)
+
+	$y += 45
+
+	# Buttons
+	$btnSave = New-Object System.Windows.Forms.Button
+	$btnSave.Location = New-Object System.Drawing.Point(($margin + $controlWidth - 160), $y)
+	$btnSave.Size = New-Object System.Drawing.Size(75, 30)
+	$btnSave.Text = "Save"
+	$btnSave.Add_Click({
+		$listNameValue = $txtListName.Text.Trim()
+
+		# Validate list name
+		if ([string]::IsNullOrWhiteSpace($listNameValue)) {
+			[System.Windows.Forms.MessageBox]::Show("Please enter a list name.", "Validation Error", "OK", "Warning")
+			return
+		}
+
+		# Check for invalid filename characters
+		$invalidChars = [System.IO.Path]::GetInvalidFileNameChars()
+		if ($listNameValue.IndexOfAny($invalidChars) -ge 0) {
+			[System.Windows.Forms.MessageBox]::Show("List name contains invalid characters.", "Validation Error", "OK", "Warning")
+			return
+		}
+
+		# Prevent overwriting script-mappings.txt
+		if ($listNameValue -eq "script-mappings") {
+			[System.Windows.Forms.MessageBox]::Show("Cannot use reserved name 'script-mappings'.", "Validation Error", "OK", "Warning")
+			return
+		}
+
+		# Save the file
+		$wsbDir = Join-Path $Script:WorkingDir "wsb"
+		if (-not (Test-Path $wsbDir)) {
+			New-Item -ItemType Directory -Path $wsbDir -Force | Out-Null
+		}
+
+		$listPath = Join-Path $wsbDir "$listNameValue.txt"
+		try {
+			$packageContent = $txtPackages.Text.Trim()
+			Set-Content -Path $listPath -Value $packageContent -Encoding UTF8
+
+			$script:__editorReturn = @{
+				DialogResult = 'OK'
+				ListName = $listNameValue
+			}
+			$editorForm.Close()
+		}
+		catch {
+			[System.Windows.Forms.MessageBox]::Show("Error saving list: $($_.Exception.Message)", "Save Error", "OK", "Error")
+		}
+	})
+	$editorForm.Controls.Add($btnSave)
+
+	$btnCancel = New-Object System.Windows.Forms.Button
+	$btnCancel.Location = New-Object System.Drawing.Point(($margin + $controlWidth - 75), $y)
+	$btnCancel.Size = New-Object System.Drawing.Size(75, 30)
+	$btnCancel.Text = "Cancel"
+	$btnCancel.Add_Click({
+		$script:__editorReturn = @{ DialogResult = 'Cancel' }
+		$editorForm.Close()
+	})
+	$editorForm.Controls.Add($btnCancel)
+
+	$editorForm.AcceptButton = $btnSave
+	$editorForm.CancelButton = $btnCancel
+
+	[void]$editorForm.ShowDialog()
+
+	if ($script:__editorReturn) {
+		return $script:__editorReturn
+	} else {
+		return @{ DialogResult = 'Cancel' }
+	}
+}
+
 # Determine the appropriate script based on selected file or directory contents
 function Find-MatchingScript {
 	param(
@@ -325,7 +523,7 @@ Install.* = Installer.ps1
 		# Create the main form
 		$form = New-Object System.Windows.Forms.Form
 		$form.Text = "Windows Sandbox Test Configuration"
-		$form.Size = New-Object System.Drawing.Size(450, 665)
+		$form.Size = New-Object System.Drawing.Size(450, 715)
 		$form.StartPosition = "CenterScreen"
 		$form.FormBorderStyle = "FixedDialog"
 		$form.MaximizeBox = $false
@@ -570,6 +768,95 @@ Start-Process "`$env:USERPROFILE\Desktop\`$SandboxFolderName\$selectedFile" -Wor
 		})
 
 		$form.Controls.Add($txtSandboxFolderName)
+
+		$y += $labelHeight + $controlHeight + $spacing
+
+		# Install Packages section
+		$lblInstallPackages = New-Object System.Windows.Forms.Label
+		$lblInstallPackages.Location = New-Object System.Drawing.Point($leftMargin, $y)
+		$lblInstallPackages.Size = New-Object System.Drawing.Size(200, $labelHeight)
+		$lblInstallPackages.Text = "Install Packages:"
+		$form.Controls.Add($lblInstallPackages)
+
+		$cmbInstallPackages = New-Object System.Windows.Forms.ComboBox
+		$cmbInstallPackages.Location = New-Object System.Drawing.Point($leftMargin, ($y + $labelHeight))
+		$cmbInstallPackages.Size = New-Object System.Drawing.Size(($controlWidth - 85), $controlHeight)
+		$cmbInstallPackages.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+
+		$tooltipPackages = New-Object System.Windows.Forms.ToolTip
+		$tooltipPackages.SetToolTip($cmbInstallPackages, (Get-PackageListTooltip))
+
+		# Populate dropdown
+		$packageLists = Get-PackageLists
+		[void]$cmbInstallPackages.Items.Add("")
+
+		if ($packageLists.Count -eq 0) {
+			$cmbInstallPackages.Items.Add("[Create new list...]")
+			$cmbInstallPackages.SelectedIndex = 0
+		} else {
+			foreach ($list in $packageLists) {
+				[void]$cmbInstallPackages.Items.Add($list)
+			}
+			[void]$cmbInstallPackages.Items.Add("[Create new list...]")
+			$cmbInstallPackages.SelectedIndex = 0
+		}
+
+		# Selection change event
+		$cmbInstallPackages.Add_SelectedIndexChanged({
+			if ($this.SelectedItem -eq "[Create new list...]") {
+				$result = Show-PackageListEditor
+
+				if ($result.DialogResult -eq 'OK') {
+					$currentSelection = $result.ListName
+					$this.Items.Clear()
+					[void]$this.Items.Add("")
+
+					$lists = Get-PackageLists
+					foreach ($list in $lists) {
+						[void]$this.Items.Add($list)
+					}
+					[void]$this.Items.Add("[Create new list...]")
+
+					$this.SelectedItem = $currentSelection
+					$tooltipPackages.SetToolTip($this, (Get-PackageListTooltip))
+				} else {
+					$this.SelectedIndex = 0
+				}
+			}
+		})
+
+		$form.Controls.Add($cmbInstallPackages)
+
+		# Edit button
+		$btnEditPackages = New-Object System.Windows.Forms.Button
+		$btnEditPackages.Location = New-Object System.Drawing.Point(($leftMargin + $controlWidth - 75), ($y + $labelHeight))
+		$btnEditPackages.Size = New-Object System.Drawing.Size(75, $controlHeight)
+		$btnEditPackages.Text = "Edit..."
+		$btnEditPackages.Add_Click({
+			$selectedList = $cmbInstallPackages.SelectedItem
+
+			if ($selectedList -eq "" -or $selectedList -eq "[Create new list...]") {
+				[System.Windows.Forms.MessageBox]::Show("Please select a package list to edit.", "No Selection", "OK", "Information")
+				return
+			}
+
+			$result = Show-PackageListEditor -ListName $selectedList
+
+			if ($result.DialogResult -eq 'OK') {
+				$currentSelection = $selectedList
+				$cmbInstallPackages.Items.Clear()
+				[void]$cmbInstallPackages.Items.Add("")
+
+				$lists = Get-PackageLists
+				foreach ($list in $lists) {
+					[void]$cmbInstallPackages.Items.Add($list)
+				}
+				[void]$cmbInstallPackages.Items.Add("[Create new list...]")
+
+				$cmbInstallPackages.SelectedItem = $currentSelection
+			}
+		})
+		$form.Controls.Add($btnEditPackages)
 
 		$y += $labelHeight + $controlHeight + $spacing
 
@@ -830,6 +1117,11 @@ Start-Process "`$env:USERPROFILE\Desktop\`$SandboxFolderName\$selectedFile" -Wor
 				MapFolder = $txtMapFolder.Text
 				SandboxFolderName = $txtSandboxFolderName.Text
 				WinGetVersion = $cmbWinGetVersion.Text
+				InstallPackageList = if ($cmbInstallPackages.SelectedItem -and
+				                       $cmbInstallPackages.SelectedItem -ne "" -and
+				                       $cmbInstallPackages.SelectedItem -ne "[Create new list...]") {
+				                       $cmbInstallPackages.SelectedItem
+				                   } else { "" }
 				Prerelease = $chkPrerelease.Checked
 				Clean = $chkClean.Checked
 				Async = $chkAsync.Checked

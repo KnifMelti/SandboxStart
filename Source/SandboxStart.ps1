@@ -93,6 +93,9 @@ function Start-SandboxApplication {
         if (![string]::IsNullOrWhiteSpace($dialogResult.WinGetVersion)) {
             $sandboxParams.WinGetVersion = $dialogResult.WinGetVersion
         }
+        if (![string]::IsNullOrWhiteSpace($dialogResult.InstallPackageList)) {
+            $sandboxParams.InstallPackageList = $dialogResult.InstallPackageList
+        }
         if ($dialogResult.Prerelease) { $sandboxParams.Prerelease = $true }
         if ($dialogResult.Clean) { $sandboxParams.Clean = $true }
         if ($dialogResult.Async) { $sandboxParams.Async = $true }
