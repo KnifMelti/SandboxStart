@@ -20,6 +20,7 @@ Features automatic WinGet installation, script mapping system, and customizable 
 - 🎨 **Script Mapping System** - Automatic script selection based on file patterns
 - 📜 **Custom Scripts** - Create and save your own sandbox initialization scripts
 - 🔄 **WinGet Integration** - Automated WinGet installation in sandbox
+- 📦 **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
 - ⚙️ **Version Control** - Select specific WinGet versions or use pre-release builds
 - 🚀 **Async Mode** - Launch sandbox in background and continue working
 - 🌓 **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
