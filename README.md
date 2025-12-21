@@ -262,7 +262,6 @@ Restart-Computer
 ## 🙏 Credits
 
 - Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1)
-- Integrated into [KnifMelti/WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI)
 
 ## ⭐ Show Your Support
 
