@@ -18,7 +18,6 @@ Features automatic WinGet installation, package list installation, script mappin
 - 🎯 **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters
 - 📁 **Folder/File Mapping** - Map any folder or select specific files to test
 - 📦 **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
-- 🔄 **WinGet Integration** - Automated WinGet installation in sandbox
 - ⚙️ **Version Control** - Select specific WinGet versions or use pre-release builds
 - 🎨 **Script Mapping System** - Automatic script selection based on file patterns
 - 📜 **Custom Scripts** - Create and save your own sandbox initialization scripts
