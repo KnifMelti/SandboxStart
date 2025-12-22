@@ -32,7 +32,6 @@ jobs:
         # Copy PowerShell scripts from Source/ to root of release ZIP
         $scriptsFromSource = @(
           'SandboxStart.ps1',
-          'Show-SandboxTestDialog.ps1',
           'Test-WindowsSandbox.ps1'
         )
 
@@ -52,6 +51,7 @@ jobs:
         $sharedDest = Join-Path $tempPath "shared"
         New-Item -ItemType Directory -Path $sharedDest -Force | Out-Null
         Copy-Item "Source\shared\SandboxTest.ps1" -Destination $sharedDest -Force
+        Copy-Item "Source\shared\Show-SandboxTestDialog.ps1" -Destination $sharedDest -Force
         if (Test-Path "Source\shared\README.md") {
           Copy-Item "Source\shared\README.md" -Destination $sharedDest -Force
         }
