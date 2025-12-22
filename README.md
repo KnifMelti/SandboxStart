@@ -59,7 +59,7 @@ The GUI dialog allows you to configure:
 - **Install Package Lists**: Install predefined sets of applications via WinGet using custom package lists
 
 ### 🔧 WinGet Options
-- **WinGet Version**: Use the drop-down list, manually specify version (e.g., "1.11.510") or leave blank for latest
+- **WinGet Version**: Use the drop-down list or leave blank for latest
 - **Prerelease**: Include pre-release WinGet versions
 - **Clean**: Clear cached dependencies before starting
 
@@ -162,19 +162,19 @@ In dialog:
 
 ```
 SandboxStart/
-├── SandboxStart.ps1              # Main launcher
-├── Show-SandboxTestDialog.ps1    # GUI dialog
-├── Test-WindowsSandbox.ps1       # WSB detection/installation
-├── README.md                     # This file
-├── shared/                       # Submodule
-|   └── SandboxTest.ps1           # Core sandbox function
-└── wsb/                          # Created at first run
-    ├── script-mappings.txt       # Pattern→Script mappings
-    ├── InstallWSB.ps1            # Default script
-    ├── WinGetManifest.ps1        # Default script
-    ├── Installer.ps1             # Default script
-    ├── Explorer.ps1              # Default script
-    └── [custom scripts]          # Your own scripts
+├── SandboxStart.ps1               # Main launcher
+├── Test-WindowsSandbox.ps1        # WSB detection/installation
+├── README.md                      # This file
+├── shared/                        # Submodule
+|   └── SandboxTest.ps1            # Core sandbox function
+|   └── Show-SandboxTestDialog.ps1 # GUI dialog
+└── wsb/                           # Created at first run
+    ├── script-mappings.txt        # Pattern→Script mappings
+    ├── InstallWSB.ps1             # Default script
+    ├── WinGetManifest.ps1         # Default script
+    ├── Installer.ps1              # Default script
+    ├── Explorer.ps1               # Default script
+    └── [custom scripts]           # Your own scripts
 ```
 
 ## 👨‍💻 For Developers
@@ -183,11 +183,11 @@ Source code is located in the `Source/` directory:
 
 ```
 Source/
-├── SandboxStart.ps1              # Main launcher
-├── Show-SandboxTestDialog.ps1    # GUI dialog
-├── Test-WindowsSandbox.ps1       # WSB detection/installation
-└── shared/                       # Submodule
-    └── SandboxTest.ps1           # Core functionality
+├── SandboxStart.ps1               # Main launcher
+├── Test-WindowsSandbox.ps1        # WSB detection/installation
+└── shared/                        # Submodule
+    └── SandboxTest.ps1            # Core sandbox function
+    └── Show-SandboxTestDialog.ps1 # GUI dialog
 ```
 
 To run from the repository:
