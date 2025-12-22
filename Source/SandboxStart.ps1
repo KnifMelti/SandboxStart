@@ -26,7 +26,11 @@ Add-Type -AssemblyName System.Drawing
 
 # Load required functions
 . "$WorkingDir\Test-WindowsSandbox.ps1"
-. "$WorkingDir\shared\SandboxTest.ps1"
+if (Test-Path "$WorkingDir\shared\SandboxTest.ps1") {
+    . "$WorkingDir\shared\SandboxTest.ps1"
+} else {
+    . "$WorkingDir\SandboxTest.ps1"
+}
 
 function Start-SandboxApplication {
     <#
@@ -43,7 +47,11 @@ function Start-SandboxApplication {
             throw "Windows Sandbox is required but not available."
         }
 
-        . "$WorkingDir\shared\Show-SandboxTestDialog.ps1"
+        if (Test-Path "$WorkingDir\shared\Show-SandboxTestDialog.ps1") {
+            . "$WorkingDir\shared\Show-SandboxTestDialog.ps1"
+        } else {
+            . "$WorkingDir\Show-SandboxTestDialog.ps1"
+        }
         
     }
     catch {
