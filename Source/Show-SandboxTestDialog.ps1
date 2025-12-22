@@ -1,8 +1,3 @@
-$Script:WorkingDir = $PSScriptRoot
-# Import required assemblies
-Add-Type -AssemblyName System.Drawing
-. $WorkingDir\shared\SandboxTest.ps1
-
 function Get-ScriptMappings {
 	<#
 	.SYNOPSIS

@@ -8,10 +8,6 @@
     Handles pending reboot scenarios.
 #>
 
-# Load Windows Forms assembly for MessageBox
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName PresentationFramework
-
 function Test-WindowsSandbox {
     <#
     .SYNOPSIS
@@ -39,15 +35,34 @@ function Test-WindowsSandbox {
     
     try {
         $sandboxExe = Join-Path $env:SystemRoot "System32\WindowsSandbox.exe"
-        
+
         if (Test-Path $sandboxExe) {
             # Windows Sandbox executable exists - ready to use
             Write-Verbose "Windows Sandbox is available at: $sandboxExe"
             return $true
         }
-        
-        # Executable missing - check feature state
+
+        # Executable missing - need to check feature state (requires admin rights)
         Write-Verbose "WindowsSandbox.exe not found, checking feature state..."
+
+        # Check for admin rights before attempting to query feature state
+        $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+        if (-not $isAdmin) {
+            $adminMessage = "Windows Sandbox is not installed.`n`n"
+            $adminMessage += "Administrator privileges are required to check and enable the Windows Sandbox feature.`n`n"
+            $adminMessage += "Please restart this program as administrator (right-click > Run as administrator)."
+
+            [void][System.Windows.Forms.MessageBox]::Show(
+                $adminMessage,
+                "Administrator Privileges Required",
+                [System.Windows.Forms.MessageBoxButtons]::OK,
+                [System.Windows.Forms.MessageBoxIcon]::Error
+            )
+
+            return $false
+        }
+
         $wsbFeature = Get-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -ErrorAction SilentlyContinue
         
         if ($wsbFeature -and $wsbFeature.State -eq 'Enabled') {
@@ -57,15 +72,14 @@ function Test-WindowsSandbox {
             $message = "Windows Sandbox feature is enabled but the executable is missing:`n$sandboxExe`n`n"
             $message += "A restart is required before it can be used.`n`nRestart now?"
             
-            $result = [System.Windows.MessageBox]::Show(
+            $result = [System.Windows.Forms.MessageBox]::Show(
                 $message,
                 "Restart Required",
-                [System.Windows.MessageBoxButton]::OKCancel,
-                [System.Windows.MessageBoxImage]::Information
+                [System.Windows.Forms.MessageBoxButtons]::OKCancel,
+                [System.Windows.Forms.MessageBoxIcon]::Information
             )
-            
-            if ($result -eq [System.Windows.MessageBoxResult]::OK) {
-                Write-Host "Restarting computer..." -ForegroundColor Yellow
+
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
                 Restart-Computer -Force
             }
             
@@ -78,40 +92,31 @@ function Test-WindowsSandbox {
             $message = "Windows Sandbox is not enabled (executable missing:`n$sandboxExe).`n`n"
             $message += "Enable the feature now? (Restart required after enabling)"
             
-            $result = [System.Windows.MessageBox]::Show(
+            $result = [System.Windows.Forms.MessageBox]::Show(
                 $message,
                 "Windows Sandbox Not Enabled",
-                [System.Windows.MessageBoxButton]::OKCancel,
-                [System.Windows.MessageBoxImage]::Question
+                [System.Windows.Forms.MessageBoxButtons]::OKCancel,
+                [System.Windows.Forms.MessageBoxIcon]::Question
             )
-            
-            if ($result -ne [System.Windows.MessageBoxResult]::OK) {
-                Write-Host "User cancelled Windows Sandbox installation." -ForegroundColor Yellow
+
+            if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
                 return $false
             }
             
             try {
-                Write-Host "Enabling Windows Sandbox feature (this can take a while)..." -ForegroundColor Cyan
-                
                 Enable-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -All -NoRestart -ErrorAction Stop | Out-Null
-                
-                Write-Host "Windows Sandbox feature enabled successfully!" -ForegroundColor Green
                 
                 $message = "Feature enabled. A restart is required before Windows Sandbox can be used.`n`nRestart now?"
                 
-                $rebootResult = [System.Windows.MessageBox]::Show(
+                $rebootResult = [System.Windows.Forms.MessageBox]::Show(
                     $message,
                     "Restart Required",
-                    [System.Windows.MessageBoxButton]::YesNo,
-                    [System.Windows.MessageBoxImage]::Question
+                    [System.Windows.Forms.MessageBoxButtons]::YesNo,
+                    [System.Windows.Forms.MessageBoxIcon]::Question
                 )
-                
-                if ($rebootResult -eq [System.Windows.MessageBoxResult]::Yes) {
-                    Write-Host "Restarting computer..." -ForegroundColor Yellow
+
+                if ($rebootResult -eq [System.Windows.Forms.DialogResult]::Yes) {
                     Restart-Computer -Force
-                }
-                else {
-                    Write-Host "Please restart your computer to complete Windows Sandbox installation." -ForegroundColor Yellow
                 }
                 
                 return $false
@@ -120,11 +125,11 @@ function Test-WindowsSandbox {
                 $errorMsg = "Failed to enable Windows Sandbox: $($_.Exception.Message)"
                 Write-Error $errorMsg
                 
-                [System.Windows.MessageBox]::Show(
+                [System.Windows.Forms.MessageBox]::Show(
                     $errorMsg,
                     "Enable Failed",
-                    [System.Windows.MessageBoxButton]::OK,
-                    [System.Windows.MessageBoxImage]::Error
+                    [System.Windows.Forms.MessageBoxButtons]::OK,
+                    [System.Windows.Forms.MessageBoxIcon]::Error
                 )
                 
                 return $false
@@ -135,11 +140,11 @@ function Test-WindowsSandbox {
         $errorMsg = "Error checking Windows Sandbox status: $($_.Exception.Message)"
         Write-Error $errorMsg
         
-        [System.Windows.MessageBox]::Show(
+        [System.Windows.Forms.MessageBox]::Show(
             $errorMsg,
             "Error",
-            [System.Windows.MessageBoxButton]::OK,
-            [System.Windows.MessageBoxImage]::Error
+            [System.Windows.Forms.MessageBoxButtons]::OK,
+            [System.Windows.Forms.MessageBoxIcon]::Error
         )
         
         return $false

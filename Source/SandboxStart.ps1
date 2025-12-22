@@ -20,10 +20,15 @@
 $ErrorActionPreference = 'Stop'
 $Script:WorkingDir = $PSScriptRoot
 
+# Import required assemblies
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName System.Drawing
+
 # Load required functions
-. "$PSScriptRoot\Test-WindowsSandbox.ps1"
-. "$PSScriptRoot\Show-SandboxTestDialog.ps1"
-. "$PSScriptRoot\shared\SandboxTest.ps1"
+. "$WorkingDir\Test-WindowsSandbox.ps1"
+. "$WorkingDir\Show-SandboxTestDialog.ps1"
+. "$WorkingDir\shared\SandboxTest.ps1"
 
 function Start-SandboxApplication {
     <#
@@ -37,8 +42,7 @@ function Start-SandboxApplication {
         
         if (-not $wsbReady) {
             # User cancelled or feature couldn't be enabled
-            Write-Host "Windows Sandbox is required but not available. Exiting." -ForegroundColor Yellow
-            exit 1
+            throw "Windows Sandbox is required but not available."
         }
         
         # Show configuration dialog in a loop to allow re-entry if version is invalid
@@ -114,9 +118,15 @@ function Start-SandboxApplication {
         exit 0
     }
     catch {
-        Write-Host "`nError: $($_.Exception.Message)" -ForegroundColor Red
-        Write-Host "Press any key to exit..." -ForegroundColor Yellow
-        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+        # Only show error dialog if it's not the "Sandbox not available" message (already shown graphically)
+        if ($_.Exception.Message -ne "Windows Sandbox is required but not available.") {
+            [System.Windows.Forms.MessageBox]::Show(
+                $_.Exception.Message,
+                "Error",
+                [System.Windows.Forms.MessageBoxButtons]::OK,
+                [System.Windows.Forms.MessageBoxIcon]::Error
+            )
+        }
         exit 1
     }
 }
