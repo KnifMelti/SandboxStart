@@ -51,7 +51,7 @@ function Test-WindowsSandbox {
         if (-not $isAdmin) {
             $adminMessage = "Windows Sandbox is not installed.`n`n"
             $adminMessage += "Administrator privileges are required to check and enable the Windows Sandbox feature.`n`n"
-            $adminMessage += "Please restart this program as administrator (right-click > Run as administrator)."
+            $adminMessage += "Please restart this script as administrator."
 
             [void][System.Windows.Forms.MessageBox]::Show(
                 $adminMessage,
