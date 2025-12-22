@@ -26,7 +26,6 @@ Add-Type -AssemblyName System.Drawing
 
 # Load required functions
 . "$WorkingDir\Test-WindowsSandbox.ps1"
-. "$WorkingDir\Show-SandboxTestDialog.ps1"
 . "$WorkingDir\shared\SandboxTest.ps1"
 
 function Start-SandboxApplication {
@@ -43,78 +42,9 @@ function Start-SandboxApplication {
             # User cancelled or feature couldn't be enabled
             throw "Windows Sandbox is required but not available."
         }
+
+        . "$WorkingDir\shared\Show-SandboxTestDialog.ps1"
         
-        # Show configuration dialog in a loop to allow re-entry if version is invalid
-        while ($true) {
-            $dialogResult = Show-SandboxTestDialog
-            
-            if (-not $dialogResult -or $dialogResult.DialogResult -ne 'OK') {
-                # User cancelled the dialog
-                Write-Host "Operation cancelled by user." -ForegroundColor Yellow
-                exit 0
-            }
-            
-            # Validate WinGet version if one was specified (skip validation if Pre-release is checked)
-            $versionValid = $true
-            if (![string]::IsNullOrWhiteSpace($dialogResult.WinGetVersion) -and -not $dialogResult.Prerelease) {
-                Write-Verbose "Validating WinGet version: $($dialogResult.WinGetVersion)"
-                $versionExists = Test-WinGetVersion -Version $dialogResult.WinGetVersion
-                
-                if (-not $versionExists) {
-                    $result = [System.Windows.Forms.MessageBox]::Show(
-                        "The specified WinGet version '$($dialogResult.WinGetVersion)' was not found in the GitHub repository.`n`nPlease choose an action:`n`nClick 'OK' to return to the configuration dialog and select a different version.`nClick 'Cancel' to exit the application.",
-                        "Invalid WinGet Version",
-                        [System.Windows.Forms.MessageBoxButtons]::OKCancel,
-                        [System.Windows.Forms.MessageBoxIcon]::Warning
-                    )
-                    
-                    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-                        # Continue the loop to show the dialog again
-                        $versionValid = $false
-                    } else {
-                        # User chose Cancel - exit the script
-                        Write-Host "Operation cancelled by user." -ForegroundColor Yellow
-                        exit 0
-                    }
-                }
-            }
-            
-            # If version is valid (or not specified), proceed with SandboxTest
-            if ($versionValid) {
-                break
-            }
-        }
-        
-        # Build parameters for SandboxTest
-        $sandboxParams = @{
-            MapFolder = $dialogResult.MapFolder
-            SandboxFolderName = $dialogResult.SandboxFolderName
-            Script = $dialogResult.Script
-        }
-        
-        # Add optional parameters if they have values
-        if (![string]::IsNullOrWhiteSpace($dialogResult.WinGetVersion)) {
-            $sandboxParams.WinGetVersion = $dialogResult.WinGetVersion
-        }
-        if (![string]::IsNullOrWhiteSpace($dialogResult.InstallPackageList)) {
-            $sandboxParams.InstallPackageList = $dialogResult.InstallPackageList
-        }
-        if ($dialogResult.Prerelease) { $sandboxParams.Prerelease = $true }
-        if ($dialogResult.Clean) { $sandboxParams.Clean = $true }
-        if ($dialogResult.Async) { $sandboxParams.Async = $true }
-        if ($dialogResult.Verbose) { $sandboxParams.Verbose = $true }
-        
-        # Execute SandboxTest
-        Write-Host "`nLaunching Windows Sandbox..." -ForegroundColor Cyan
-        SandboxTest @sandboxParams
-        
-        # Wait for key press if requested
-        if ($dialogResult.Wait) {
-            Write-Host "`nPress any key to exit..." -ForegroundColor Yellow
-            $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-        }
-        
-        exit 0
     }
     catch {
         # Only show error dialog if it's not the "Sandbox not available" message (already shown graphically)
