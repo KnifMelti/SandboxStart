@@ -62,7 +62,7 @@ The GUI dialog allows you to configure:
 
 ### 🔧 WinGet Options
 - **WinGet Version**: Use the drop-down list or leave blank for latest
-- **Prerelease**: Include pre-release WinGet versions
+- **Prerelease**: Use pre-release of WinGet
 - **Clean**: Clear cached dependencies before starting
 
 ### ⚡ Runtime Options
