@@ -21,6 +21,8 @@ Features automatic WinGet installation, script mapping system, and customizable 
 - 📦 **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
 - ⚙️ **Version Control** - Select specific WinGet versions or use pre-release builds
 - 📜 **Custom Scripts** - Create and save your own sandbox initialization scripts
+- 🖥️ **Sandbox Configuration** - Control network access, memory allocation, and GPU virtualization
+- 🧠 **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
 - 🌓 **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
 - 🔗 **Desktop Shortcuts** - Creates useful shortcut links (Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 
@@ -67,6 +69,11 @@ The GUI dialog allows you to configure:
 - **Async**: Launch sandbox and return immediately (don't wait for completion)
 - **Verbose**: Show detailed progress information
 - **Wait**: Wait for keypress before closing (useful for CLI scenarios)
+
+### 🖥️ Windows Sandbox Configuration
+- **Enable Networking**: Control network access in sandbox (required for WinGet downloads)
+- **Memory (MB)**: Allocate RAM to sandbox - dynamically calculated based on your system (max 75% of total RAM)
+- **GPU Virtualization**: Choose between hardware acceleration (Default/Enable) or software rendering (Disable)
 
 ### 📜 Script Configuration
 - **Script Editor**: PowerShell script to run after sandbox initialization
