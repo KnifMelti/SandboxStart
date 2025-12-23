@@ -66,9 +66,7 @@ The GUI dialog allows you to configure:
 - **Clean**: Clear cached dependencies before starting
 
 ### ⚡ Runtime Options
-- **Async**: Launch sandbox and return immediately (don't wait for completion)
-- **Verbose**: Show detailed progress information
-- **Wait**: Wait for keypress before closing PS window (useful for reading screen log)
+- **Verbose/Wait**: Show detailed progress information and wait for keypress before closing PS window (useful for reading screen log)
 
 ### 🖥️ WSB Configuration
 - **Enable Networking**: Control network access in sandbox (required for WinGet, if unchecked WinGet handling is skipped)
