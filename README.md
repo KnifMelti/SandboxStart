@@ -16,10 +16,10 @@ Features automatic WinGet installation, script mapping system, and customizable 
 
 - 🔧 **Auto-Installation** - Prompts to enable Windows Sandbox if not available
 - 🎯 **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters
-- 📁 **Folder/File Mapping** - Map any folder or select specific files to test
+- 📁 **Folder/File Mapping** - Map any folder or select specific file to test
 - 🎨 **Script Mapping System** - Automatic script selection based on file patterns
 - 📦 **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
-- ⚙️ **Version Control** - Select specific WinGet versions or use pre-release builds
+- ⚙️ **Version Control** - Select specific WinGet version or use pre-release build
 - 📜 **Custom Scripts** - Create and save your own sandbox initialization scripts
 - 🖥️ **WSB Configuration** - Control network access, memory allocation, and GPU virtualization
 - 🧠 **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
@@ -71,7 +71,7 @@ The GUI dialog allows you to configure:
 - **Wait**: Wait for keypress before closing PS window (useful for reading screen log)
 
 ### 🖥️ WSB Configuration
-- **Enable Networking**: Control network access in sandbox (required for WinGet downloads)
+- **Enable Networking**: Control network access in sandbox (required for WinGet, if unchecked WinGet handling is skipped)
 - **Memory (MB)**: Allocate RAM to sandbox - dynamically calculated based on your system (max 75% of total RAM)
 - **GPU Virtualization**: Choose between hardware acceleration (Default/Enable) or software rendering (Disable)
 
