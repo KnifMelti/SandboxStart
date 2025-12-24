@@ -63,12 +63,10 @@ The GUI dialog allows you to configure:
 ### 🔧 WinGet Options
 - **WinGet Version**: Use the drop-down list or leave blank for latest
 - **Prerelease**: Use pre-release of WinGet
-- **Clean**: Clear cached dependencies before starting
 
 ### ⚡ Runtime Options
-- **Async**: Launch sandbox and return immediately (don't wait for completion)
-- **Verbose**: Show detailed progress information
-- **Wait**: Wait for keypress before closing PS window (useful for reading screen log)
+- **Clean**: Clear cached dependencies before starting
+- **Verbose**: Show detailed progress information and wait for keypress before closing PS window
 
 ### 🖥️ WSB Configuration
 - **Enable Networking**: Control network access in sandbox (required for WinGet, if unchecked WinGet handling is skipped)
