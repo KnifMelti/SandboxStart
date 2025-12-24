@@ -60,44 +60,5 @@ function Start-SandboxApplication {
     }
 }
 
-function Test-WinGetVersion {
-    <#
-    .SYNOPSIS
-    Validates that a WinGet version exists
-    
-    .PARAMETER Version
-    Version string to validate (e.g., "1.7.10514", "v1.7.10514")
-    #>
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Version
-    )
-    
-    try {
-        $releasesUrl = 'https://api.github.com/repos/microsoft/winget-cli/releases?per_page=100'
-        $releases = Invoke-RestMethod -Uri $releasesUrl -UseBasicParsing -ErrorAction Stop
-        
-        # Normalize version (remove 'v' prefix if present)
-        $normalizedVersion = $Version.TrimStart('v')
-        
-        # Match against tag_name (which may or may not have 'v' prefix)
-        $versionPattern = '^v?' + [regex]::Escape($normalizedVersion)
-        $matchingRelease = $releases | Where-Object { $_.tag_name -match $versionPattern } | Select-Object -First 1
-        
-        if ($matchingRelease) {
-            Write-Verbose "Found matching release: $($matchingRelease.tag_name)"
-            return $true
-        } else {
-            Write-Verbose "No matching release found for version: $Version"
-            return $false
-        }
-    }
-    catch {
-        Write-Warning "Failed to validate WinGet version: $($_.Exception.Message)"
-        # On error, assume version might be valid (fail open)
-        return $true
-    }
-}
-
 # Main execution
 Start-SandboxApplication
