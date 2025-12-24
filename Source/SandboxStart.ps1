@@ -26,7 +26,7 @@ Add-Type -AssemblyName System.Drawing
 
 # Load required functions
 . "$WorkingDir\Test-WindowsSandbox.ps1"
-. "$WorkingDir\Ensure-StartMenuShortcut.ps1"
+. "$WorkingDir\Update-StartMenuShortcut.ps1"
 
 function Start-SandboxApplication {
     <#

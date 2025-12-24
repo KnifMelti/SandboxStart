@@ -7,7 +7,7 @@ function Update-StartMenuShortcut {
     Checks if SandboxStart.lnk exists in user's Start Menu.
     If it doesn't exist, creates it.
     If it exists, verifies the path matches current script location.
-    Uses SandboxStart.ico from the working directory.
+    Uses startmenu-icon.ico from the working directory.
 
     .PARAMETER WorkingDir
     The working directory where SandboxStart.ps1 is located
@@ -22,7 +22,7 @@ function Update-StartMenuShortcut {
         # Define paths
         $startMenuPath = [System.IO.Path]::Combine($env:APPDATA, 'Microsoft\Windows\Start Menu\Programs')
         $shortcutPath = Join-Path $startMenuPath 'SandboxStart.lnk'
-        $iconPath = Join-Path $WorkingDir 'SandboxStart.ico'
+        $iconPath = Join-Path $WorkingDir 'startmenu-icon.ico'
         $scriptPath = Join-Path $WorkingDir 'SandboxStart.ps1'
 
         # Expected target command
@@ -70,6 +70,7 @@ function Update-StartMenuShortcut {
 
         # Create or update shortcut if needed
         if ($needsUpdate) {
+            $wasCreated = -not (Test-Path $shortcutPath)
             Write-Verbose "Creating/updating shortcut at $shortcutPath"
 
             try {
@@ -90,6 +91,17 @@ function Update-StartMenuShortcut {
 
                 # Release COM object
                 [System.Runtime.Interopservices.Marshal]::ReleaseComObject($shell) | Out-Null
+
+                # Show message if shortcut was created for the first time
+                if ($wasCreated) {
+                    Add-Type -AssemblyName System.Windows.Forms
+                    [System.Windows.Forms.MessageBox]::Show(
+                        "A shortcut to SandboxStart has been created in the Start Menu.`n`nYou can now launch the application from the Start Menu.",
+                        "Shortcut Created",
+                        [System.Windows.Forms.MessageBoxButtons]::OK,
+                        [System.Windows.Forms.MessageBoxIcon]::Information
+                    ) | Out-Null
+                }
             }
             catch {
                 Write-Warning "Failed to create/update shortcut: $_"
