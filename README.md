@@ -12,73 +12,73 @@ Features automatic WinGet installation, script mapping system, and customizable 
 
 <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI Dialog" width="49%"> <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/List.png" alt="List editor" width="49%" align="top">
 
-## ✨ Features
+## Features
 
-- 🔧 **Auto-Installation** - Prompts to enable Windows Sandbox if not available
-- 🎯 **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters
-- 📁 **Folder/File Mapping** - Map any folder or select specific file to test
-- 🎨 **Script Mapping System** - Automatic script selection based on file patterns
-- 📦 **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
-- ⚙️ **Version Control** - Select specific WinGet version or use pre-release build
-- 📜 **Custom Scripts** - Create and save your own sandbox initialization scripts
-- 🖥️ **WSB Configuration** - Control network access, memory allocation, and GPU virtualization
-- 🧠 **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
-- 🌓 **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
-- 🔗 **Desktop Shortcuts** - Creates useful shortcut links (Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
+- **Auto-Installation** - Prompts to enable Windows Sandbox if not available
+- **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters
+- **Folder/File Mapping** - Map any folder or select specific file to test
+- **Script Mapping System** - Automatic script selection based on file patterns
+- **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
+- **Version Control** - Select specific WinGet version or use pre-release build
+- **Custom Scripts** - Create and save your own sandbox initialization scripts
+- **WSB Configuration** - Control network access, memory allocation, and GPU virtualization
+- **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
+- **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
+- **Desktop Shortcuts** - Creates useful shortcut links (Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 
-## 📋 Requirements
+## Requirements
 
 - Windows 10/11 **Pro, Enterprise, or Education**
 - Windows Sandbox feature (auto-prompt to install if missing)
 
-## 📦 Installation
+## Installation
 
 Download, unblock and extract the latest release: [SandboxStart-vX.X.X.X.zip](https://github.com/KnifMelti/SandboxStart//releases/latest)
 
-## 🚀 Quick Start
+## Quick Start
 
 ```powershell
 .\SandboxStart.ps1
 ```
 
 This will:
-1. ✅ Check if Windows Sandbox is available (prompt to install if not)
-2. 🎨 Show configuration dialog
-3. 🚀 Launch sandbox with your settings
+1. Check if Windows Sandbox is available (prompt to install if not)
+2. Show configuration dialog
+3. Launch sandbox with your settings
 
-## 🎮 Configuration Dialog
+## Configuration Dialog
 
 The GUI dialog allows you to configure:
 
-### 📁 Folder Mapping
+### Folder Mapping
 - **Map Folder**: Select a folder to map into the sandbox
 - **Sandbox Folder Name**: Name for the folder inside sandbox Desktop
 
-### 📄 File Selection
+### File Selection
 - **Browse File**: Select a specific file to run (automatically maps its parent folder)
 
-### 📦 Package Lists
+### Package Lists
 - **Install Package Lists**: Install predefined sets of applications via WinGet using custom package lists
 
-### 🔧 WinGet Options
+### WinGet Options
 - **WinGet Version**: Use the drop-down list or leave blank for latest
 - **Prerelease**: Use pre-release of WinGet
 
-### ⚡ Runtime Options
+### Runtime Options
 - **Clean**: Clear cached dependencies before starting
 - **Verbose**: Show detailed progress information and wait for keypress before closing PS window
 
-### 🖥️ WSB Configuration
+### WSB Configuration
 - **Enable Networking**: Control network access in sandbox (required for WinGet, if unchecked WinGet handling is skipped)
 - **Memory (MB)**: Allocate RAM to sandbox - dynamically calculated based on your system (max 75% of total RAM)
 - **GPU Virtualization**: Choose between hardware acceleration (Default/Enable) or software rendering (Disable)
 
-### 📜 Script Configuration
+### Script Configuration
 - **Script Editor**: PowerShell script to run after sandbox initialization
 - **Load**: Load saved custom scripts from `wsb\` directory
 - **Save**: Save current script for reuse
 
-## 🗺️ Script Mapping System
+## Script Mapping System
 
 SandboxStart automatically selects appropriate scripts based on folder contents using pattern matching defined in `wsb\script-mappings.txt`.
 
@@ -112,7 +112,7 @@ test-*.zip = ExtractAndTest.ps1
 
 All custom scripts have access to the `$SandboxFolderName` variable which contains the name of the mapped folder on the sandbox Desktop.
 
-## 💡 Examples
+## Examples
 
 ### Example 1: Test an Installer
 
@@ -163,7 +163,7 @@ In dialog:
 3. Click OK
 4. Sandbox runs the selected file
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 SandboxStart/
@@ -182,7 +182,7 @@ SandboxStart/
     └── [custom scripts]           # Your own scripts
 ```
 
-## 👨‍💻 For Developers
+## For Developers
 
 Source code is located in the `Source/` directory:
 
@@ -204,7 +204,7 @@ cd Source
 
 **Note:** Release ZIPs extract scripts to the root level (no Source/ folder for end users).
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Windows Sandbox Not Available
 
@@ -221,53 +221,53 @@ Restart-Computer
 
 ### Script Not Running in Sandbox
 
-- ✅ Check that script syntax is valid PowerShell
-- ✅ Verify `$SandboxFolderName` variable is used correctly
-- ✅ Try with `-Verbose` flag to see detailed execution
+- Check that script syntax is valid PowerShell
+- Verify `$SandboxFolderName` variable is used correctly
+- Try with `-Verbose` flag to see detailed execution
 
 ### WinGet Installation Fails
 
-- ✅ Check internet connection in sandbox
-- ✅ Try specifying a specific WinGet version
-- ✅ Use `-Clean` flag to clear cached dependencies
+- Check internet connection in sandbox
+- Try specifying a specific WinGet version
+- Use `-Clean` flag to clear cached dependencies
 
 ### Permission Errors
 
-- ✅ Ensure Windows Sandbox feature is fully installed
-- ✅ Check that mapped folders are accessible
+- Ensure Windows Sandbox feature is fully installed
+- Check that mapped folders are accessible
 
-## 🎯 Use Cases
+## Use Cases
 
 ### For Developers
-- 🧪 Test installers without polluting your system
-- 🔄 Test different WinGet package versions
-- 📦 Validate installation scripts
-- 🐛 Debug installation issues in clean environment
+- Test installers without polluting your system
+- Test different WinGet package versions
+- Validate installation scripts
+- Debug installation issues in clean environment
 
 ### For IT Professionals
-- 📋 Test deployment scripts in clean environment
-- ✅ Validate MSI/EXE installers before rollout
-- 🔍 Check for installation conflicts
-- 📊 Test software behavior with different registry settings
+- Test deployment scripts in clean environment
+- Validate MSI/EXE installers before rollout
+- Check for installation conflicts
+- Test software behavior with different registry settings
 
 ### For Package Maintainers
-- 📝 Test WinGet manifests
-- 🔄 Validate package updates
-- 🎯 Test different installation scenarios
-- 🧹 Verify clean uninstallation
+- Test WinGet manifests
+- Validate package updates
+- Test different installation scenarios
+- Verify clean uninstallation
 
-## 📚 Additional Resources
+## Additional Resources
 
 - [Windows Sandbox Overview](https://docs.microsoft.com/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview)
 - [WinGet Documentation](https://docs.microsoft.com/windows/package-manager/)
 - [Testing a Manifest in Windows Sandbox](https://github.com/microsoft/winget-pkgs/blob/master/doc/README.md#in-windows-sandbox) (Original inspiration)
 - [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) (Parent project)
 
-## 🙏 Credits
+## Credits
 
 - Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1)
 
-## ⭐ Show Your Support
+## Show Your Support
 
 If you find this tool useful, please consider giving it a star on GitHub!
 
