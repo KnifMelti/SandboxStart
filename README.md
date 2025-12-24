@@ -12,6 +12,8 @@ Features automatic WinGet installation, Start Menu shortcut, WSB configuration, 
 
 <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI Dialog" width="49%"> <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/List.png" alt="List editor" width="49%" align="top">
 
+<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Mappings.png" alt="Edit mappings">
+
 ## Features
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
@@ -22,7 +24,7 @@ Features automatic WinGet installation, Start Menu shortcut, WSB configuration, 
   - **Version Control** - Select specific WinGet version or use pre-release build
   - **WSB Configuration** - Control network access, memory allocation, and GPU virtualization
     - **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
-  - **Script Mapping System** - Automatic script selection based on file patterns
+  - **Script Mapping System** - Automatic script selection based on file patterns (editable script mappings)
     - **Custom Scripts** - Create and save your own sandbox initialization scripts
 - **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
 - **Desktop Shortcuts** - Creates useful shortcut links (Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
@@ -64,9 +66,9 @@ The GUI dialog allows you to configure:
 ### WinGet Options
 - **WinGet Version**: Use the drop-down list or leave blank for latest
 - **Prerelease**: Use pre-release of WinGet
+- **Clean**: Clear cached dependencies before starting
 
 ### Runtime Options
-- **Clean**: Clear cached dependencies before starting
 - **Verbose**: Show detailed progress information and wait for keypress before closing PS window
 
 ### WSB Configuration
