@@ -5,7 +5,7 @@
 # SandboxStart
 
 A standalone Windows Sandbox testing tool with GUI for easily testing applications, scripts, and installers in an isolated environment.<br>
-Features automatic WinGet installation, script mapping system, and customizable test scenarios.
+Features automatic WinGet installation, Start Menu shortcut, WSB configuration, script mapping system, and customizable test scenarios.
 
 > **Note:** This project was extracted from [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
 > It depends on the [SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**.
@@ -15,6 +15,7 @@ Features automatic WinGet installation, script mapping system, and customizable 
 ## Features
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
+- **Start Menu Shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run and when script folder is moved
 - **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters
 - **Folder/File Mapping** - Map any folder or select specific file to test
 - **Script Mapping System** - Automatic script selection based on file patterns
@@ -33,7 +34,7 @@ Features automatic WinGet installation, script mapping system, and customizable 
 
 ## Installation
 
-Download, unblock and extract the latest release: [SandboxStart-vX.X.X.X.zip](https://github.com/KnifMelti/SandboxStart//releases/latest)
+Download, unblock and extract the latest release: [SandboxStart-v#.#.#.#.zip](https://github.com/KnifMelti/SandboxStart//releases/latest)
 
 ## Quick Start
 
@@ -93,7 +94,7 @@ SandboxStart automatically selects appropriate scripts based on folder contents 
 
 ### Default Scripts
 
-Four predefined scripts are created automatically in the `wsb\` folder on first run (when detectied as needed):
+Four predefined scripts are created automatically in the `wsb\` folder on first run (when detected as needed):
 
 1. **InstallWSB.ps1** - Cleans logs, runs InstallWSB.cmd, opens folder
 2. **WinGetManifest.ps1** - Installs WinGet packages from manifest files  
