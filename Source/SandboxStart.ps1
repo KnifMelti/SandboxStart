@@ -26,7 +26,7 @@ Add-Type -AssemblyName System.Drawing
 
 # Load required functions
 . "$WorkingDir\Test-WindowsSandbox.ps1"
-. "$WorkingDir\shared\SandboxTest.ps1"
+. "$WorkingDir\Ensure-StartMenuShortcut.ps1"
 
 function Start-SandboxApplication {
     <#
@@ -37,12 +37,16 @@ function Start-SandboxApplication {
     try {
         # Check Windows Sandbox availability
         $wsbReady = Test-WindowsSandbox
-        
+
         if (-not $wsbReady) {
             # User cancelled or feature couldn't be enabled
             throw "Windows Sandbox is required but not available."
         }
 
+        # Ensure Start Menu shortcut exists and is up to date
+        Update-StartMenuShortcut -WorkingDir $WorkingDir
+
+        . "$WorkingDir\shared\SandboxTest.ps1"
         . "$WorkingDir\shared\Show-SandboxTestDialog.ps1"
         
     }
