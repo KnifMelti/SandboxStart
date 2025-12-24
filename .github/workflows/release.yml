@@ -32,7 +32,9 @@ jobs:
         # Copy PowerShell scripts from Source/ to root of release ZIP
         $scriptsFromSource = @(
           'SandboxStart.ps1',
-          'Test-WindowsSandbox.ps1'
+          'Test-WindowsSandbox.ps1',
+          'Update-StartMenuShortcut.ps1',
+          'startmenu-icon.ico'
         )
 
         foreach ($script in $scriptsFromSource) {
