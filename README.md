@@ -168,7 +168,9 @@ In dialog:
 ```
 SandboxStart/
 ├── SandboxStart.ps1               # Main launcher
+├── startmenu-icon.ico             # Icon for shortcut
 ├── Test-WindowsSandbox.ps1        # WSB detection/installation
+├── Update-StartMenuShortcut.ps1   # Manages shortcut creation/updating
 ├── README.md                      # This file
 ├── shared/                        # Submodule
 |   └── SandboxTest.ps1            # Core sandbox function
@@ -189,7 +191,9 @@ Source code is located in the `Source/` directory:
 ```
 Source/
 ├── SandboxStart.ps1               # Main launcher
+├── startmenu-icon.ico             # Icon for shortcut
 ├── Test-WindowsSandbox.ps1        # WSB detection/installation
+├── Update-StartMenuShortcut.ps1   # Manages shortcut creation/updating
 └── shared/                        # Submodule
     └── SandboxTest.ps1            # Core sandbox function
     └── Show-SandboxTestDialog.ps1 # GUI dialog
