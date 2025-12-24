@@ -12,8 +12,6 @@ Features automatic WinGet installation, Start Menu shortcut, WSB configuration, 
 
 <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI Dialog" width="49%"> <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/List.png" alt="List editor" width="49%" align="top">
 
-<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Mappings.png" alt="Edit mappings">
-
 ## Features
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
@@ -84,6 +82,8 @@ The GUI dialog allows you to configure:
 ## Script Mapping System
 
 SandboxStart automatically selects appropriate scripts based on folder contents using pattern matching defined in `wsb\script-mappings.txt`.
+
+<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Mappings.png" alt="Edit mappings">
 
 ### Default Mappings
 
