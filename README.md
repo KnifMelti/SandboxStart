@@ -17,13 +17,13 @@ Features automatic WinGet installation, Start Menu shortcut, WSB configuration, 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
 - **Start Menu Shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run and when script folder is moved
 - **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters
-- **Folder/File Mapping** - Map any folder or select specific file to test
-- **Script Mapping System** - Automatic script selection based on file patterns
-- **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
-- **Version Control** - Select specific WinGet version or use pre-release build
-- **Custom Scripts** - Create and save your own sandbox initialization scripts
-- **WSB Configuration** - Control network access, memory allocation, and GPU virtualization
-- **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
+  - **Folder/File Mapping** - Map any folder or select specific file to test
+  - **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
+  - **Version Control** - Select specific WinGet version or use pre-release build
+  - **WSB Configuration** - Control network access, memory allocation, and GPU virtualization
+    - **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
+  - **Script Mapping System** - Automatic script selection based on file patterns
+    - **Custom Scripts** - Create and save your own sandbox initialization scripts
 - **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
 - **Desktop Shortcuts** - Creates useful shortcut links (Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 
