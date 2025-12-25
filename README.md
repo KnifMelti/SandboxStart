@@ -15,7 +15,7 @@ Features automatic WinGet installation, Start Menu shortcut, WSB configuration, 
 ## Features
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
-- **Start Menu Shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run and if script folder is moved or got updated (then `SandboxStart.ps1` must be manually started from the new location/version to make the shortcut appear again)
+- **Start Menu Shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run and if script folder is moved (then `SandboxStart.ps1` must be manually started from the new location)
 - **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters:
   - **Folder/File Mapping** - Map any folder or select specific file to test
   - **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
@@ -94,7 +94,7 @@ Relevant script is automatically created in the `wsb\` folder (then editable) wh
 
 | Pattern | Script | Description |
 |---------|--------|-------------|
-| `InstallWSB.cmd` | InstallWSB.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** and opens folder |
+| `InstallWSB.cmd` | InstallWSB.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** (from [WAU Settings GUI](https://github.com/KnifMelti/WAU-Settings-GUI)) and opens folder |
 | `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs **WinGet** packages from local manifest |
 | `Install.*` | Installer.ps1 | Searches for and runs common installer files |
 | `*.*` | Explorer.ps1 | Opens mapped folder in Explorer (fallback) |
