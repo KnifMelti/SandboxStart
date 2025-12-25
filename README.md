@@ -99,7 +99,7 @@ SandboxStart automatically selects appropriate scripts based on folder contents 
 
 ### Default Scripts
 
-Four predefined scripts are created automatically in the `wsb\` folder when detected as needed:
+Four predefined scripts are created automatically in the `wsb\` folder when detected as needed (script mappings):
 
 1. **InstallWSB.ps1** - Cleans logs, runs InstallWSB.cmd, opens folder
 2. **WinGetManifest.ps1** - Installs WinGet packages from manifest files  
