@@ -110,7 +110,7 @@ myapp-*.exe = CustomInstaller.ps1
 test-*.zip = ExtractAndTest.ps1
 ```
 
-All custom scripts have access to the `$SandboxFolderName` variable which contains the name of the mapped folder on the sandbox Desktop.
+All custom scripts have access to the `$SandboxFolderName` variable which contains the full path to the mapped folder on the sandbox Desktop.
 
 ## Examples
 
