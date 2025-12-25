@@ -23,13 +23,17 @@ jobs:
       run: |
         $version = "${{ github.ref_name }}"
         
-        $tempPath = Join-Path ([System.IO.Path]::GetTempPath()) "SandboxStart-$version"
+        $tempPath = Join-Path ([System.IO.Path]::GetTempPath()) "SandboxStart-$version-temp"
         if (Test-Path $tempPath) {
           Remove-Item $tempPath -Recurse -Force
         }
         New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
         
-        # Copy PowerShell scripts from Source/ to root of release ZIP
+        # Create SandboxStart subfolder inside temp directory
+        $releaseFolder = Join-Path $tempPath "SandboxStart"
+        New-Item -ItemType Directory -Path $releaseFolder -Force | Out-Null
+        
+        # Copy PowerShell scripts from Source/ to SandboxStart folder
         $scriptsFromSource = @(
           'SandboxStart.ps1',
           'Test-WindowsSandbox.ps1',
@@ -40,26 +44,23 @@ jobs:
         foreach ($script in $scriptsFromSource) {
           $sourcePath = Join-Path "Source" $script
           if (Test-Path $sourcePath) {
-            Copy-Item $sourcePath -Destination $tempPath -Force
+            Copy-Item $sourcePath -Destination $releaseFolder -Force
           }
         }
 
         # Copy README from root
         if (Test-Path "README.md") {
-          Copy-Item "README.md" -Destination $tempPath -Force
+          Copy-Item "README.md" -Destination $releaseFolder -Force
         }
 
-        # Copy shared submodule to shared/ in release ZIP
-        $sharedDest = Join-Path $tempPath "shared"
+        # Copy shared submodule to shared/ in SandboxStart folder
+        $sharedDest = Join-Path $releaseFolder "shared"
         New-Item -ItemType Directory -Path $sharedDest -Force | Out-Null
         Copy-Item "Source\shared\SandboxTest.ps1" -Destination $sharedDest -Force
         Copy-Item "Source\shared\Show-SandboxTestDialog.ps1" -Destination $sharedDest -Force
-        if (Test-Path "Source\shared\README.md") {
-          Copy-Item "Source\shared\README.md" -Destination $sharedDest -Force
-        }
         
         if (Test-Path "LICENSE") {
-          Copy-Item "LICENSE" -Destination $tempPath -Force
+          Copy-Item "LICENSE" -Destination $releaseFolder -Force
         }
         
         Compress-Archive -Path "$tempPath\*" -DestinationPath "SandboxStart-$version.zip" -Force
