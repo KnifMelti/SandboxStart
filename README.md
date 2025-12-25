@@ -44,8 +44,10 @@ Download, unblock and extract the latest release: [SandboxStart-v#.#.#.#.zip](ht
 
 This will:
 1. Check if Windows Sandbox is available (prompt to install if not and restart after prompt)
-2. Show configuration dialog
-3. Launch sandbox with your settings
+2. Install a shortcut in Start Menu
+3. Start from the shortcut
+4. Show configuration dialog
+5. Launch sandbox with your settings
 
 ## Configuration Dialog
 
@@ -79,12 +81,11 @@ The GUI dialog allows you to configure:
   - **[Load...]**: Load saved custom scripts from `wsb\` directory
   - **[Save]**: Save current script for reuse
   - **[Save as...]**: Save current script as new file for reuse
+  - **[...]**: Edit mappings...
 
 ## Script Mapping System
 
-SandboxStart automatically selects appropriate scripts based on folder contents using pattern matching defined in `wsb\script-mappings.txt`.
-
-- **[...]**:
+SandboxStart automatically selects appropriate scripts based on folder contents using pattern matching defined in `wsb\script-mappings.txt`:
 
 <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Mappings.png" alt="Edit mappings">
 
