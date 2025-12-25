@@ -25,7 +25,7 @@ Features automatic WinGet installation, Start Menu shortcut, WSB configuration, 
   - **Script Mapping System** - Automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - Create and save your own sandbox initialization scripts
 - **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
-- **Desktop Shortcuts** - Creates useful shortcut links (Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
+- **Desktop Shortcuts** - Creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 
 ## Requirements
 
