@@ -90,7 +90,7 @@ SandboxStart automatically selects appropriate scripts based on folder contents 
 
 ### Default Mappings/Scripts
 
-Relevant script is automatically created in the `wsb\` folder when a pattern is detected:
+Relevant script is automatically created in the `wsb\` folder (then editable) when a pattern is detected:
 
 | Pattern | Script | Description |
 |---------|--------|-------------|
