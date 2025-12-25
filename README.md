@@ -62,7 +62,7 @@ The GUI dialog allows you to configure:
 - **Install Package Lists**: Install predefined sets of applications via WinGet using custom package lists
 
 ### WinGet Options
-- **WinGet Version**: Use the drop-down list or leave blank for latest
+- **WinGet Version**: Use the drop-down list (dynamically populated) or leave blank for latest
 - **Prerelease**: Use pre-release of WinGet
 - **Clean**: Clear cached dependencies before starting
 
