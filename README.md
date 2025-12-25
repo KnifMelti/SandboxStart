@@ -93,7 +93,7 @@ SandboxStart automatically selects appropriate scripts based on folder contents 
 | Pattern | Script | Description |
 |---------|--------|-------------|
 | `InstallWSB.cmd` | InstallWSB.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** and opens folder |
-| `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs **WinGet** local manifest |
+| `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs **WinGet** packages from local manifest |
 | `Install.*` | Installer.ps1 | Searches for and runs installer files |
 | `*.*` | Explorer.ps1 | Opens mapped folder in Explorer (fallback) |
 
@@ -102,7 +102,7 @@ SandboxStart automatically selects appropriate scripts based on folder contents 
 Four predefined scripts are created automatically in the `wsb\` folder when detected as needed (script mappings):
 
 1. **InstallWSB.ps1** - Cleans logs, runs InstallWSB.cmd, opens folder
-2. **WinGetManifest.ps1** - Installs WinGet packages from manifest files  
+2. **WinGetManifest.ps1** - Validates/installs WinGet packages from local manifest files  
 3. **Installer.ps1** - Searches for common installer files and runs them
 4. **Explorer.ps1** - Simply opens the mapped folder
 
