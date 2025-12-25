@@ -84,7 +84,8 @@ The GUI dialog allows you to configure:
 
 SandboxStart automatically selects appropriate scripts based on folder contents using pattern matching defined in `wsb\script-mappings.txt`.
 
-Button **...**:
+- **[...]**:
+
 <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Mappings.png" alt="Edit mappings">
 
 ### Default Mappings
