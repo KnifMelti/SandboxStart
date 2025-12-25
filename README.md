@@ -15,7 +15,7 @@ Features automatic WinGet installation, Start Menu shortcut, WSB configuration, 
 ## Features
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
-- **Start Menu Shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run and when script folder is moved (`SandboxStart.ps1` must then manually be started from the new location)
+- **Start Menu Shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run and if script folder is moved (then `SandboxStart.ps1` must be manually started from the new location)
 - **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters
   - **Folder/File Mapping** - Map any folder or select specific file to test
   - **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
