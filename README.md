@@ -43,7 +43,7 @@ Download, unblock and extract the latest release: [SandboxStart-v#.#.#.#.zip](ht
 ```
 
 This will:
-1. Check if Windows Sandbox is available (prompt to install if not)
+1. Check if Windows Sandbox is available (prompt to install if not and restart)
 2. Show configuration dialog
 3. Launch sandbox with your settings
 
@@ -78,6 +78,7 @@ The GUI dialog allows you to configure:
 - **Script Editor**: PowerShell script to run after sandbox initialization
 - **Load**: Load saved custom scripts from `wsb\` directory
 - **Save**: Save current script for reuse
+- **Save as**: Save current script as new file for reuse
 
 ## Script Mapping System
 
@@ -96,7 +97,7 @@ SandboxStart automatically selects appropriate scripts based on folder contents 
 
 ### Default Scripts
 
-Four predefined scripts are created automatically in the `wsb\` folder on first run (when detected as needed):
+Four predefined scripts are created automatically in the `wsb\` folder when detected as needed:
 
 1. **InstallWSB.ps1** - Cleans logs, runs InstallWSB.cmd, opens folder
 2. **WinGetManifest.ps1** - Installs WinGet packages from manifest files  
@@ -107,7 +108,7 @@ Four predefined scripts are created automatically in the `wsb\` folder on first 
 
 Create your own scripts in the `wsb\` folder and add mappings to `script-mappings.txt`:
 
-```ini
+```
 # Custom mapping example
 myapp-*.exe = CustomInstaller.ps1
 test-*.zip = ExtractAndTest.ps1
@@ -161,7 +162,7 @@ In dialog:
 ```
 
 In dialog:
-1. Click "File..." to select a specific `.exe`, `.cmd`, or `.ps1`
+1. Click "File..." to select a specific `.exe`, `.bat` `.cmd`, `.js` or `.ps1`q 
 2. Script automatically generates appropriate execution command
 3. Click OK
 4. Sandbox runs the selected file
