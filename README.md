@@ -16,13 +16,13 @@ Features automatic WinGet installation, Start Menu shortcut, WSB configuration, 
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
 - **Start Menu Shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run and if script folder is moved (then `SandboxStart.ps1` must be manually started from the new location)
-- **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters
+- **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters:
   - **Folder/File Mapping** - Map any folder or select specific file to test
   - **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
   - **Version Control** - Select specific WinGet version or use pre-release build
-  - **WSB Configuration** - Control network access, memory allocation, and GPU virtualization
+  - **WSB Configuration** - Control network access, memory allocation, and GPU virtualization:
     - **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
-  - **Script Mapping System** - Automatic script selection based on file patterns (editable script mappings)
+  - **Script Mapping System** - Automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - Create and save your own sandbox initialization scripts
 - **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
 - **Desktop Shortcuts** - Creates useful shortcut links (Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
@@ -43,7 +43,7 @@ Download, unblock and extract the latest release: [SandboxStart-v#.#.#.#.zip](ht
 ```
 
 This will:
-1. Check if Windows Sandbox is available (prompt to install if not and restart)
+1. Check if Windows Sandbox is available (prompt to install if not and restart after prompt)
 2. Show configuration dialog
 3. Launch sandbox with your settings
 
@@ -75,15 +75,16 @@ The GUI dialog allows you to configure:
 - **GPU Virtualization**: Choose between hardware acceleration (Default/Enable) or software rendering (Disable)
 
 ### Script Configuration
-- **Script Editor**: PowerShell script to run after sandbox initialization
-- **Load**: Load saved custom scripts from `wsb\` directory
-- **Save**: Save current script for reuse
-- **Save as**: Save current script as new file for reuse
+- **Script Editor**: PowerShell script to run after sandbox initialization:
+  - **Load...**: Load saved custom scripts from `wsb\` directory
+  - **Save**: Save current script for reuse
+  - **Save as...**: Save current script as new file for reuse
 
 ## Script Mapping System
 
 SandboxStart automatically selects appropriate scripts based on folder contents using pattern matching defined in `wsb\script-mappings.txt`.
 
+Button **...**:
 <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Mappings.png" alt="Edit mappings">
 
 ### Default Mappings
@@ -220,7 +221,7 @@ SandboxStart will automatically prompt to:
 1. Enable the Windows Sandbox feature
 2. Restart the computer
 
-**Manual installation:**
+**Manual installation of WSB:**
 
 ```powershell
 Enable-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -All
