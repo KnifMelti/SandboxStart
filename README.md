@@ -97,7 +97,7 @@ Relevant script is automatically created in the `wsb\` folder (then editable) wh
 |---------|--------|-------------|
 | `InstallWSB.cmd` | InstallWSB.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** (from [WAU Settings GUI](https://github.com/KnifMelti/WAU-Settings-GUI)) and opens folder |
 | `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs **WinGet** packages from local manifest |
-| `*.*` | Installer.ps1 | Universal smart installer - detects and runs installers (Install.*, Setup.*, Installer.msi, etc.) with built-in priority, opens Explorer if none found |
+| `*.*` | Installer.ps1 | Universal smart installer - detects and runs installers (`Install.*`, `Setup.*`, `Installer.msi`, etc.) with built-in priority, opens Explorer if none found |
 
 ### Custom Scripts
 
