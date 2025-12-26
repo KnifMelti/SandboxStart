@@ -44,7 +44,7 @@ Download, unblock and extract the latest release: [SandboxStart-v#.#.#.#.zip](ht
 
 This will:
 1. Install a shortcut in Start Menu
-2. Check if Windows Sandbox is available (prompt to install if not and restart after prompt)
+2. Check if Windows Sandbox is available (prompt to install if not and reboot after prompt)
 3. Start from the shortcut
 4. Show configuration dialog
 5. Launch sandbox with your settings
