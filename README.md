@@ -43,8 +43,8 @@ Download, unblock and extract the latest release: [SandboxStart-v#.#.#.#.zip](ht
 ```
 
 This will:
-1. Check if Windows Sandbox is available (prompt to install if not and restart after prompt)
-2. Install a shortcut in Start Menu
+1. Install a shortcut in Start Menu
+2. Check if Windows Sandbox is available (prompt to install if not and restart after prompt)
 3. Start from the shortcut
 4. Show configuration dialog
 5. Launch sandbox with your settings
@@ -116,10 +116,6 @@ All custom scripts have access to the `$SandboxFolderName` variable which contai
 
 ### Example 1: Test an Installer
 
-```powershell
-.\SandboxStart.ps1
-```
-
 In dialog:
 1. Browse to folder containing `Setup.exe`
 2. Script auto-selects "Installer.ps1"
@@ -127,10 +123,6 @@ In dialog:
 4. Sandbox launches and runs the installer
 
 ### Example 2: Test WinGet Manifest
-
-```powershell
-.\SandboxStart.ps1
-```
 
 In dialog:
 1. Browse to folder containing `.installer.yaml` files
@@ -140,10 +132,6 @@ In dialog:
 
 ### Example 3: Custom Script Execution
 
-```powershell
-.\SandboxStart.ps1
-```
-
 In dialog:
 1. Browse to your test folder
 2. Edit script or load custom script
@@ -152,10 +140,6 @@ In dialog:
 5. Sandbox executes your custom script
 
 ### Example 4: Test Specific File
-
-```powershell
-.\SandboxStart.ps1
-```
 
 In dialog:
 1. Click "File..." to select a specific `.exe`, `.bat` `.cmd`, `.js` or `.ps1`q 
