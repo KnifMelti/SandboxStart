@@ -4,7 +4,7 @@
 
 # SandboxStart
 
-A standalone Windows Sandbox testing tool with GUI for easily testing applications, scripts, and installers in an isolated environment.<br>
+A Windows Sandbox (**WSB**) testing tool for easily testing applications, scripts, and installers in an isolated environment.<br>
 Features automatic WinGet installation, Start Menu shortcut, WSB configuration, script mapping system, and customizable test scenarios.
 
 > **Note:** This project was extracted from [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
