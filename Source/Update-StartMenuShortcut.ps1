@@ -5,7 +5,7 @@ function Update-StartMenuShortcut {
 
     .DESCRIPTION
     Checks if SandboxStart.lnk exists in user's Start Menu.
-    If it doesn't exist, creates it.
+    If it doesn't exist, creates it and returns true (indicating it was created to restart from it).
     If it exists, verifies the path matches current script location.
     Uses startmenu-icon.ico from the working directory.
 
@@ -31,6 +31,7 @@ function Update-StartMenuShortcut {
 
         # Check if shortcut exists
         $needsUpdate = $false
+        $wasCreated = $false
 
         if (Test-Path $shortcutPath) {
             # Shortcut exists - verify it points to correct location
@@ -91,17 +92,6 @@ function Update-StartMenuShortcut {
 
                 # Release COM object
                 [System.Runtime.Interopservices.Marshal]::ReleaseComObject($shell) | Out-Null
-
-                # Show message if shortcut was created for the first time
-                if ($wasCreated) {
-                    Add-Type -AssemblyName System.Windows.Forms
-                    [System.Windows.Forms.MessageBox]::Show(
-                        "A shortcut to SandboxStart has been created in the Start Menu.`n`nYou can now launch the application from the Start Menu.",
-                        "Shortcut Created",
-                        [System.Windows.Forms.MessageBoxButtons]::OK,
-                        [System.Windows.Forms.MessageBoxIcon]::Information
-                    ) | Out-Null
-                }
             }
             catch {
                 Write-Warning "Failed to create/update shortcut: $_"
@@ -113,4 +103,6 @@ function Update-StartMenuShortcut {
         Write-Error "Error in Ensure-StartMenuShortcut: $_"
         throw
     }
+
+    return $wasCreated
 }

@@ -28,6 +28,24 @@ Add-Type -AssemblyName System.Drawing
 . "$WorkingDir\Test-WindowsSandbox.ps1"
 . "$WorkingDir\Update-StartMenuShortcut.ps1"
 
+# Ensure Start Menu shortcut exists and is up to date
+$shortcutWasCreated = Update-StartMenuShortcut -WorkingDir $WorkingDir
+
+# If shortcut was just created, restart from the shortcut to show custom icon in taskbar
+if ($shortcutWasCreated) {
+    [System.Windows.Forms.MessageBox]::Show(
+        "A shortcut to SandboxStart has been created in the Start Menu.`n`nThe script will now restart to display the custom icon in taskbar.",
+        "Shortcut Created",
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Information
+    ) | Out-Null
+
+    # Launch from the shortcut and exit
+    $shortcutPath = [System.IO.Path]::Combine($env:APPDATA, 'Microsoft\Windows\Start Menu\Programs\SandboxStart.lnk')
+    Start-Process -FilePath $shortcutPath
+    exit
+}
+
 function Start-SandboxApplication {
     <#
     .SYNOPSIS
@@ -42,9 +60,6 @@ function Start-SandboxApplication {
             # User cancelled or feature couldn't be enabled
             throw "Windows Sandbox is required but not available."
         }
-
-        # Ensure Start Menu shortcut exists and is up to date
-        Update-StartMenuShortcut -WorkingDir $WorkingDir
 
         . "$WorkingDir\shared\SandboxTest.ps1"
         . "$WorkingDir\shared\Show-SandboxTestDialog.ps1"

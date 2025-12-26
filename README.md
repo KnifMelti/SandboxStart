@@ -5,7 +5,7 @@
 # SandboxStart
 
 A Windows Sandbox (**WSB**) testing tool for easily testing applications, scripts, and installers in an isolated environment.<br>
-Features automatic WinGet installation, Start Menu shortcut, WSB configuration, script mapping system, and customizable test scenarios.
+Features automatic WinGet installation, follow-script-location shortcut, WSB configuration, script mapping system, and customizable test scenarios.
 
 > **Note:** This project was extracted from [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
 > It depends on the [SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**.
@@ -15,7 +15,7 @@ Features automatic WinGet installation, Start Menu shortcut, WSB configuration, 
 ## Features
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
-- **Start Menu Shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run and if script folder is moved (then `SandboxStart.ps1` must be manually started from the new location)
+- **Follow-script-location shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run and if script folder is moved (then `SandboxStart.ps1` must be manually started from the new location)
 - **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters:
   - **Folder/File Mapping** - Map any folder or select specific file to test
   - **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
