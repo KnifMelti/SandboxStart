@@ -97,8 +97,7 @@ Relevant script is automatically created in the `wsb\` folder (then editable) wh
 |---------|--------|-------------|
 | `InstallWSB.cmd` | InstallWSB.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** (from [WAU Settings GUI](https://github.com/KnifMelti/WAU-Settings-GUI)) and opens folder |
 | `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs **WinGet** packages from local manifest |
-| `Install.*` | Installer.ps1 | Searches for and runs common installer files |
-| `*.*` | Explorer.ps1 | Opens mapped folder in Explorer (fallback) |
+| `*.*` | Installer.ps1 | Universal smart installer - detects and runs installers (Install.*, Setup.*, Installer.*, *.msi, etc.) with built-in priority, opens Explorer if none found |
 
 ### Custom Scripts
 
@@ -163,8 +162,7 @@ SandboxStart/
     ├── script-mappings.txt        # Pattern→Script mappings (created at first run)
     ├── InstallWSB.ps1             # Default script (created at folder file match)
     ├── WinGetManifest.ps1         # Default script (             "              )
-    ├── Installer.ps1              # Default script (             "              )
-    ├── Explorer.ps1               # Default script (        fallback *.*        )
+    ├── Installer.ps1              # Universal smart installer detector & fallback (*.*)
     └── [custom scripts]           # Your own scripts
 ```
 
