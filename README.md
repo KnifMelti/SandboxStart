@@ -79,7 +79,7 @@ The GUI dialog allows you to configure:
 ### Script Configuration
 - **Script Editor**: PowerShell script to run after sandbox initialization:
   - [&#x270E;]: Edit mappings...
-  - [Load...]: Load saved custom scripts from `wsb\` directory
+  - [Load...]: Load scripts from `wsb\` directory
   - [Save]: Save current script for reuse (not default scripts)
   - [Save as...]: Save current script as new file for reuse
   - [X]: Clear editor
