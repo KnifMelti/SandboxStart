@@ -91,13 +91,15 @@ SandboxStart automatically selects appropriate scripts based on folder contents 
 
 ### Default Mappings/Scripts
 
-Relevant script is automatically created in the `wsb\` folder (then editable) when a pattern is detected:
+Default scripts are automatically downloaded from GitHub and loaded when a pattern is detected:
 
 | Pattern | Script | Description |
 |---------|--------|-------------|
 | `InstallWSB.cmd` | InstallWSB.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** (from [WAU Settings GUI](https://github.com/KnifMelti/WAU-Settings-GUI)) and opens folder |
 | `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs **WinGet** packages from local manifest |
 | `*.*` | Installer.ps1 | Universal smart installer - detects and runs installers (`Install.*`, `Setup.*`, `Installer.msi`, etc.) with built-in priority, opens Explorer if none found |
+
+**Note:** Default scripts are read-only in the GUI. To customize behavior, create your own script and add a mapping (see Custom Scripts below).
 
 ### Custom Scripts
 
