@@ -92,7 +92,7 @@ SandboxStart automatically selects appropriate scripts based on folder contents 
 
 ### Default Scripts/Mappings
 
-Default scripts are automatically downloaded from GitHub and loaded when a pattern is detected and if the file is no the same:
+Default scripts are automatically downloaded from GitHub and loaded when a pattern is detected and if the file is not the same:
 
 | Pattern | Script | Description |
 |---------|--------|-------------|
@@ -100,7 +100,7 @@ Default scripts are automatically downloaded from GitHub and loaded when a patte
 | `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs a **WinGet** package from local manifest |
 | `*.*` | Installer.ps1 | Universal smart installer - detects and runs installers (`Install.*`, `Setup.*`, `Installer.msi`, etc.) with built-in priority, opens Explorer if none found |
 
-> **Note:** Default scripts can't be saved in the GUI, only saved as....<br>
+> **Note:** Default scripts can't be saved in the GUI, only saved as...<br>
 > To customize behavior, create your own script and add/edit the mappings (see Custom Scripts below).
 
 ### Custom Scripts
