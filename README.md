@@ -78,6 +78,7 @@ The GUI dialog allows you to configure:
 
 ### Script Configuration
 - **Script Editor**: PowerShell script to run after sandbox initialization:
+  - **[X]**: Clear script editor
   - **[Load...]**: Load saved custom scripts from `wsb\` directory
   - **[Save]**: Save current script for reuse
   - **[Save as...]**: Save current script as new file for reuse
@@ -99,7 +100,7 @@ Default scripts are automatically downloaded from GitHub and loaded when a patte
 | `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs **WinGet** packages from local manifest |
 | `*.*` | Installer.ps1 | Universal smart installer - detects and runs installers (`Install.*`, `Setup.*`, `Installer.msi`, etc.) with built-in priority, opens Explorer if none found |
 
-**Note:** Default scripts are read-only in the GUI. To customize behavior, create your own script and add a mapping (see Custom Scripts below).
+**Note:** Default scripts are read-only in the GUI. To customize behavior, create your own script and add/edit the mappings (see Custom Scripts below).
 
 ### Custom Scripts
 
@@ -109,6 +110,7 @@ Create your own scripts in the `wsb\` folder and add mappings to `script-mapping
 # Custom mapping example
 myapp-*.exe = CustomInstaller.ps1
 test-*.zip = ExtractAndTest.ps1
+*.* = MyInstaller.ps1
 ```
 
 All custom scripts have access to the `$SandboxFolderName` variable which contains the full path to the mapped folder on the sandbox Desktop.
@@ -126,7 +128,7 @@ In dialog:
 ### Example 2: Test WinGet Manifest
 
 In dialog:
-1. Browse to folder containing `.installer.yaml` files
+1. Browse to folder containing `*.installer.yaml` file
 2. Script auto-selects "WinGetManifest.ps1"
 3. Click OK
 4. Sandbox launches and validates/installs package from manifest
@@ -143,7 +145,7 @@ In dialog:
 ### Example 4: Test Specific File
 
 In dialog:
-1. Click "File..." to select a specific `.exe`, `.bat` `.cmd`, `.js` or `.ps1`q 
+1. Click "File..." to select a specific `.exe`, `.bat` `.cmd`, `.js` or `.ps1`
 2. Script automatically generates appropriate execution command
 3. Click OK
 4. Sandbox runs the selected file
