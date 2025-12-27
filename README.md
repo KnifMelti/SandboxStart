@@ -97,10 +97,11 @@ Default scripts are automatically downloaded from GitHub and loaded when a patte
 | Pattern | Script | Description |
 |---------|--------|-------------|
 | `InstallWSB.cmd` | InstallWSB.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** (from [WAU Settings GUI](https://github.com/KnifMelti/WAU-Settings-GUI)) and opens folder |
-| `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs **WinGet** packages from local manifest |
+| `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs a **WinGet** package from local manifest |
 | `*.*` | Installer.ps1 | Universal smart installer - detects and runs installers (`Install.*`, `Setup.*`, `Installer.msi`, etc.) with built-in priority, opens Explorer if none found |
 
-**Note:** Default scripts are read-only in the GUI. To customize behavior, create your own script and add/edit the mappings (see Custom Scripts below).
+> **Note:** Default scripts are read-only in the GUI.<br>
+> To customize behavior, create your own script and add/edit the mappings (see Custom Scripts below).
 
 ### Custom Scripts
 
@@ -128,10 +129,10 @@ In dialog:
 ### Example 2: Test WinGet Manifest
 
 In dialog:
-1. Browse to folder containing `*.installer.yaml` file
+1. Browse to folder containing a `*.installer.yaml` file
 2. Script auto-selects "WinGetManifest.ps1"
 3. Click OK
-4. Sandbox launches and validates/installs package from manifest
+4. Sandbox launches and validates/installs the package from manifest
 
 ### Example 3: Custom Script Execution
 
