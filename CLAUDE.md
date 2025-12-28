@@ -163,6 +163,27 @@ This two-phase initialization prevents shortcuts from breaking due to unknown in
 - This ensures compatibility within Windows Sandbox environment
 - GitHub default scripts are stored with CRLF endings
 
+**Converting files to CRLF (if created with LF):**
+
+If a file was created with Unix line endings (LF), convert it to Windows CRLF using PowerShell:
+
+```powershell
+cd "e:\WinGet\SandboxStart\Source\wsb"
+Get-Content FileName.txt | Set-Content -Encoding ASCII FileName_temp.txt
+Move-Item -Force FileName_temp.txt FileName.txt
+```
+
+Or using bash (if unix2dos available):
+```bash
+cd "e:\WinGet\SandboxStart\Source\wsb" && unix2dos FileName.txt
+```
+
+Verify correct line endings:
+```bash
+file FileName.txt
+# Should output: ASCII text, with CRLF line terminators
+```
+
 ## Key Variables
 
 ### In SandboxTest.ps1
