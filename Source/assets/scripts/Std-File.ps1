@@ -22,6 +22,6 @@ elseif ($extension -eq '.ps1') {
 	Start-Process powershell.exe -ArgumentList "-File `"$env:USERPROFILE\Desktop\$SandboxFolderName\$FileName`""
 }
 else {
-	# Default: Try to run directly using Start-Process with file association
+	# Default: Try to run directly using Start-Process with file association (*.js, *.msi, etc.)
 	Start-Process "$env:USERPROFILE\Desktop\$SandboxFolderName\$FileName" -WorkingDirectory "$env:USERPROFILE\Desktop\$SandboxFolderName"
 }
