@@ -104,7 +104,7 @@ Default scripts are automatically downloaded from GitHub and loaded when a patte
 
 ### Custom Scripts
 
-Create your own scripts in the `wsb\` folder and add/edit mappings to `script-mappings.txt`:
+Create your own scripts in the `wsb\` folder and add/edit mappings to/in `script-mappings.txt`:
 
 ```
 # Custom mapping example
