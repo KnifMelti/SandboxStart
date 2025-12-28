@@ -3,8 +3,7 @@ $sandboxPath = "$env:USERPROFILE\Desktop\$SandboxFolderName"
 
 # Look for installer files (priority order)
 # Opens Explorer if none found
-# Note: Get-ChildItem -Filter is case-insensitive on Windows
-# "Setup.exe" will match Setup.exe, setup.exe, SETUP.EXE, etc.
+
 $installers = @(
 	"Install.cmd",
 	"Install.bat",
@@ -17,6 +16,7 @@ $installers = @(
 	"Install.msi",
 	"Installer.msi"
 )
+
 $found = $null
 foreach ($file in $installers) {
 	$matchedFiles = Get-ChildItem -Path $sandboxPath -Filter $file -File -ErrorAction SilentlyContinue
@@ -27,13 +27,21 @@ foreach ($file in $installers) {
 }
 
 if ($found) {
-	if ($found -like "*.cmd" -or $found -like "*.bat") {
-		Start-Process cmd.exe -ArgumentList "/c cd /d `"$sandboxPath`" && `"$found`""
-	} elseif ($found -like "*.msi") {
-		Start-Process msiexec.exe -ArgumentList "/i `"$sandboxPath\$found`""
-	} else {
-		Start-Process "$sandboxPath\$found" -WorkingDirectory $sandboxPath
+	$extension = [System.IO.Path]::GetExtension($found).ToLower()
+	$fullFilePath = Join-Path $sandboxPath $found
+	
+	switch ($extension) {
+		{ $_ -in @('.cmd', '.bat') } {
+			# CMD/BAT: Execute via cmd.exe with proper working directory
+			Start-Process cmd.exe -ArgumentList "/c cd /d `"$sandboxPath`" && `"$found`""
+		}
+		default {
+			# Default: Direct execution with working directory
+			# Works for: .exe, .msi, etc.
+			Start-Process $fullFilePath -WorkingDirectory $sandboxPath
+		}
 	}
 } else {
+	# No installer found, open Explorer
 	Start-Process explorer.exe -ArgumentList "`"$sandboxPath`""
 }
