@@ -15,7 +15,7 @@ Features automatic WinGet installation, follow-script-location shortcut, WSB con
 ## Features
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
-- **Follow-script-location shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run/if script folder is moved (then `SandboxStart.ps1` must be manually started from the new location)
+- **Follow-script-location shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run/if script folder is moved (then `SandboxStart.ps1` must be manually started from the new location again)
 - **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters:
   - **Folder/File Mapping** - Map any folder or select specific file to test
   - **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
