@@ -100,7 +100,9 @@ When a folder is selected in the GUI, the script mapping system:
 
 ### Shared Utilities (Common-Helpers.ps1)
 
-Located in `Source/shared/Common-Helpers.ps1`, provides 8 utility functions to reduce code duplication:
+**Status:** Planned but not yet implemented.
+
+Located in `Source/shared/Common-Helpers.ps1`, will provide 8 utility functions to reduce code duplication:
 
 - `Ensure-DirectoryExists` - Creates directory if missing
 - `Write-AsciiFile` - Writes ASCII-encoded files
@@ -198,7 +200,6 @@ $sandboxPath = "$env:USERPROFILE\Desktop\MyTestFolder"
 2. Use `$SandboxFolderName` variable (will be replaced at runtime)
 3. Add mapping to `Source/wsb/script-mappings.txt`
 4. Upload script to GitHub releases as asset (for automatic download)
-5. Update GUI logic in `Show-SandboxTestDialog.ps1` to recognize the new pattern
 
 ### Modifying the GUI Dialog
 
