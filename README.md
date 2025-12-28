@@ -38,9 +38,8 @@ Download, unblock and extract the latest release: [SandboxStart-v#.#.#.#.zip](ht
 
 ## Quick Start
 
-```powershell
-.\SandboxStart.ps1
-```
+1. Right click on `SandboxStart.ps1`
+2. Run with PowerShell
 
 This will:
 1. Install a shortcut in Start Menu
@@ -113,8 +112,6 @@ myapp-*.exe = CustomInstaller.ps1
 test-*.zip = ExtractAndTest.ps1
 *.* = MyInstaller.ps1
 ```
-
-All custom scripts have access to the `$SandboxFolderName` variable which contains the full path to the mapped folder on the sandbox Desktop.
 
 ## Examples
 
@@ -221,7 +218,7 @@ Restart-Computer
 
 - Check internet connection in sandbox
 - Try specifying a specific WinGet version
-- Use `-Clean` flag to clear cached dependencies
+- Use the option: **Clear (cached dependencies)**
 
 ### Permission Errors
 
