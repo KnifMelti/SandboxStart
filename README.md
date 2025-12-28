@@ -96,9 +96,9 @@ Default scripts are automatically downloaded from GitHub and loaded when a patte
 
 | Pattern | Script | Description |
 |---------|--------|-------------|
-| `InstallWSB.cmd` | InstallWSB.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** (from [WAU Settings GUI](https://github.com/KnifMelti/WAU-Settings-GUI)) and opens folder |
-| `*.installer.yaml` | WinGetManifest.ps1 | Validates/installs a **WinGet** package from local manifest |
-| `*.*` | Installer.ps1 | Universal smart installer - detects and runs installers (`Install.*`, `Setup.*`, `Installer.msi`, etc.) with built-in priority, opens Explorer if none found |
+| `InstallWSB.cmd` | Std-WAU.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** (from [WAU Settings GUI](https://github.com/KnifMelti/WAU-Settings-GUI)) and opens folder |
+| `*.installer.yaml` | Std-Manifest.ps1 | Validates/installs a **WinGet** package from local manifest |
+| `*.*` | Std-Install.ps1 | Universal smart installer - detects and runs installers (`Install.*`, `Setup.*`, `Installer.msi`, etc.) with built-in priority, opens Explorer if none found |
 
 > **Note:** Default scripts can't be saved in the GUI, only saved as...<br>
 > To customize behavior, create your own script and add/edit the mappings (see Custom Scripts below).
@@ -122,7 +122,7 @@ All custom scripts have access to the `$SandboxFolderName` variable which contai
 
 In dialog:
 1. Browse to folder containing `Setup.exe`
-2. Script auto-selects "Installer.ps1"
+2. Script auto-selects "Std-Install.ps1"
 3. Click OK
 4. Sandbox launches and runs the installer
 
@@ -130,7 +130,7 @@ In dialog:
 
 In dialog:
 1. Browse to folder containing a `*.installer.yaml` file
-2. Script auto-selects "WinGetManifest.ps1"
+2. Script auto-selects "Std-Manifest.ps1"
 3. Click OK
 4. Sandbox launches and validates/installs the package from manifest
 
@@ -165,9 +165,10 @@ SandboxStart/
 |   └── Show-SandboxTestDialog.ps1 # GUI dialog
 └── wsb/                           # Created at first run
     ├── script-mappings.txt        # Pattern→Script mappings (created at first run)
-    ├── InstallWSB.ps1             # Default script (created at folder file match)
-    ├── WinGetManifest.ps1         # Default script (             "              )
-    ├── Installer.ps1              # Universal smart installer detector & fallback (*.*)
+    ├── Std-WAU.ps1                # Default script (created at folder file match)
+    ├── Std-Manifest.ps1           # Default script (             "              )
+    ├── Std-Install.ps1            # Universal smart installer detector & fallback (*.*)
+    ├── Std-File.ps1               # Default script for direct file execution
     └── [custom scripts]           # Your own scripts
 ```
 
