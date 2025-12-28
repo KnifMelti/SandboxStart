@@ -87,11 +87,11 @@ The GUI dialog allows you to configure:
 
 SandboxStart automatically selects appropriate scripts based on folder contents using pattern matching defined in `wsb\script-mappings.txt`:
 
-<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Mappings.png" alt="Edit mappings">
+<img src="https://github.com/KnifMelti/SandboxStart/tree/master/Source/assets/Mappings.png" alt="Edit mappings">
 
 ### Default Scripts/Mappings
 
-Default scripts are **automatically downloaded from** [GitHub](https://github.com/KnifMelti/SandboxStart/tree/master/Source/assets/scripts) (if the files differ - via API) and loaded when a pattern is detected:
+Default scripts are **automatically downloaded from** [GitHub](https://github.com/KnifMelti/SandboxStart/tree/master/Source/assets/scripts) (via API if the files differ) and loaded when a pattern is detected:
 
 | Pattern | Script | Description |
 |---------|--------|-------------|
