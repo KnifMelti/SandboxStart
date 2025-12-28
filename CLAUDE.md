@@ -194,12 +194,13 @@ $sandboxPath = "$env:USERPROFILE\Desktop\MyTestFolder"
 
 ## Common Development Tasks
 
-### Adding a New Default Script
+### Modifying a Default/adding a new Script
 
-1. Create script in `Source/assets/scripts/ScriptName.ps1`
+1. Edit the script in `Source/assets/scripts/ScriptName.ps1`
 2. Use `$SandboxFolderName` variable (will be replaced at runtime)
 3. Add mapping to `Source/wsb/script-mappings.txt`
 4. Upload script to GitHub releases as asset (for automatic download)
+5. For adding a new Default Script the code in project must be modified too
 
 ### Modifying the GUI Dialog
 
