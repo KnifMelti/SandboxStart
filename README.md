@@ -91,7 +91,7 @@ SandboxStart automatically selects appropriate scripts based on folder contents 
 
 ### Default Scripts/Mappings
 
-Default scripts are automatically downloaded from GitHub and loaded when a pattern is detected and if the file is not the same:
+Default scripts are **automatically downloaded from GitHub** and loaded when a pattern is detected and if the file is not the same:
 
 | Pattern | Script | Description |
 |---------|--------|-------------|
