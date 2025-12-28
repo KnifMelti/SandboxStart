@@ -149,9 +149,9 @@ In dialog:
 4. Click OK
 5. Sandbox installs dependencies (if needed) and runs the selected file
 
-**Note:** To enable auto-installation for `.ahk` or `.py` files, create package list files:
-- `wsb\AHK.txt` containing `AutoHotkey.AutoHotkey`
-- `wsb\Python.txt` containing `Python.Python.3.13`
+> **Note:** To enable auto-installation for `.ahk` or `.py` files, create package list files:
+> - `wsb\AHK.txt` containing `AutoHotkey.AutoHotkey`
+> - `wsb\Python.txt` containing `Python.Python.3.13`
 
 ## Project Structure
 
