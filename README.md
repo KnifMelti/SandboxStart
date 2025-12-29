@@ -24,6 +24,7 @@ Features automatic WinGet installation, follow-script-location shortcut, WSB con
     - **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
   - **Script Mapping System** - Automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - Create and save your own sandbox initialization scripts
+- **Updates** check/notifications
 - **Dark Mode Sync** - Automatically syncs dark mode from host to Windows Sandbox (and Notepad++ if later installed in **WSB**)
 - **Desktop Shortcuts** - Creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 
