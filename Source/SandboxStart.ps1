@@ -27,6 +27,7 @@ Add-Type -AssemblyName System.Drawing
 # Load required functions
 . "$WorkingDir\Test-WindowsSandbox.ps1"
 . "$WorkingDir\Update-StartMenuShortcut.ps1"
+. "$WorkingDir\shared\GitHub-ApiHelper.ps1"
 
 # Ensure Start Menu shortcut exists and is up to date
 $shortcutWasCreated = Update-StartMenuShortcut -WorkingDir $WorkingDir

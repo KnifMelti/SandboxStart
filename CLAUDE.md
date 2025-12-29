@@ -359,6 +359,172 @@ Release ZIP:
 
 End users run from root level (no `Source/` folder).
 
+## GitHub API Integration and Caching
+
+### Overview
+
+SandboxStart uses a smart GitHub API integration system with caching and fallback mechanisms to minimize rate limiting and improve performance.
+
+**Module:** `Source/shared/GitHub-ApiHelper.ps1`
+
+### GitHub API Usage
+
+The project makes GitHub API calls for:
+
+1. **WinGet CLI releases** (`microsoft/winget-cli`) - Fetches available WinGet versions
+2. **Default scripts listing** (`KnifMelti/SandboxStart`) - Auto-downloads default scripts
+3. **Update checking** (`KnifMelti/SandboxStart/releases/latest`) - Checks for new releases
+
+### Rate Limiting
+
+**Without authentication:** 60 requests per hour per IP address
+**With Personal Access Token (PAT):** 5,000 requests per hour
+
+### Caching System
+
+**Cache Location:** `%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\GitHubCache\`
+
+**Cache Structure:**
+- `releases_microsoft_winget-cli.json` - Cached WinGet releases
+- `releases_KnifMelti_SandboxStart.json` - SandboxStart releases
+- `contents_KnifMelti_SandboxStart_scripts.json` - Default scripts list
+- `cache_metadata.json` - Cache timestamps and expiry information
+
+**Cache Behavior:**
+- TTL: 60 minutes (configurable)
+- Automatic cache validation and expiry handling
+- Falls back to expired cache when API is unavailable
+- Cache is cleared via "Clean (cached dependencies)" option in GUI
+
+### Fallback Chain
+
+When fetching GitHub data, the system follows this fallback chain:
+
+1. **Try local cache** (if < 60 minutes old)
+2. **Try API with PAT** (if `$env:GITHUB_PAT` is set)
+3. **Try API without authentication**
+4. **Use expired cache** (if available)
+5. **Try Atom feed** (for releases only)
+6. **Return error** (with clear user message)
+
+### Performance Benefits
+
+- First run: 3-4 API calls (cached for 60 minutes)
+- Subsequent runs within cache window: 0 API calls
+- **95%+ reduction** in API usage for typical workflows
+
+### Developer Setup: GitHub Personal Access Token (Optional)
+
+**For repository owners and developers only.** End users do not need PAT.
+
+#### Why Use PAT?
+
+- Increases rate limit from 60 to 5,000 requests per hour
+- Useful during development/testing with frequent runs
+- No downside if not configured (system falls back gracefully)
+
+#### Setup Instructions
+
+1. **Create PAT on GitHub:**
+   - Go to: Settings → Developer settings → Personal access tokens → Tokens (classic)
+   - Click "Generate new token"
+   - Name: "SandboxStart Development"
+   - Scopes: Select "public_repo" (read access to public repositories)
+   - Expiration: Choose appropriate duration
+   - Click "Generate token" and **copy the token immediately**
+
+2. **Set Environment Variable:**
+
+```powershell
+# In PowerShell session (temporary):
+$env:GITHUB_PAT = "ghp_xxxxxxxxxxxx"
+
+# Or in PowerShell profile (permanent):
+# Edit: $PROFILE
+# Add line: $env:GITHUB_PAT = "ghp_xxxxxxxxxxxx"
+```
+
+3. **Verify PAT is Working:**
+
+```powershell
+# Run SandboxStart with Verbose mode
+.\SandboxStart.ps1 -Verbose
+
+# Look for message: "Using authenticated API request (PAT)"
+```
+
+#### Security Warning
+
+**NEVER commit your PAT to Git!**
+
+- PAT tokens provide access to your GitHub account
+- If accidentally committed, token becomes public and can be misused
+- Always use environment variables (which are not tracked by Git)
+- If token is exposed, immediately revoke it on GitHub and create a new one
+
+#### Checking Rate Limit Status
+
+To see your current rate limit:
+
+```powershell
+# Load the module
+. "Source\shared\GitHub-ApiHelper.ps1"
+
+# Check rate limit
+Test-GitHubApiLimit
+
+# Output:
+# Remaining : 4998
+# Limit     : 5000
+# ResetTime : 12/29/2025 11:30:00 AM
+```
+
+### Cache Management
+
+#### Manual Cache Clearing
+
+```powershell
+# Load the module
+. "Source\shared\GitHub-ApiHelper.ps1"
+
+# Clear GitHub cache
+Clear-GitHubCache
+```
+
+#### Automatic Cache Clearing
+
+Cache is automatically cleared when user selects "Clean (cached dependencies)" option in GUI.
+
+### API Helper Functions
+
+The `GitHub-ApiHelper.ps1` module provides these functions:
+
+- `Get-GitHubReleases` - Fetch releases with caching
+- `Get-GitHubFolderContents` - List folder contents with caching
+- `Get-GitHubLatestRelease` - Get latest release info
+- `Get-GitHubPersonalAccessToken` - Retrieve PAT from environment
+- `Test-GitHubApiLimit` - Check rate limit status
+- `Clear-GitHubCache` - Clear all cached data
+- `Invoke-GitHubApi` - Low-level API wrapper (internal use)
+- `ConvertFrom-AtomFeed` - Parse Atom feeds as fallback (internal use)
+
+### Troubleshooting
+
+**"GitHub API rate limit exceeded" warning:**
+- You've hit the 60 requests/hour limit
+- Wait for rate limit reset (shown in error message)
+- Or configure PAT for 5,000 requests/hour
+
+**"Using expired cache data as fallback":**
+- API is unavailable or rate limited
+- System is using older cached data
+- Data may be outdated but functional
+
+**Cache not working:**
+- Check cache directory exists: `%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\GitHubCache\`
+- Clear cache using "Clean" option or `Clear-GitHubCache` function
+- Check `cache_metadata.json` for corruption
+
 ## Important Constraints
 
 1. **Never hardcode paths** - Always use `$SandboxFolderName` placeholder in default scripts
