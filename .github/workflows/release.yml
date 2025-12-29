@@ -56,7 +56,7 @@ jobs:
         # Copy shared submodule to shared/ in SandboxStart folder
         $sharedDest = Join-Path $releaseFolder "shared"
         New-Item -ItemType Directory -Path $sharedDest -Force | Out-Null
-        Copy-Item "Source\shared\GitHub-ApiHelper.ps1" -Destination $sharedDest -Force
+        Copy-Item "Source\shared\Shared-Helpers.ps1" -Destination $sharedDest -Force
         Copy-Item "Source\shared\SandboxTest.ps1" -Destination $sharedDest -Force
         Copy-Item "Source\shared\Show-SandboxTestDialog.ps1" -Destination $sharedDest -Force
         
