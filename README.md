@@ -10,7 +10,7 @@ Features automatic WinGet installation, follow-script-location shortcut, WSB con
 > **Note:** This project was extracted from [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
 > It depends on the [SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**.
 
-<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI Dialog" title="Custom Theme Hacker Terminal" width="49%"> <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/List.png" alt="List editor" title="Custom Theme Hacker Terminal" width="49%" align="top">
+<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI Dialog" title="Custom Theme: Hacker Terminal" width="49%"> <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/List.png" alt="List editor" title="Custom Theme: Hacker Terminal" width="49%" align="top">
 
 ## Features
 
@@ -37,7 +37,7 @@ Features automatic WinGet installation, follow-script-location shortcut, WSB con
 
 ## Installation
 
-Download, unblock and extract the latest release: [SandboxStart-v#.#.#.#.zip](https://github.com/KnifMelti/SandboxStart//releases/latest)
+Download, unblock and extract the latest release: [SandboxStart-v#.#.#.#.zip](https://github.com/KnifMelti/SandboxStart/releases/latest)
 
 ## Quick Start
 
@@ -90,7 +90,7 @@ The GUI dialog allows you to configure:
 
 SandboxStart automatically selects appropriate scripts based on folder contents using pattern matching defined in `wsb\script-mappings.txt`:
 
-<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Mappings.png" alt="Edit mappings" title="Custom Theme Hacker Terminal">
+<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Mappings.png" alt="Edit mappings" title="Custom Theme: Hacker Terminal">
 
 ### Default Scripts/Mappings
 
