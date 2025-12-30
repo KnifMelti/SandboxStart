@@ -146,10 +146,11 @@ In dialog:
 
 In dialog:
 1. Click "File..." to select a specific file (`.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js`)
-2. Script automatically generates appropriate execution command
-3. For `.ahk` or `.py` files: Auto-selects required package list if networking enabled
-4. Click OK
-5. Sandbox installs dependencies (if needed) and runs the selected file
+    1. Change to `All Files (*.*)` if you want to let **Windows** decide what to start it with (`.reg`...)
+3. Script automatically generates appropriate execution command
+4. For `.ahk` or `.py` files: Auto-selects required package list if networking enabled
+5. Click OK
+6. Sandbox installs dependencies (if needed) and runs the selected file
 
 > **Note:** To enable auto-installation for `.ahk` or `.py` files, create package list files:
 > - `wsb\AHK.txt` containing `AutoHotkey.AutoHotkey`
