@@ -27,7 +27,6 @@ Add-Type -AssemblyName System.Drawing
 # Load required functions
 . "$WorkingDir\Test-WindowsSandbox.ps1"
 . "$WorkingDir\Update-StartMenuShortcut.ps1"
-. "$WorkingDir\shared\Shared-Helpers.ps1"
 
 # Ensure Start Menu shortcut exists and is up to date
 $shortcutWasCreated = Update-StartMenuShortcut -WorkingDir $WorkingDir
@@ -63,6 +62,7 @@ function Start-SandboxApplication {
         }
 
         . "$WorkingDir\shared\SandboxTest.ps1"
+        . "$WorkingDir\shared\Shared-Helpers.ps1"
         . "$WorkingDir\shared\Show-SandboxTestDialog.ps1"
         
     }
