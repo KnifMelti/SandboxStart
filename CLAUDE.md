@@ -217,6 +217,104 @@ Edit `Source/shared/Show-SandboxTestDialog.ps1`. Key sections:
 - Default script download logic (`Download-DefaultScript`)
 - Form validation and parameter building for `SandboxTest` call
 
+#### Important Considerations for GUI Form Modifications
+
+The GUI form includes automatic high-DPI scaling support (see PR #6). When modifying the form layout, keep these constraints in mind:
+
+**Form Size and Layout Variables:**
+- Form size: `465×740` pixels (width × height)
+- Control width: `$controlWidth = 409` pixels
+- Left margin: `$leftMargin = 20` pixels
+- Right margin: ~20 pixels (calculated to keep controls centered)
+
+**High-DPI Scrollbar System:**
+
+The form includes automatic vertical scrollbar support that activates when the form exceeds the screen's working area (at >125% DPI scaling). Key implementation details:
+
+1. **Form.Load Event Handler** (lines ~3324-3374):
+   - Captures final Y position: `$finalY = $y`
+   - Detects screen WorkingArea (excludes taskbar)
+   - Automatically resizes form if it exceeds available screen height
+   - Enables AutoScroll with calculated `AutoScrollMinSize`
+   - Prevents horizontal scrollbar by subtracting scrollbar width (17px)
+
+2. **Form.Shown Event Handler** (lines ~3376-3385):
+   - Force-hides horizontal scrollbar after rendering
+   - Calls `PerformLayout()` to refresh layout
+
+**When Adding Controls Vertically:**
+
+If you add new controls that increase the `$y` position (vertical stacking):
+
+```powershell
+# Example: Adding a new control
+$lblNewControl = New-Object System.Windows.Forms.Label
+$lblNewControl.Location = New-Object System.Drawing.Point($leftMargin, $y)
+$lblNewControl.Size = New-Object System.Drawing.Size($controlWidth, $labelHeight)
+$lblNewControl.Text = "New Control:"
+$form.Controls.Add($lblNewControl)
+$y += $labelHeight + 5
+
+$txtNewControl = New-Object System.Windows.Forms.TextBox
+$txtNewControl.Location = New-Object System.Drawing.Point($leftMargin, $y)
+$txtNewControl.Size = New-Object System.Drawing.Size($controlWidth, $controlHeight)
+$form.Controls.Add($txtNewControl)
+$y += $controlHeight + $spacing + 10  # This increases $y
+```
+
+**Considerations:**
+- The `$finalY` variable automatically captures the final Y position before buttons
+- Content height is calculated as: `$contentHeight = $finalY + 50` (button Y + height + margin)
+- If you add many controls, consider increasing `Form.Size` height from 740 to a larger value
+- Alternatively, accept that scrollbar will appear at lower DPI levels
+
+**When Modifying Control Width:**
+
+If you change `$controlWidth`:
+
+- Formula to maintain centered layout: `ClientSize.Width ≈ $leftMargin + $controlWidth + scrollBarWidth (17) + margin (5)`
+- Current: `449px ≈ 20 + 409 + 17 + 5 = 451px` (fits with 2px tolerance)
+- If you increase `$controlWidth` beyond 412px, horizontal scrollbar may appear
+- If you decrease `$controlWidth`, increase form width or accept wider right margin
+
+**When Modifying Form Width:**
+
+If you change `Form.Size` width from 465:
+
+- Adjust `$controlWidth` to maintain equal left/right margins
+- Formula: `$controlWidth = ClientSize.Width - $leftMargin - rightMargin - scrollBarWidth - tolerance`
+- Example: For 20px margins: `$controlWidth = ClientWidth - 20 - 20 - 17 - 5`
+
+**Testing Checklist After GUI Modifications:**
+
+Always test at multiple DPI scaling levels:
+
+```powershell
+# Test at these DPI levels:
+# - 100% (1920×1080): No scrollbar expected
+# - 125%: No scrollbar expected
+# - 150%: Vertical scrollbar should appear
+# - 175%: Vertical scrollbar should appear
+
+# Verify:
+□ No horizontal scrollbar at any DPI level
+□ All controls visible and accessible via scrolling
+□ Controls remain centered (equal left/right margins)
+□ Form doesn't exceed screen height at any DPI level
+```
+
+**Quick Reference: Current Layout Dimensions**
+
+```
+Form Size:           465×740 pixels
+ClientSize:          ~449×701 pixels (at 100% DPI)
+Control Width:       409 pixels
+Left Margin:         20 pixels
+Right Margin:        ~20 pixels
+Scrollbar Width:     17 pixels (when visible)
+Content Height:      ~700 pixels (calculated from $finalY + 50)
+```
+
 ### Debugging Sandbox Execution
 
 1. Use `-Verbose` parameter in GUI to see detailed output
