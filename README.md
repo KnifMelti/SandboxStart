@@ -12,6 +12,8 @@ Features automatic WinGet installation, follow-script-location shortcut, WSB con
 
 <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI Dialog" width="49%"> <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/List.png" alt="List editor" width="49%" align="top">
 
+![Alt text](https://private-user-images.githubusercontent.com/102996177/531088430-0a6f1ec4-4736-4c99-9114-08dbf88963e9.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjcxMjcwMTEsIm5iZiI6MTc2NzEyNjcxMSwicGF0aCI6Ii8xMDI5OTYxNzcvNTMxMDg4NDMwLTBhNmYxZWM0LTQ3MzYtNGM5OS05MTE0LTA4ZGJmODg5NjNlOS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUxMjMwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MTIzMFQyMDMxNTFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT03YTE0NzM3YTk3OTUzYjJlMjU0OGQwZGI4MzUwODI3ZWRkOTE0NzliMzc5M2FiYzdhNGFhOTJjYzU4NDhkNGQ4JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.tAOPhTFHqtsXuF0XJZqJucVih64ZBSeu6L2X1Qm8Hnk)
+
 ## Features
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
