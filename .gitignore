@@ -1,6 +1,7 @@
 # Runtime-generated directories
 wsb/
 test_download/
+themes
 .claude/
 
 # Windows Sandbox configuration files (generated at runtime)
