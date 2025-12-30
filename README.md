@@ -25,7 +25,7 @@ Features automatic WinGet installation, follow-script-location shortcut, WSB con
   - **Script Mapping System** - Automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - Create and save your own sandbox initialization scripts
 - **Updates** check/notifications
-- **Full DPI** awareness support
+- **DPI-responsive UI** with automatic scrollbars
 - **Dark Mode Support** - GUI automatically adapts to Windows theme (dark/light mode), sandbox always syncs with Windows system theme (and Notepad++ if later installed in **WSB**)
   - **Tip**: Right-click the main dialog to change GUI theme (Auto/Light/Dark/Custom) - preference persists during session and doesn't affect sandbox
 - **Desktop Shortcuts** - Creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
