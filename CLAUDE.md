@@ -98,21 +98,6 @@ When a folder is selected in the GUI, the script mapping system:
 2. Downloads default script from GitHub if pattern matches and file is different/missing
 3. Loads script content into editor
 
-### Shared Utilities (Common-Helpers.ps1)
-
-**Status:** Planned but not yet implemented.
-
-Located in `Source/shared/Common-Helpers.ps1`, will provide 8 utility functions to reduce code duplication:
-
-- `Ensure-DirectoryExists` - Creates directory if missing
-- `Write-AsciiFile` - Writes ASCII-encoded files
-- `Join-PathMulti` - Joins multiple path segments
-- `Test-ValidFolderName` - Validates folder names (not drive roots)
-- `Get-DriveLetterFromPath` - Extracts drive letter from path
-- `Get-SandboxFolderName` - Converts paths to sandbox folder names (e.g., `C:\` → `Drive_C`)
-- `Invoke-SilentProgress` - Executes blocks with suppressed progress output
-- `Read-FileContent` - Reads entire file as single string
-
 ### Sandbox Execution Flow
 
 When sandbox launches, the following occurs (inside sandbox):

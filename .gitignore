@@ -15,3 +15,6 @@ test_download/
 
 # Log files
 *.log
+
+# Windows reserved device names
+nul
