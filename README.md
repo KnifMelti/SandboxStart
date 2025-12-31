@@ -15,9 +15,9 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
 ## Features
 
 - **Auto-Installation** - prompts to enable Windows Sandbox if not available
-- **Follow-script-location shortcut** - automatically creates a shortcut in user's Start Menu on first run
+- **Follow-script-location shortcut** - automatically creates a shortcut in user's Start Menu on first run:
   - If script folder is moved then `SandboxStart.ps1` must be manually started from the new location again to fix the shortcut
-- **Easy-to-use** interface for configuring sandbox parameters:
+- **Easy-to-use** - interface for configuring sandbox parameters:
   - **DPI-responsive UI** - adds a vertical scrollbar if needed
   - **Folder/File Mapping** - map any folder or select specific file to test:
     - `.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js` or `All Files (*.*)`
@@ -28,7 +28,7 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
   - **Script Mapping System** - automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - create and save your own sandbox initialization scripts
 - **Dark Mode Support** - UI automatically adapts to Windows theme (dark/light mode), sandbox always syncs with Windows system theme (and Notepad++ if later installed in **WSB**):
-  - **Right-click** the main dialog to change **UI** theme (Auto/Light/Dark/Custom) - preference persists during sessions and doesn't affect sandbox
+  - **Right-click** the main dialog to change **UI** theme (Auto/Light/Dark/Custom) - preference savet to `HKEY_CURRENT_USER\Software\SandboxStart` and doesn't affect sandbox
 - **Updates** - checks and shows notifications if a newer release is available
 - **Desktop Shortcuts** - creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 
