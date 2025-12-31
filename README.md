@@ -16,7 +16,7 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
 
 - **Auto-Installation** - prompts to enable Windows Sandbox if not available
 - **Follow-script-location shortcut** - automatically creates a shortcut in user's Start Menu on first run
-  - If script folder is moved then `SandboxStart.ps1` must be manually started from the new location again
+  - If script folder is moved then `SandboxStart.ps1` must be manually started from the new location again to fix the shortcut
 - **Easy-to-use** interface for configuring sandbox parameters:
   - **DPI-responsive UI** - adds a vertical scrollbar if needed
   - **Folder/File Mapping** - map any folder or select specific file to test:
@@ -28,8 +28,8 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
   - **Script Mapping System** - automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - create and save your own sandbox initialization scripts
 - **Dark Mode Support** - UI automatically adapts to Windows theme (dark/light mode), sandbox always syncs with Windows system theme (and Notepad++ if later installed in **WSB**):
-  - **Right-click** the main dialog to change UI theme (Auto/Light/Dark/Custom) - preference persists during session and doesn't affect sandbox
-- **Updates** - checks and shows notification if a newer release is available
+  - **Right-click** the main dialog to change **UI** theme (Auto/Light/Dark/Custom) - preference persists during sessions and doesn't affect sandbox
+- **Updates** - checks and shows notifications if a newer release is available
 - **Desktop Shortcuts** - creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 
 ## Requirements
@@ -55,7 +55,7 @@ This will:
 
 ## Configuration Dialog
 
-The GUI dialog allows you to configure:
+The dialog allows you to configure:
 
 ### Folder Mapping
 - **Map Folder**: Select a folder to map into the sandbox
@@ -66,23 +66,23 @@ The GUI dialog allows you to configure:
   - `.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js` or `All Files (*.*)`
 
 ### Package Lists
-- **Install Package Lists**: Install predefined sets of applications via WinGet using custom package lists
+- **Install Package Lists**: Install predefined sets of applications via **WinGet** using custom package lists
 
 ### WinGet Options
 - **WinGet Version**: Use the drop-down list (dynamically populated) or leave blank for latest
-- **Prerelease**: Use pre-release of WinGet
+- **Prerelease**: Use pre-release of **WinGet**
 - **Clean**: Clear cached dependencies before starting
 
 ### Runtime Options
 - **Verbose**: Show detailed progress information and wait for keypress before closing PS window
 
 ### WSB Configuration
-- **Enable Networking**: Control network access in sandbox (required for WinGet, if unchecked WinGet handling is skipped)
-- **Memory (MB)**: Allocate RAM to sandbox - dynamically calculated based on your system (max 75% of total RAM)
+- **Enable Networking**: Control network access in sandbox (required for **WinGet**, if unchecked all of the **WinGet** handling is skipped - package lists/pre-release/clean cached dependencies)
+- **Memory (MB)**: Allocate **RAM** to sandbox - dynamically calculated based on your system (max 75% of total RAM)
 - **GPU Virtualization**: Choose between hardware acceleration (Default/Enable) or software rendering (Disable)
 
 ### Script Configuration
-- **Script Editor**: PowerShell script to run after sandbox initialization:
+- **Script Editor**: **PowerShell** script to run after sandbox initialization:
   - [&#x270E;]: Edit mappings...
   - [Load...]: Load scripts from `wsb\` directory
   - [Save]: Save current script for reuse (not default scripts)
@@ -91,7 +91,7 @@ The GUI dialog allows you to configure:
 
 ## Script Mapping System
 
-SandboxStart automatically selects appropriate scripts based on folder contents using pattern matching defined in `wsb\script-mappings.txt`:
+**SandboxStart** automatically selects appropriate scripts based on folder contents using pattern matching defined in `wsb\script-mappings.txt`:
 
 <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Mappings.png" alt="Edit mappings" title="Custom Theme: Hacker Terminal">
 
@@ -105,7 +105,7 @@ Default scripts are **automatically downloaded from** [GitHub](https://github.co
 | `*.installer.yaml` | Std-Manifest.ps1 | Validates/installs a **WinGet** package from local manifest |
 | `*.*` | Std-Install.ps1 | Universal smart installer - detects and runs installers (`Install.*`, `Setup.*`, `Installer.msi`, etc.) with built-in priority, opens Explorer if none found |
 
-> **Note:** Default scripts can't be saved in the GUI, only saved as...<br>
+> **Note:** Default scripts can't be saved, only saved as...<br>
 > To customize behavior, create your own script and add/edit the mappings (see Custom Scripts below).
 
 ### Custom Scripts
@@ -125,7 +125,7 @@ test-*.zip = ExtractAndTest.ps1
 
 In dialog:
 1. Browse to folder containing `Setup.exe`
-2. Script auto-selects "Std-Install.ps1"
+2. Script auto-selects `Std-Install.ps1`
 3. Click OK
 4. Sandbox launches and runs the installer
 
@@ -133,7 +133,7 @@ In dialog:
 
 In dialog:
 1. Browse to folder containing a `*.installer.yaml` file
-2. Script auto-selects "Std-Manifest.ps1"
+2. Script auto-selects `Std-Manifest.ps1`
 3. Click OK
 4. Sandbox launches and validates/installs the package from manifest
 
@@ -142,9 +142,9 @@ In dialog:
 In dialog:
 1. Browse to your test folder
 2. Edit script or load custom script
-3. Modify PowerShell code as needed
+3. Modify **PowerShell** code as needed
 4. Click OK
-5. Sandbox executes your custom script
+5. Sandbox launches and executes your custom script
 
 ### Example 4: Test Specific File
 
@@ -154,7 +154,7 @@ In dialog:
 3. Script automatically generates appropriate execution command
 4. For `.ahk` or `.py` files: Auto-selects required package list if networking enabled
 5. Click OK
-6. Sandbox installs dependencies (if needed) and runs the selected file
+6. Sandbox launches, installs dependencies (if needed) and runs the selected file
 
 > **Note:** To enable auto-installation for `.ahk` or `.py` files, create package list files:
 > - `wsb\AHK.txt` containing `AutoHotkey.AutoHotkey`
