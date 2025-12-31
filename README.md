@@ -259,7 +259,7 @@ Restart-Computer
 - Test malware behavior safely (sandbox isolation)
 - Conduct safe security research and testing
 - Investigate potentially unwanted programs (PUPs)
-- Use as a lightweight alternative to [FLARE VM](https://github.com/mandiant/flare-vm) for quick malware analysis
+- Use as a lightweight alternative to [FLARE-VM](https://github.com/mandiant/flare-vm) for quick malware analysis
 
 > **Note:** Windows Sandbox does not include Windows Security/Defender, only Microsoft Defender SmartScreen. This allows you to bypass SmartScreen domain restrictions by keeping blocked downloads in the sandbox and copying them to the host system.
 
