@@ -23,11 +23,11 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
     - `.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js` or `All Files (*.*)`
   - **Package Lists** - install predefined sets of applications via **WinGet** using custom package lists
   - **Version Control** - select specific **WinGet** version or use pre-release build
-  - **WSB Configuration** - control network access, memory allocation, and GPU virtualization:
+  - **Network-only mode** - enable internet access without **WinGet** installation for faster startup and manual testing
+  -   - **WSB Configuration** - control network access, memory allocation, and GPU virtualization:
     - **Smart Memory Detection** - automatically detects system **RAM** and offers safe memory options (max 75% of total)
   - **Script Mapping System** - automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - create and save your own sandbox initialization scripts
-  - **Network-only mode** - Enable internet access without WinGet installation for faster startup and manual testing
 - **Dark Mode Support** - UI automatically adapts to Windows theme (dark/light mode), **WSB** always syncs with Windows system theme (and syncs to Notepad++ if later installed in sandbox):
   - **Right-click** the main dialog to change **UI** theme (Auto/Light/Dark/Custom) - preference saved to `HKEY_CURRENT_USER\Software\SandboxStart` and doesn't affect **WSB**
 - **Updates** - checks and shows notifications if a newer release is available
