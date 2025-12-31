@@ -235,7 +235,6 @@ Restart-Computer
 - Try out new applications in a safe environment
 - Test software from untrusted sources safely
 - Experiment with system tweaks without risk
-- Learn and practice software installation
 
 ### For Developers
 - Test installers without polluting your system
