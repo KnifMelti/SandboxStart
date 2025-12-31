@@ -448,7 +448,7 @@ End users run from root level (no `Source/` folder).
 
 SandboxStart uses a smart GitHub API integration system with caching and fallback mechanisms to minimize rate limiting and improve performance.
 
-**Module:** `Source/shared/GitHub-ApiHelper.ps1`
+**Module:** `Source/shared/Shared-Helpers.ps1`
 
 ### GitHub API Usage
 
