@@ -71,6 +71,8 @@ git commit -m "Update submodule commit reference"
    - Generates Windows Sandbox configuration (`.wsb` XML file)
    - Creates bootstrap script executed inside sandbox
    - Launches Windows Sandbox with configured parameters
+   - Accepts `$SkipWinGetInstallation` parameter to enable network-only mode
+   - When enabled, skips all WinGet download/installation but preserves pre-install initialization
 
 ### Script Mapping System
 
@@ -109,11 +111,12 @@ When sandbox launches, the following occurs (inside sandbox):
    - Configures Explorer settings (show file extensions, hidden files)
    - Sets execution policy to Bypass
 
-2. **WinGet Installation** (if networking enabled)
+2. **WinGet Installation** (if networking enabled AND WinGet not skipped)
    - Extracts dependencies from cached `.zip`/`.appx` files
    - Installs WinGet CLI via Add-AppxPackage
    - Falls back to PowerShell module method if package installation fails
    - Applies WinGet settings (enables local manifests, disables malware scan)
+   - **Skipped in network-only mode** - preserves pre-install but skips WinGet entirely
 
 3. **Package Installation** (optional, if package list specified)
    - Reads `packages.txt` (WinGet package IDs, one per line)
@@ -139,6 +142,38 @@ When `InstallWSB.cmd` is detected (WAU installation):
    - Creates AdvancedRun config for testing WAU with Notepad++/InstEd
 
 This two-phase initialization prevents shortcuts from breaking due to unknown installation paths.
+
+### Network-Only Mode
+
+A lightweight mode that enables networking without WinGet installation:
+
+**Use Cases:**
+- Quick browser testing without WinGet overhead
+- Manual file downloads from websites
+- Network-based tool testing
+- ~30-60 second faster startup
+
+**Implementation:**
+- GUI: `$chkSkipWinGet` checkbox in Runtime Options section (enabled only when networking is checked)
+- Parameter: `[switch] $SkipWinGetInstallation` in SandboxTest.ps1
+- Behavior: Skips all WinGet-related operations (download, install, config, packages)
+- Preserves: Pre-install initialization (dark mode, shortcuts, Explorer settings, clipboard history)
+
+**Code Conditions:**
+All WinGet operations are guarded by:
+```powershell
+if (($Networking -eq "Enable") -and -not $SkipWinGetInstallation) {
+    # WinGet operations here
+}
+```
+
+**Three Modes:**
+
+| Mode | Networking | Skip WinGet | Result |
+|------|-----------|-------------|--------|
+| **Full Offline** | Disabled | Unchecked (disabled) | No network, no WinGet, pre-install only |
+| **Network Only** | Enabled | Checked | Network enabled, no WinGet, pre-install + internet |
+| **Full Install** | Enabled | Unchecked | Network + WinGet + packages (default) |
 
 ### File Encoding
 

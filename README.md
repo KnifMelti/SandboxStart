@@ -27,6 +27,7 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
     - **Smart Memory Detection** - automatically detects system **RAM** and offers safe memory options (max 75% of total)
   - **Script Mapping System** - automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - create and save your own sandbox initialization scripts
+  - **Network-only mode** - Enable internet access without WinGet installation for faster startup and manual testing
 - **Dark Mode Support** - UI automatically adapts to Windows theme (dark/light mode), **WSB** always syncs with Windows system theme (and syncs to Notepad++ if later installed in sandbox):
   - **Right-click** the main dialog to change **UI** theme (Auto/Light/Dark/Custom) - preference saved to `HKEY_CURRENT_USER\Software\SandboxStart` and doesn't affect **WSB**
 - **Updates** - checks and shows notifications if a newer release is available
@@ -75,6 +76,10 @@ The dialog allows you to configure:
 
 ### Runtime Options
 - **Verbose**: show detailed progress information and wait for keypress before closing **PowerShell** window
+- **Skip WinGet installation (network only mode)**: enable networking without installing WinGet (only available when networking is enabled)
+  - Useful for quick browser tests, manual downloads, or network-based tools
+  - Saves ~30-60 seconds startup time
+  - Pre-install shortcuts and settings still apply
 
 ### WSB Configuration
 - **Enable Networking**: control network access in sandbox (if unchecked all of the **WinGet** handling is skipped - installation/package lists/pre-release/clean cached dependencies)
