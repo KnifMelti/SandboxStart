@@ -97,7 +97,7 @@ The dialog allows you to configure:
 
 ### Default Scripts/Mappings
 
-Default scripts are **automatically downloaded from** [GitHub](https://github.com/KnifMelti/SandboxStart/tree/master/Source/assets/scripts) (via API if the files differ) and loaded when a pattern is detected:
+Default scripts are **automatically downloaded from** [GitHub](https://github.com/KnifMelti/SandboxStart/tree/master/Source/assets/scripts) (via [API if the files differ](https://github.com/KnifMelti/SandboxStart/blob/master/CLAUDE.md#github-api-integration-and-caching)) and loaded when a pattern is detected:
 
 | Pattern | Script | Description |
 |---------|--------|-------------|
