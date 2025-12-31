@@ -5,7 +5,7 @@
 # SandboxStart
 
 A Windows Sandbox (**WSB**) testing tool for easily testing applications, scripts, and installers in an isolated environment.<br>
-Features automatic WinGet installation, follow-script-location shortcut, WSB configuration, script mapping system, high-DPI compatible UI and customizable test scenarios.
+Features automatic **WinGet** installation, follow-script-location shortcut, **WSB** configuration, script mapping system, high-DPI compatible UI and customizable test scenarios.
 
 > **Note:** This project was extracted from [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
 > It depends on the [SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**.
@@ -14,21 +14,23 @@ Features automatic WinGet installation, follow-script-location shortcut, WSB con
 
 ## Features
 
-- **Auto-Installation** - Prompts to enable Windows Sandbox if not available
-- **Follow-script-location shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run/if script folder is moved (then `SandboxStart.ps1` must be manually started from the new location again)
+- **Auto-Installation** - prompts to enable Windows Sandbox if not available
+- **Follow-script-location shortcut** - automatically creates a shortcut in user's Start Menu on first run
+  - If script folder is moved then `SandboxStart.ps1` must be manually started from the new location again
 - **Easy-to-use** interface for configuring sandbox parameters:
-  - **DPI-responsive UI** with automatic vertical scrollbar
-  - **Folder/File Mapping** - Map any folder or select specific file to test
-  - **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
-  - **Version Control** - Select specific **WinGet** version or use pre-release build
-  - **WSB Configuration** - Control network access, memory allocation, and GPU virtualization:
-    - **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
-  - **Script Mapping System** - Automatic script selection based on file patterns (editable script mappings):
-    - **Custom Scripts** - Create and save your own sandbox initialization scripts
-- **Dark Mode Support** - UI automatically adapts to Windows theme (dark/light mode), sandbox always syncs with Windows system theme (and Notepad++ if later installed in **WSB**)
-  - **Tip**: Right-click the main dialog to change UI theme (Auto/Light/Dark/Custom) - preference persists during session and doesn't affect sandbox
-- **Updates** check/notifications
-- **Desktop Shortcuts** - Creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
+  - **DPI-responsive UI** - adds a vertical scrollbar if needed
+  - **Folder/File Mapping** - map any folder or select specific file to test:
+    - `.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js` or `All Files (*.*)`
+  - **Package Lists** - install predefined sets of applications via **WinGet** using custom package lists
+  - **Version Control** - select specific **WinGet** version or use pre-release build
+  - **WSB Configuration** - control network access, memory allocation, and GPU virtualization:
+    - **Smart Memory Detection** - automatically detects system **RAM** and offers safe memory options (max 75% of total)
+  - **Script Mapping System** - automatic script selection based on file patterns (editable script mappings):
+    - **Custom Scripts** - create and save your own sandbox initialization scripts
+- **Dark Mode Support** - UI automatically adapts to Windows theme (dark/light mode), sandbox always syncs with Windows system theme (and Notepad++ if later installed in **WSB**):
+  - **Right-click** the main dialog to change UI theme (Auto/Light/Dark/Custom) - preference persists during session and doesn't affect sandbox
+- **Updates** - checks and shows notification if a newer release is available
+- **Desktop Shortcuts** - creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 
 ## Requirements
 
@@ -60,7 +62,8 @@ The GUI dialog allows you to configure:
 - **Sandbox Folder Name**: Name for the folder inside sandbox Desktop
 
 ### File Selection
-- **Browse File**: Select a specific file to run (automatically maps its parent folder)
+- **Browse File**: Select a specific file to run (automatically maps its parent folder):
+  - `.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js` or `All Files (*.*)`
 
 ### Package Lists
 - **Install Package Lists**: Install predefined sets of applications via WinGet using custom package lists
@@ -146,8 +149,8 @@ In dialog:
 ### Example 4: Test Specific File
 
 In dialog:
-1. Click "File..." to select a specific file (`.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js`)
-    1. Change to `All Files (*.*)` if you want to let **Windows** decide what to start it with (`.reg`...)
+1. Click "File..." to select a specific file:
+    1. Change to `All Files (*.*)` if you want to let **WSB** decide in **Windows** what to start it with (`.reg`...)
 3. Script automatically generates appropriate execution command
 4. For `.ahk` or `.py` files: Auto-selects required package list if networking enabled
 5. Click OK
