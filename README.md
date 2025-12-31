@@ -5,7 +5,7 @@
 # SandboxStart
 
 A Windows Sandbox (**WSB**) testing tool for easily testing applications, scripts, and installers in an isolated environment.<br>
-Features automatic WinGet installation, follow-script-location shortcut, WSB configuration, script mapping system, customizable test scenarios, and high-DPI compatible UI.
+Features automatic WinGet installation, follow-script-location shortcut, WSB configuration, script mapping system, high-DPI compatible UI and customizable test scenarios.
 
 > **Note:** This project was extracted from [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
 > It depends on the [SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**.
@@ -16,18 +16,18 @@ Features automatic WinGet installation, follow-script-location shortcut, WSB con
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
 - **Follow-script-location shortcut** - Automatically creates/updates a shortcut in user's Start Menu on first run/if script folder is moved (then `SandboxStart.ps1` must be manually started from the new location again)
-- **GUI Dialog** - Easy-to-use interface for configuring sandbox parameters:
+- **Easy-to-use** interface for configuring sandbox parameters:
+  - **DPI-responsive UI** with automatic vertical scrollbar
   - **Folder/File Mapping** - Map any folder or select specific file to test
   - **Package Lists** - Install predefined sets of applications via WinGet using custom package lists
-  - **Version Control** - Select specific WinGet version or use pre-release build
+  - **Version Control** - Select specific **WinGet** version or use pre-release build
   - **WSB Configuration** - Control network access, memory allocation, and GPU virtualization:
     - **Smart Memory Detection** - Automatically detects system RAM and offers safe memory options (max 75% of total)
   - **Script Mapping System** - Automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - Create and save your own sandbox initialization scripts
+- **Dark Mode Support** - UI automatically adapts to Windows theme (dark/light mode), sandbox always syncs with Windows system theme (and Notepad++ if later installed in **WSB**)
+  - **Tip**: Right-click the main dialog to change UI theme (Auto/Light/Dark/Custom) - preference persists during session and doesn't affect sandbox
 - **Updates** check/notifications
-- **DPI-responsive UI** with automatic vertical scrollbar
-- **Dark Mode Support** - GUI automatically adapts to Windows theme (dark/light mode), sandbox always syncs with Windows system theme (and Notepad++ if later installed in **WSB**)
-  - **Tip**: Right-click the main dialog to change GUI theme (Auto/Light/Dark/Custom) - preference persists during session and doesn't affect sandbox
 - **Desktop Shortcuts** - Creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
 
 ## Requirements
