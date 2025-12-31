@@ -435,8 +435,8 @@ Release ZIP:
   Update-StartMenuShortcut.ps1
   shared/
     SandboxTest.ps1
+    Shared-Helpers.ps1
     Show-SandboxTestDialog.ps1
-    Common-Helpers.ps1
     ...
 ```
 
@@ -551,7 +551,7 @@ To see your current rate limit:
 
 ```powershell
 # Load the module
-. "Source\shared\GitHub-ApiHelper.ps1"
+. "Source\shared\Shared-Helpers.ps1"
 
 # Check rate limit
 Test-GitHubApiLimit
@@ -568,7 +568,7 @@ Test-GitHubApiLimit
 
 ```powershell
 # Load the module
-. "Source\shared\GitHub-ApiHelper.ps1"
+. "Source\shared\Shared-Helpers.ps1"
 
 # Clear GitHub cache
 Clear-GitHubCache
@@ -580,7 +580,7 @@ Cache is automatically cleared when user selects "Clean (cached dependencies)" o
 
 ### API Helper Functions
 
-The `GitHub-ApiHelper.ps1` module provides these functions:
+The `Shared-Helpers.ps1` module provides these functions:
 
 - `Get-GitHubReleases` - Fetch releases with caching
 - `Get-GitHubFolderContents` - List folder contents with caching
