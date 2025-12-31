@@ -27,10 +27,10 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
     - **Smart Memory Detection** - automatically detects system **RAM** and offers safe memory options (max 75% of total)
   - **Script Mapping System** - automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - create and save your own sandbox initialization scripts
-- **Dark Mode Support** - UI automatically adapts to Windows theme (dark/light mode), sandbox always syncs with Windows system theme (and Notepad++ if later installed in **WSB**):
-  - **Right-click** the main dialog to change **UI** theme (Auto/Light/Dark/Custom) - preference savet to `HKEY_CURRENT_USER\Software\SandboxStart` and doesn't affect sandbox
+- **Dark Mode Support** - UI automatically adapts to Windows theme (dark/light mode), **WSB** always syncs with Windows system theme (and syncs to Notepad++ if later installed in sandbox):
+  - **Right-click** the main dialog to change **UI** theme (Auto/Light/Dark/Custom) - preference saved to `HKEY_CURRENT_USER\Software\SandboxStart` and doesn't affect **WSB**
 - **Updates** - checks and shows notifications if a newer release is available
-- **Desktop Shortcuts** - creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop
+- **Desktop Shortcuts** - creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop (downloads assets automatically)
 
 ## Requirements
 
@@ -48,7 +48,7 @@ Download, unblock and extract the latest release: [SandboxStart-v#.#.#.#.zip](ht
 
 This will:
 1. Install a shortcut in Start Menu
-2. Check if Windows Sandbox is available (prompt to install if not and reboot after prompt)
+2. Check if Windows Sandbox is available (prompt to install if not and reboot after prompt - requires elevation)
 3. Start from the shortcut
 4. Show configuration dialog
 5. Launch sandbox with your settings
@@ -58,28 +58,28 @@ This will:
 The dialog allows you to configure:
 
 ### Folder Mapping
-- **Map Folder**: Select a folder to map into the sandbox
-- **Sandbox Folder Name**: Name for the folder inside sandbox Desktop
+- **Map Folder**: select a folder to map into the sandbox
+- **Sandbox Folder Name**: name for the folder inside sandbox Desktop
 
 ### File Selection
-- **Browse File**: Select a specific file to run (automatically maps its parent folder):
+- **Browse File**: select a specific file to run (automatically maps its parent folder):
   - `.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js` or `All Files (*.*)`
 
 ### Package Lists
-- **Install Package Lists**: Install predefined sets of applications via **WinGet** using custom package lists
+- **Install Package Lists**: install predefined sets of applications via **WinGet** using custom package lists
 
 ### WinGet Options
-- **WinGet Version**: Use the drop-down list (dynamically populated) or leave blank for latest
-- **Prerelease**: Use pre-release of **WinGet**
-- **Clean**: Clear cached dependencies before starting
+- **WinGet Version**: use the drop-down list (dynamically populated) or leave blank for latest
+- **Prerelease**: use pre-release of **WinGet**
+- **Clean**: clear cached dependencies before starting
 
 ### Runtime Options
-- **Verbose**: Show detailed progress information and wait for keypress before closing PS window
+- **Verbose**: show detailed progress information and wait for keypress before closing **PowerShell** window
 
 ### WSB Configuration
-- **Enable Networking**: Control network access in sandbox (required for **WinGet**, if unchecked all of the **WinGet** handling is skipped - package lists/pre-release/clean cached dependencies)
-- **Memory (MB)**: Allocate **RAM** to sandbox - dynamically calculated based on your system (max 75% of total RAM)
-- **GPU Virtualization**: Choose between hardware acceleration (Default/Enable) or software rendering (Disable)
+- **Enable Networking**: control network access in sandbox (if unchecked all of the **WinGet** handling is skipped - installation/package lists/pre-release/clean cached dependencies)
+- **Memory (MB)**: allocate **RAM** to sandbox - dynamically calculated based on your system (max 75% of total RAM)
+- **GPU Virtualization**: choose between hardware acceleration (Default/Enable) or software rendering (Disable)
 
 ### Script Configuration
 - **Script Editor**: **PowerShell** script to run after sandbox initialization:
@@ -101,7 +101,7 @@ Default scripts are **automatically downloaded from** [GitHub](https://github.co
 
 | Pattern | Script | Description |
 |---------|--------|-------------|
-| `InstallWSB.cmd` | Std-WAU.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** (from [WAU Settings GUI](https://github.com/KnifMelti/WAU-Settings-GUI)) and opens folder |
+| `InstallWSB.cmd` | Std-WAU.ps1 | Runs install command for **[WAU](https://github.com/Romanitho/Winget-AutoUpdate)** in **WSB** (made in [WAU Settings GUI](https://github.com/KnifMelti/WAU-Settings-GUI)) and opens folder |
 | `*.installer.yaml` | Std-Manifest.ps1 | Validates/installs a **WinGet** package from local manifest |
 | `*.*` | Std-Install.ps1 | Universal smart installer - detects and runs installers (`Install.*`, `Setup.*`, `Installer.msi`, etc.) with built-in priority, opens Explorer if none found |
 
@@ -123,7 +123,6 @@ test-*.zip = ExtractAndTest.ps1
 
 ### Example 1: Test an Installer
 
-In dialog:
 1. Browse to folder containing `Setup.exe`
 2. Script auto-selects `Std-Install.ps1`
 3. Click OK
@@ -131,7 +130,6 @@ In dialog:
 
 ### Example 2: Test WinGet Manifest
 
-In dialog:
 1. Browse to folder containing a `*.installer.yaml` file
 2. Script auto-selects `Std-Manifest.ps1`
 3. Click OK
@@ -139,7 +137,6 @@ In dialog:
 
 ### Example 3: Custom Script Execution
 
-In dialog:
 1. Browse to your test folder
 2. Edit script or load custom script
 3. Modify **PowerShell** code as needed
@@ -148,11 +145,10 @@ In dialog:
 
 ### Example 4: Test Specific File
 
-In dialog:
-1. Click "File..." to select a specific file:
+1. Click [File...] to select a specific file:
     1. Change to `All Files (*.*)` if you want to let **WSB** decide in **Windows** what to start it with (`.reg`...)
 3. Script automatically generates appropriate execution command
-4. For `.ahk` or `.py` files: Auto-selects required package list if networking enabled
+4. For `.ahk` or `.py` files: auto-selects required package list if networking enabled
 5. Click OK
 6. Sandbox launches, installs dependencies (if needed) and runs the selected file
 
@@ -171,6 +167,7 @@ SandboxStart/
 ├── README.md                      # This file
 ├── shared/                        # Submodule
 |   └── SandboxTest.ps1            # Core sandbox function
+|   └── Shared-Helpers.ps1         # Core Helpers
 |   └── Show-SandboxTestDialog.ps1 # GUI dialog
 └── wsb/                           # Created at first run
     ├── script-mappings.txt        # Pattern→Script mappings (created at first run)
@@ -193,14 +190,8 @@ Source/
 ├── Update-StartMenuShortcut.ps1   # Manages shortcut creation/updating
 └── shared/                        # Submodule
     └── SandboxTest.ps1            # Core sandbox function
+    └── Shared-Helpers.ps1         # Core Helpers
     └── Show-SandboxTestDialog.ps1 # GUI dialog
-```
-
-To run from the repository:
-
-```powershell
-cd Source
-.\SandboxStart.ps1
 ```
 
 **Note:** Release ZIPs extract scripts to the root level (no Source/ folder for end users).
@@ -209,20 +200,20 @@ cd Source
 
 ### Windows Sandbox Not Available
 
-SandboxStart will automatically prompt to:
-1. Enable the Windows Sandbox feature
+**SandboxStart** will automatically prompt to:
+1. Enable the Windows Sandbox feature (requires elevation)
 2. Restart the computer
 
-**Manual installation of WSB:**
+**Manual installation of WSB (requires elevation):**
 
 ```powershell
 Enable-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -All
 Restart-Computer
 ```
 
-### Script Not Running in Sandbox
+### Script Not Running in sandbox
 
-- Check that script syntax is valid PowerShell
+- Check that script syntax is valid **PowerShell**
 - Verify `$SandboxFolderName` variable is used correctly
 - Try with `-Verbose` flag to see detailed execution
 
