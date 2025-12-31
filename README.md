@@ -230,6 +230,13 @@ Restart-Computer
 
 ## Use Cases
 
+### For Home Users
+- Test downloaded software before installing on main system
+- Try out new applications in a safe environment
+- Test software from untrusted sources safely
+- Experiment with system tweaks without risk
+- Learn and practice software installation
+
 ### For Developers
 - Test installers without polluting your system
 - Test different WinGet package versions
@@ -247,6 +254,15 @@ Restart-Computer
 - Validate package updates
 - Test different installation scenarios
 - Verify clean uninstallation
+
+### For Security Professionals
+- Analyze suspicious executables in isolated environment
+- Test malware behavior safely (sandbox isolation)
+- Verify software integrity before deployment
+- Conduct safe security research and testing
+- Investigate potentially unwanted programs (PUPs)
+
+> **Note:** Windows Sandbox does not include Windows Security/Defender, only Microsoft Defender SmartScreen. This allows you to bypass SmartScreen domain restrictions by keeping blocked downloads in the sandbox and copying them to the host system.
 
 ## Additional Resources
 
