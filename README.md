@@ -24,7 +24,7 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
   - **Package Lists** - install predefined sets of applications via **WinGet** using custom package lists
   - **Version Control** - select specific **WinGet** version or use pre-release build
   - **Network-only mode** - enable internet access without **WinGet** installation for faster startup and manual testing
-  -   - **WSB Configuration** - control network access, memory allocation, and GPU virtualization:
+  - **WSB Configuration** - control network access, memory allocation, and GPU virtualization:
     - **Smart Memory Detection** - automatically detects system **RAM** and offers safe memory options (max 75% of total)
   - **Script Mapping System** - automatic script selection based on file patterns (editable script mappings):
     - **Custom Scripts** - create and save your own sandbox initialization scripts
