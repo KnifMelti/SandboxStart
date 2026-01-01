@@ -153,7 +153,7 @@ test-*.zip = ExtractAndTest.ps1
 ### Example 4: Test Specific File
 
 1. Click [File...] to select a specific file:
-    1. Change to `All Files (*.*)` if you want to let **WSB** decide in **Windows** what to start it with (`.reg`...)
+    1. Change to `All Files (*.*)` if you want to let **Windows** in **WSB** decide how to start it (`.reg`...)
 3. Script automatically generates appropriate execution command
 4. For `.ahk` or `.py` files: auto-selects required package list if networking enabled
 5. Click OK
