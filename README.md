@@ -79,12 +79,12 @@ The dialog allows you to configure:
 - **Skip WinGet installation (network only mode)**: enable networking without installing **WinGet** (only available when **WSB** networking is enabled)
   - Useful for quick browser tests, manual downloads, or network-based tools
   - Startup times:
-    - Original WSB without anything: ~15s
+    - Original WSB without anything at all: ~15s
     - SandboxStart: Full Install ~45s - Network Only/Full Offline ~25-30s
-  - Pre-install shortcuts and settings still apply
+  - Desktop shortcuts and all settings still apply
 
 ### WSB Configuration
-- **Enable Networking**: control network access in sandbox (if unchecked all of the **WinGet** handling is skipped - installation/package lists/pre-release/clean cached dependencies)
+- **Enable Networking**: control network access in sandbox (if unchecked all of the **WinGet** features are skipped - installation/package lists/pre-release/clean cached dependencies)
 - **Memory (MB)**: allocate **RAM** to sandbox - dynamically calculated based on your system (max 75% of total RAM)
 - **GPU Virtualization**: choose between hardware acceleration (Default/Enable) or software rendering (Disable)
 
