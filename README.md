@@ -8,7 +8,7 @@ A Windows Sandbox (**WSB**) testing tool for easily testing applications, script
 Features automatic **WinGet** installation, follow-script-location shortcut, **WSB** configuration, script mapping system, high-DPI compatible UI and customizable test scenarios.
 
 > **Note:** This project was extracted from [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
-> It depends on the [SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule**.
+> It depends on the [SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule** that also feeds the parent project with new features.
 
 <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI Dialog" title="Custom Theme: Hacker Terminal" width="49%"> <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/List.png" alt="List editor" title="Custom Theme: Hacker Terminal" width="49%" align="top">
 
