@@ -23,7 +23,7 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
     - `.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js` or `All Files (*.*)`
   - **Package Lists** - install predefined sets of applications via **WinGet** using custom package lists
   - **Version Control** - select specific **WinGet** version or use pre-release build
-  - **Network-only mode** - enable internet access without **WinGet** installation for faster startup and manual testing
+  - **Network-only mode** - enable internet access without **WinGet** installation
   - **WSB Configuration** - control network access, memory allocation, and GPU virtualization:
     - **Smart Memory Detection** - automatically detects system **RAM** and offers safe memory options (max 75% of total)
   - **Script Mapping System** - automatic script selection based on file patterns (editable script mappings):
@@ -76,9 +76,11 @@ The dialog allows you to configure:
 
 ### Runtime Options
 - **Verbose**: show detailed progress information and wait for keypress before closing **PowerShell** window
-- **Skip WinGet installation (network only mode)**: enable networking without installing WinGet (only available when **WSB** networking is enabled)
+- **Skip WinGet installation (network only mode)**: enable networking without installing **WinGet** (only available when **WSB** networking is enabled)
   - Useful for quick browser tests, manual downloads, or network-based tools
-  - Saves ~30-60 seconds startup time
+  - Startup times:
+    - Original WSB without anything: ~15s
+    - SandboxStart: Full Install ~45s - Network Only/Full Offline ~25-30s
   - Pre-install shortcuts and settings still apply
 
 ### WSB Configuration
