@@ -76,7 +76,7 @@ The dialog allows you to configure:
 
 ### Runtime Options
 - **Verbose**: show detailed progress information and wait for keypress before closing **PowerShell** window
-- **Skip WinGet installation (network only mode)**: enable networking without installing WinGet (only available when networking is enabled)
+- **Skip WinGet installation (network only mode)**: enable networking without installing WinGet (only available when **WSB** networking is enabled)
   - Useful for quick browser tests, manual downloads, or network-based tools
   - Saves ~30-60 seconds startup time
   - Pre-install shortcuts and settings still apply
