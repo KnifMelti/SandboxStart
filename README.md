@@ -246,7 +246,7 @@ Restart-Computer
 
 **Allowed:** A-Z, a-z, 0-9, standard symbols (space, -, _, ., /, \, etc.)
 
-**Common cause:** OneDrive with localized folder names (e.g., "Dokument" instead of "Documents")
+**Common cause:** OneDrive with localized folder names
 
 **Example:**
 - ❌ Invalid: `C:\Users\OneDrive\Testmäp` (contains ä)
