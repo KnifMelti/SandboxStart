@@ -235,6 +235,22 @@ Restart-Computer
 - Ensure Windows Sandbox feature is fully installed
 - Check that mapped folders are accessible
 
+### Folder Paths with Non-ASCII Characters
+
+**Issue:** Windows Sandbox cannot process folder paths containing non-ASCII characters.
+
+**Blocked characters:** All characters with ASCII value > 127 (Scandinavian: å/ä/ö, German: ü/ß, French: é/è/ç, Cyrillic, Greek, Asian scripts, €/£, etc.)
+
+**Allowed:** A-Z, a-z, 0-9, standard symbols (space, -, _, ., /, \, etc.)
+
+**Common cause:** OneDrive with localized folder names (e.g., "Dokument" instead of "Documents")
+
+**Example:**
+- ❌ Invalid: `C:\Users\OneDrive\Testmäp` (contains ä)
+- ✅ Valid: `C:\Users\Documents\TestFolder`
+
+**Note:** SandboxStart detects and warns before launch. Windows Sandbox platform limitation.
+
 ## Use Cases
 
 ### For Home Users
