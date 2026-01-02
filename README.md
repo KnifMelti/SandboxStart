@@ -61,6 +61,8 @@ The dialog allows you to configure:
 ### Folder Mapping
 - **Map Folder**: select a folder to map into the sandbox
 - **Sandbox Folder Name**: name for the folder inside sandbox Desktop
+> **Nota bene**: A mapping is always **RW** because Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) already has one to:<br>
+`%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside **WSB**
 
 ### File Selection
 - **Browse File**: select a specific file to run (automatically maps its parent folder):
@@ -268,7 +270,11 @@ Restart-Computer
 - Investigate potentially unwanted programs (PUPs)
 - Use as a lightweight alternative to [FLARE-VM](https://github.com/mandiant/flare-vm) for quick malware analysis
 
-> **Note:** Windows Sandbox does not include Windows Security/Defender, only Microsoft Defender SmartScreen. This allows you to bypass SmartScreen domain restrictions by keeping blocked downloads in the sandbox and copying them to the host system.
+> **Note:** Windows Sandbox does not include Windows Security/Defender, only Microsoft Defender SmartScreen. This allows you to bypass SmartScreen domain restrictions by keeping blocked downloads in the sandbox and copying them to the host system.<br><br>
+**Nota bene**: Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) requires a **RW** mapping to:<br>
+`%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside **WSB**<br>
+So, it's not as secure as **FLARE-VM**!
+
 
 ## Additional Resources
 
