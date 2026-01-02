@@ -175,13 +175,15 @@ if (($Networking -eq "Enable") -and -not $SkipWinGetInstallation) {
 | **Network Only** | Enabled | Checked | Network enabled, no WinGet, pre-install + internet |
 | **Full Install** | Enabled | Unchecked | Network + WinGet + packages (default) |
 
-### File Encoding
+### File Encoding and Indentation
 
-**Critical:** All PowerShell scripts and configuration files MUST use **Windows CRLF line endings** and **ASCII encoding**:
+**Critical:** All PowerShell scripts and configuration files MUST use **Windows CRLF line endings**, **ASCII encoding**, and **TAB characters for indentation**:
 
 - Scripts written to sandbox use `Out-File -Encoding ASCII`
 - This ensures compatibility within Windows Sandbox environment
 - GitHub default scripts are stored with CRLF endings
+- **Always use TAB characters** for indentation, never spaces
+- This maintains consistency across all PowerShell files in the project
 
 **Converting files to CRLF (if created with LF):**
 
