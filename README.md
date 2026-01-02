@@ -61,8 +61,6 @@ The dialog allows you to configure:
 ### Folder Mapping
 - **Map Folder**: select a folder to map into the sandbox
 - **Sandbox Folder Name**: name for the folder inside sandbox Desktop
-> **Nota bene**: A mapping is always **RW** because Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) already has one to:<br>
-`%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside **WSB**
 
 ### File Selection
 - **Browse File**: select a specific file to run (automatically maps its parent folder):
