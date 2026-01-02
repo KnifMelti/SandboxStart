@@ -204,7 +204,7 @@ Source/
     └── Show-SandboxTestDialog.ps1 # GUI dialog
 ```
 
-**Note:** Release ZIPs extract scripts to the root level (no Source/ folder for end users).
+> **Note:** Release ZIPs extract scripts to the root level (no Source/ folder for end users).
 
 ## Troubleshooting
 
@@ -240,19 +240,17 @@ Restart-Computer
 
 ### Folder Paths with Non-ASCII Characters
 
-**Issue:** Windows Sandbox cannot process folder paths containing non-ASCII characters.
+- **Issue:** Windows Sandbox cannot process folder paths containing non-ASCII characters.
+- **Blocked characters:** All characters with ASCII value > 127 (Scandinavian: å/ä/ö, German: ü/ß, French: é/è/ç, Cyrillic, Greek, Asian scripts, €/£, etc.)
+- **Allowed:** A-Z, a-z, 0-9, standard symbols (space, -, _, ., /, \, etc.)
+- **Common cause:** OneDrive with localized folder names
 
-**Blocked characters:** All characters with ASCII value > 127 (Scandinavian: å/ä/ö, German: ü/ß, French: é/è/ç, Cyrillic, Greek, Asian scripts, €/£, etc.)
+  - **Example:**
+    - ❌ Invalid: `C:\Users\OneDrive\Testmäp` (contains ä)
+    - ✅ Valid: `C:\Users\Documents\TestFolder`
 
-**Allowed:** A-Z, a-z, 0-9, standard symbols (space, -, _, ., /, \, etc.)
-
-**Common cause:** OneDrive with localized folder names
-
-**Example:**
-- ❌ Invalid: `C:\Users\OneDrive\Testmäp` (contains ä)
-- ✅ Valid: `C:\Users\Documents\TestFolder`
-
-**Note:** SandboxStart detects and warns before launch. Windows Sandbox platform limitation.
+> **Note:** SandboxStart detects and warns before launch.<br>
+> Windows Sandbox platform limitation.
 
 ## Use Cases
 
