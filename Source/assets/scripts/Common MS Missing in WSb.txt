@@ -1,0 +1,3 @@
+#Microsoft.DotNet.DesktopRuntime.9
+Microsoft.DotNet.DesktopRuntime.8
+Microsoft.EdgeWebView2Runtime
