@@ -1,3 +1,8 @@
+# Missing in WSB Package List for SandboxStart
+# WinGet Package IDs - one per line
+# Lines starting with # are comments
+
 #Microsoft.DotNet.DesktopRuntime.9
 Microsoft.DotNet.DesktopRuntime.8
 Microsoft.EdgeWebView2Runtime
+
