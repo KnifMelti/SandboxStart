@@ -162,10 +162,6 @@ test-*.zip = ExtractAndTest.ps1
 5. Click OK
 6. Sandbox launches, installs dependencies (if needed) and runs the selected file
 
-> **Note:** To enable auto-installation for `.ahk` or `.py` files, create package list files:
-> - `wsb\AHK.txt` containing `AutoHotkey.AutoHotkey`
-> - `wsb\Python.txt` containing `Python.Python.3.13`
-
 ## Project Structure
 
 ```
