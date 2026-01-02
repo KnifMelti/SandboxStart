@@ -236,7 +236,7 @@ Restart-Computer
 
 ### Folder Paths with Non-ASCII Characters
 
-- **Issue:** Windows Sandbox cannot process folder paths containing non-ASCII characters.
+- **Issue:** Windows Sandbox cannot process folder paths containing non-ASCII characters
 - **Blocked characters:** All characters with ASCII value > 127 (Scandinavian: å/ä/ö, German: ü/ß, French: é/è/ç, Cyrillic, Greek, Asian scripts, €/£, etc.)
 - **Allowed:** A-Z, a-z, 0-9, standard symbols (space, -, _, ., /, \, etc.)
 - **Common cause:** OneDrive with localized folder names
