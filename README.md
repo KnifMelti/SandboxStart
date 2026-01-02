@@ -62,6 +62,9 @@ The dialog allows you to configure:
 - **Map Folder**: select a folder to map into the sandbox
 - **Sandbox Folder Name**: name for the folder inside sandbox Desktop
 
+### Read Only
+- **R/O**: map the folder as read-only in the sandbox
+
 ### File Selection
 - **Browse File**: select a specific file to run (automatically maps its parent folder):
   - `.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js` or `All Files (*.*)`
