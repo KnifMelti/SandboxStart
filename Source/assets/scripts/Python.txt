@@ -1,0 +1,5 @@
+# Python Package List for SandboxStart
+# WinGet Package IDs - one per line
+# Lines starting with # are comments
+
+Python.Python.3.14
