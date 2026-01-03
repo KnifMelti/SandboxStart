@@ -1,0 +1,26 @@
+{
+	// Code Runner settings
+	"code-runner.runInTerminal": true,
+	"code-runner.clearPreviousOutput": true,
+	"code-runner.preserveFocus": false,
+	"code-runner.showExecutionMessage": true,
+
+	// File encoding settings
+	"files.encoding": "utf8",
+	"files.eol": "\r\n",
+	"files.insertFinalNewline": false,
+	"files.trimTrailingWhitespace": false,
+
+	// PowerShell settings
+	"[powershell]": {
+		"files.encoding": "utf8bom",
+		"files.eol": "\r\n",
+		"editor.insertSpaces": false,
+		"editor.tabSize": 4,
+		"editor.detectIndentation": false
+	},
+
+	// Git settings
+	"git.detectSubmodules": true,
+	"git.ignoreLimitWarning": true
+}
