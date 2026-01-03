@@ -253,7 +253,7 @@ Restart-Computer
 - Test deployment scripts in clean environment
 - Validate MSI/EXE installers before rollout
 - Check for installation conflicts
-- Test software behavior with different registry settings
+- Find out what prerequisites are needed by an installer
 
 ### For Package Maintainers
 - Test WinGet manifests
