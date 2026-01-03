@@ -71,6 +71,7 @@ The dialog allows you to configure:
 
 ### Package Lists
 - **Install Packages**: install predefined sets of applications via **WinGet** using custom package lists
+- Useful editable lists are automatically downloaded from repository
 
 ### WinGet Options
 - **WinGet Version**: use the drop-down list (dynamically populated) or leave blank for latest
