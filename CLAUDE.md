@@ -177,13 +177,21 @@ if (($Networking -eq "Enable") -and -not $SkipWinGetInstallation) {
 
 ### File Encoding and Indentation
 
-**Critical:** All PowerShell scripts and configuration files MUST use **Windows CRLF line endings**, **ASCII encoding**, and **TAB characters for indentation**:
+**Critical:** All PowerShell scripts and configuration files MUST use **Windows CRLF line endings** and **TAB characters for indentation**:
 
-- Scripts written to sandbox use `Out-File -Encoding ASCII`
-- This ensures compatibility within Windows Sandbox environment
+- **Windows Sandbox `.wsb` files:** Use `Out-File -Encoding UTF8` (adds BOM, required for non-ASCII characters in paths)
+- **PowerShell scripts written to sandbox:** Use `Out-File -Encoding ASCII`
+- **Reason for UTF8 in .wsb files:** Windows Sandbox requires UTF-8 with BOM to correctly parse folder paths containing international characters (Swedish åäö, German üöä, etc.)
+- **Reason for ASCII in scripts:** PowerShell scripts inside sandbox don't need international characters, ASCII is sufficient
 - GitHub default scripts are stored with CRLF endings
 - **Always use TAB characters** for indentation, never spaces
 - This maintains consistency across all PowerShell files in the project
+
+**Important Note (Issue #8):**
+- Prior to this fix, `.wsb` files used ASCII encoding which converted non-ASCII characters to `???`
+- This caused error 0x8007007b when paths contained international characters
+- Solution: Changed to UTF8 encoding in SandboxTest.ps1 line ~1049
+- UTF8 adds BOM (Byte Order Mark) but Windows Sandbox handles this correctly
 
 **Converting files to CRLF (if created with LF):**
 
