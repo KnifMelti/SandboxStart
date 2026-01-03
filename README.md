@@ -85,7 +85,7 @@ The dialog allows you to configure:
   - Startup times:
     - Original WSB without anything at all: ~15s
     - SandboxStart: Full Install ~45s - Network Only/Full Offline ~25-30s
-  - Desktop shortcuts and all settings still apply
+  - User script, desktop shortcuts and all settings still apply
 
 ### WSB Configuration
 - **Enable Networking**: control network access in sandbox (if unchecked all of the **WinGet** features are skipped - installation/package lists/pre-release/clean cached dependencies)
