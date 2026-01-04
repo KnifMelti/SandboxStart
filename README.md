@@ -20,7 +20,7 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
 - **Easy-to-use** - interface for configuring sandbox parameters:
   - **DPI-responsive UI** - adds a vertical scrollbar if needed
   - **Folder/File Mapping** - map any folder or select specific file to test:
-    - `.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js` or `All Files (*.*)`
+    - `.exe`,`.msi`,`.msix`,`.cmd`,`.bat`,`.ps1`,`.appx`,`.appxbundle`,`.intunewin`,`.ahk`,`.py`,`.js` or `All Files (*.*)`
   - **Package Lists** - install predefined sets of applications via **WinGet** using custom package lists
   - **Version Control** - select specific **WinGet** version or use pre-release build
   - **Network-only mode** - enable internet access without **WinGet** installation
