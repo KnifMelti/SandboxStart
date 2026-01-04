@@ -1,4 +1,6 @@
-﻿param(
+# Std-File.ps1 - Execute files in Windows Sandbox
+[CmdletBinding()]
+param(
 	[Parameter(Mandatory)]
 	[string]$SandboxFolderName,
 
@@ -24,9 +26,79 @@ switch ($extension) {
 		# PS1: Execute via powershell.exe with working directory set
 		Start-Process powershell.exe -ArgumentList "-File `"$fullFilePath`"" -WorkingDirectory $sandboxPath
 	}
+	'.intunewin' {
+		# IntuneWin: Extract using IntunewinBuilder
+		$extractPath = Join-Path $env:TEMP "IntuneExtracted_$([guid]::NewGuid().ToString())"
+		New-Item -ItemType Directory -Path $extractPath -Force | Out-Null
+		
+		# Download and install IntunewinBuilder.msi if not present
+		$decoderPath = "$env:ProgramFiles\IntunewinBuilder\resources\IntuneWinAppUtilDecoder.exe"
+		if (-not (Test-Path $decoderPath)) {
+			Write-Host "Downloading IntunewinBuilder.msi..."
+			$msiPath = Join-Path $env:TEMP "IntunewinBuilder.msi"
+			$downloadUrl = "https://github.com/rafallz10100/IntunewinBuilder/releases/latest/download/IntunewinBuilder.msi"
+			
+			try {
+				Invoke-WebRequest -Uri $downloadUrl -OutFile $msiPath -UseBasicParsing -ErrorAction Stop
+			} catch {
+				Write-Warning "Failed to download IntunewinBuilder.msi: $_"
+				Write-Warning "Internet connection required. Aborting .intunewin extraction."
+				return
+			}
+			
+			Write-Host "Installing IntunewinBuilder..."
+			Start-Process msiexec.exe -ArgumentList "/i `"$msiPath`" /quiet /norestart" -Wait
+			Remove-Item $msiPath -Force -ErrorAction SilentlyContinue
+		}
+		
+		# Read Detection.xml to get setup file name
+		Add-Type -AssemblyName System.IO.Compression.FileSystem
+		$zipArchive = [System.IO.Compression.ZipFile]::OpenRead($fullFilePath)
+		$detectionEntry = $zipArchive.Entries | Where-Object { $_.FullName -eq "IntuneWinPackage/Metadata/Detection.xml" }
+		
+		$setupFileName = $null
+		if ($detectionEntry) {
+			$stream = $detectionEntry.Open()
+			$reader = New-Object System.IO.StreamReader($stream)
+			[xml]$xml = $reader.ReadToEnd()
+			$setupFileName = $xml.ApplicationInfo.SetupFile
+			Write-Host "Setup file from XML: $setupFileName"
+			$reader.Close()
+			$stream.Close()
+		}
+		$zipArchive.Dispose()
+		
+		# Copy .intunewin file to temp folder for decoding
+		$tempIntuneFile = Join-Path $extractPath ([System.IO.Path]::GetFileName($fullFilePath))
+		Copy-Item $fullFilePath $tempIntuneFile -Force
+		
+		# Decode using IntuneWinAppUtilDecoder
+		Write-Host "Decoding $tempIntuneFile..."
+		& $decoderPath $tempIntuneFile /s
+		
+		# Find and extract the decoded.zip file
+		$decodedZip = $tempIntuneFile -replace '\.intunewin$', '.decoded.zip'
+		$decryptedPath = Join-Path $extractPath "Decrypted"
+		
+		if (Test-Path $decodedZip) {
+			Write-Host "Extracting $decodedZip to $decryptedPath"
+			[System.IO.Compression.ZipFile]::ExtractToDirectory($decodedZip, $decryptedPath)
+			
+			# Run the setup file
+			$setupFile = Join-Path $decryptedPath $setupFileName
+			if (Test-Path $setupFile) {
+				Write-Host "Running setup file: $setupFileName"
+				Start-Process $setupFile -WorkingDirectory $decryptedPath
+			} else {
+				Write-Warning "Setup file not found: $setupFile"
+			}
+		} else {
+			Write-Warning "Decoded ZIP not found: $decodedZip"
+		}
+	}
 	default {
 		# Default: Direct execution with working directory
-		# Works for: .exe, .msi, .js, .py, .ahk, etc.
+		# Works for: .exe, .msi, .msix, .appx, .js, .py, .ahk, etc.
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
 	}
 }
