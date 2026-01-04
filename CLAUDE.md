@@ -665,3 +665,40 @@ The `Shared-Helpers.ps1` module provides these functions:
 5. **Admin rights handling** - Clearly communicate when admin rights are needed (feature enablement only)
 6. **Submodule changes require two commits** - First in submodule repo, then parent repo update
 7. **English only** - All comments, documentation, and text in code must be in English
+
+## Best Practices for File Editing
+
+### Problem with Edit Tool
+
+The Edit tool requires EXACT character-by-character matching, including:
+- Tabs vs spaces (files use tabs for indentation)
+- Line endings (CRLF)
+- Every single whitespace character
+
+This makes it error-prone and time-consuming when:
+- Indentation needs to be changed
+- Multiple attempts are needed to match exact whitespace
+- Large blocks of code need refactoring
+
+### Recommended Approaches
+
+**For simple, single-line changes:**
+1. Give the user specific line numbers and describe the change
+2. Let the user make the edit manually (takes 5 seconds in an editor)
+3. Example: "On line 2576, remove the `$selectedDir` variable assignment"
+
+**For complex, multi-line changes:**
+1. Write a PowerShell script to make the changes programmatically
+2. Use `sed`, `awk`, or PowerShell string manipulation
+3. Example: Create `fix-script.ps1` that uses `Get-Content`/`Set-Content` with `-replace`
+4. This approach is faster, more reliable, and reviewable
+
+**Avoid:**
+- Repeatedly trying the Edit tool when it fails to match whitespace
+- Trying to guess the exact tab/space combination
+- Making multiple attempts with slight variations
+
+**When to use Edit tool:**
+- Small, unique string replacements where whitespace doesn't matter
+- Changes in files with consistent, simple formatting
+- When the old_string is truly unique and easy to match

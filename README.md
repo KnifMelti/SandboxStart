@@ -30,6 +30,10 @@ Features automatic **WinGet** installation, follow-script-location shortcut, **W
     - **Custom Scripts** - create and save your own scripts for running after sandbox initialization
 - **Dark Mode Support** - UI automatically adapts to Windows theme (dark/light mode), **WSB** always syncs with Windows system theme (and syncs to Notepad++ if later installed in sandbox):
   - **Right-click** the main dialog to change **UI** theme (Auto/Light/Dark/Custom) - preference saved to `HKEY_CURRENT_USER\Software\SandboxStart` and doesn't affect **WSB**
+- **Windows Explorer Integration** (optional) - add "Test in Windows Sandbox" to File Explorer context menu:
+  - **Right-click** the main dialog → "Context Menu Integration" to enable/disable
+  - Right-click any file or folder in Windows Explorer (classic context menu) to test directly in sandbox
+  - **Windows 11 Note:** Context menu appears in classic menu only (Shift+Right-click or right-click → "Show more options")
 - **Updates** - checks and shows notifications if a newer release is available
 - **Desktop Shortcuts** - creates useful shortcut links (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility, etc.) on the sandbox desktop (downloads assets automatically when started)
 
