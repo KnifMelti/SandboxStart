@@ -71,7 +71,7 @@ The dialog allows you to configure:
 
 ### File Selection
 - **Browse File**: select a specific file to run (automatically maps its parent folder):
-  - `.exe`, `.msi`, `.cmd`, `.bat`, `.ps1`, `.ahk`, `.py`, `.js` or `All Files (*.*)`
+  - `.exe`,`.msi`,`.msix`,`.cmd`,`.bat`,`.ps1`,`.appx`,`.appxbundle`,`.intunewin`,`.ahk`,`.py`,`.js` or `All Files (*.*)`
 
 ### Package Lists
 - **Install Packages**: install predefined sets of applications via **WinGet** using custom package lists
