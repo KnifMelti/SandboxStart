@@ -17,6 +17,14 @@
 
 #Requires -Version 5.1
 
+param(
+    [Parameter(Mandatory=$false)]
+    [string]$FolderPath,
+
+    [Parameter(Mandatory=$false)]
+    [string]$FilePath
+)
+
 $ErrorActionPreference = 'Stop'
 $Script:WorkingDir = $PSScriptRoot
 
@@ -29,21 +37,41 @@ Add-Type -AssemblyName System.Drawing
 . "$WorkingDir\Update-StartMenuShortcut.ps1"
 
 # Ensure Start Menu shortcut exists and is up to date
-$shortcutWasCreated = Update-StartMenuShortcut -WorkingDir $WorkingDir
+$shortcutNeedsRestart = Update-StartMenuShortcut -WorkingDir $WorkingDir
 
-# If shortcut was just created, restart from the shortcut to show custom icon in taskbar
-if ($shortcutWasCreated) {
-    [System.Windows.Forms.MessageBox]::Show(
-        "A shortcut to SandboxStart has been created in the Start Menu.`n`nThe script will now restart to display the custom icon in taskbar.",
-        "Shortcut Created",
-        [System.Windows.Forms.MessageBoxButtons]::OK,
-        [System.Windows.Forms.MessageBoxIcon]::Information
-    ) | Out-Null
+# If shortcut was created or updated, restart from the shortcut
+# BUT: Don't restart if we were called from context menu (with FolderPath/FilePath parameters)
+$calledFromContextMenu = ($FolderPath -or $FilePath)
 
-    # Launch from the shortcut and exit
+if ($shortcutNeedsRestart -and -not $calledFromContextMenu) {
     $shortcutPath = [System.IO.Path]::Combine($env:APPDATA, 'Microsoft\Windows\Start Menu\Programs\SandboxStart.lnk')
-    Start-Process -FilePath $shortcutPath
-    exit
+
+    # Check if this is first-time creation (shortcut didn't exist before)
+    # We detect this by checking if we were started from the shortcut or directly
+    $startedFromShortcut = $MyInvocation.InvocationName -match 'SandboxStart\.lnk'
+
+    if (-not $startedFromShortcut) {
+        # Show dialog only on first-time creation
+        if (Test-Path $shortcutPath) {
+            $shell = New-Object -ComObject WScript.Shell
+            $shortcut = $shell.CreateShortcut($shortcutPath)
+            $wasJustCreated = $shortcut.Arguments -match [regex]::Escape($WorkingDir)
+            [System.Runtime.Interopservices.Marshal]::ReleaseComObject($shell) | Out-Null
+
+            if ($wasJustCreated) {
+                [System.Windows.Forms.MessageBox]::Show(
+                    "A shortcut to SandboxStart has been created in the Start Menu.`n`nThe script will now restart to display the custom icon in taskbar.",
+                    "Shortcut Created",
+                    [System.Windows.Forms.MessageBoxButtons]::OK,
+                    [System.Windows.Forms.MessageBoxIcon]::Information
+                ) | Out-Null
+            }
+        }
+
+        # Launch from the shortcut and exit (both for new and updated shortcuts)
+        Start-Process -FilePath $shortcutPath
+        exit
+    }
 }
 
 function Start-SandboxApplication {
@@ -60,6 +88,10 @@ function Start-SandboxApplication {
             # User cancelled or feature couldn't be enabled
             throw "Windows Sandbox is required but not available."
         }
+
+        # Set script-scoped variables for Show-SandboxTestDialog to pick up
+        if ($FolderPath) { $script:InitialFolderPath = $FolderPath }
+        if ($FilePath) { $script:InitialFilePath = $FilePath }
 
         . "$WorkingDir\shared\SandboxTest.ps1"
         . "$WorkingDir\shared\Shared-Helpers.ps1"
