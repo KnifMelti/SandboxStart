@@ -1,4 +1,4 @@
-function Update-StartMenuShortcut {
+﻿function Update-StartMenuShortcut {
     <#
     .SYNOPSIS
     Ensures SandboxStart.lnk exists in Start Menu with correct path
@@ -105,19 +105,51 @@ function Update-StartMenuShortcut {
         throw
     }
 
-    # ALWAYS ensure uninstall shortcut exists (independent of main shortcut update)
+    # ALWAYS ensure uninstall shortcut exists and is up to date
     # This ensures existing installations also get the uninstall shortcut
     $uninstallShortcutPath = Join-Path $startMenuPath 'SandboxStart - Uninstall.lnk'
+    $expectedUninstallArguments = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command `"& {Add-Type -AssemblyName System.Windows.Forms; . '$WorkingDir\Update-StartMenuShortcut.ps1'; Uninstall-SandboxStart}`""
 
-    if (-not (Test-Path $uninstallShortcutPath)) {
-        Write-Verbose "Creating uninstall shortcut at $uninstallShortcutPath"
+    $uninstallNeedsUpdate = $false
+
+    if (Test-Path $uninstallShortcutPath) {
+        # Verify uninstall shortcut points to correct location
+        Write-Verbose "Uninstall shortcut exists, verifying path..."
+
+        try {
+            $shell = New-Object -ComObject WScript.Shell
+            $uninstallShortcut = $shell.CreateShortcut($uninstallShortcutPath)
+
+            # Check if arguments match (contains correct working directory path)
+            if ($uninstallShortcut.Arguments -ne $expectedUninstallArguments) {
+                Write-Verbose "Uninstall shortcut path mismatch detected"
+                Write-Verbose "Current Arguments: $($uninstallShortcut.Arguments)"
+                Write-Verbose "Expected Arguments: $expectedUninstallArguments"
+                $uninstallNeedsUpdate = $true
+            }
+
+            [System.Runtime.Interopservices.Marshal]::ReleaseComObject($shell) | Out-Null
+        }
+        catch {
+            Write-Warning "Failed to verify uninstall shortcut: $_"
+            $uninstallNeedsUpdate = $true
+        }
+    }
+    else {
+        # Uninstall shortcut doesn't exist
+        Write-Verbose "Uninstall shortcut does not exist, will create it"
+        $uninstallNeedsUpdate = $true
+    }
+
+    if ($uninstallNeedsUpdate) {
+        Write-Verbose "Creating/updating uninstall shortcut at $uninstallShortcutPath"
 
         try {
             $shell = New-Object -ComObject WScript.Shell
 
             $uninstallShortcut = $shell.CreateShortcut($uninstallShortcutPath)
             $uninstallShortcut.TargetPath = $expectedTarget
-            $uninstallShortcut.Arguments = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command `"& {Add-Type -AssemblyName System.Windows.Forms; . '$WorkingDir\Update-StartMenuShortcut.ps1'; Uninstall-SandboxStart}`""
+            $uninstallShortcut.Arguments = $expectedUninstallArguments
             $uninstallShortcut.WorkingDirectory = $WorkingDir
             $uninstallShortcut.Description = 'Uninstall SandboxStart integration'
 
@@ -126,19 +158,19 @@ function Update-StartMenuShortcut {
             }
 
             $uninstallShortcut.Save()
-            Write-Verbose "Uninstall shortcut created successfully"
+            Write-Verbose "Uninstall shortcut created/updated successfully"
 
             # Release COM object
             [System.Runtime.Interopservices.Marshal]::ReleaseComObject($shell) | Out-Null
         }
         catch {
-            Write-Warning "Failed to create uninstall shortcut: $_"
+            Write-Warning "Failed to create/update uninstall shortcut: $_"
             # Don't throw - uninstall shortcut is not critical for main functionality
         }
     }
-
-    # Return true if shortcut was created OR updated (both require restart from shortcut)
-    return ($wasCreated -or $shortcutUpdated)
+    # Return true ONLY if shortcut was created for the first time
+    # (not when updated - that would cause restart dialog every time script moves)
+    return $wasCreated
 }
 
 function Test-ContextMenuIntegration {
