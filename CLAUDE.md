@@ -279,11 +279,19 @@ Users can create custom file handlers that won't be overwritten by GitHub sync u
    - Modify file type handlers as needed (see switch statement in script)
    - Click "Save As..." and save as `Std-File.ps1` (overwrites default in wsb folder)
 
-3. **Automatic detection:**
-   - On next file selection, GUI detects custom header
-   - Custom script loads in editor (editable, Save button enabled)
+3. **Automatic detection and usage:**
+   - When you select a file, GUI detects custom header
    - Status message shows "using CUSTOM Std-File.ps1"
+   - A wrapper script is shown in editor (not the full custom script content)
+   - Custom script will be executed in sandbox with proper parameters
    - GitHub sync will skip this file (won't overwrite)
+
+4. **Editing custom script:**
+   - To edit your custom Std-File.ps1, click "Load..." button
+   - Navigate to `Source\wsb\Std-File.ps1` and open it
+   - Make your changes in the editor
+   - Click "Save" to save changes (Save button is enabled for custom scripts)
+   - On next file selection, your updated custom script will be used
 
 **Method 2: Via External Editor**
 
