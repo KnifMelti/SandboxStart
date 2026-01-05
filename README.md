@@ -5,7 +5,7 @@
 # SandboxStart
 
 A Windows Sandbox (**WSB**) testing tool for easily testing applications, scripts, and installers in an isolated environment.<br>
-Features automatic **WinGet** installation, follow-script-location shortcut, **WSB** configuration, script mapping system, high-DPI compatible UI, Windows Explorer Integration (optional) and customizable test scenarios.
+Features automatic **WinGet** installation, follow-script-location shortcut, high-DPI compatible UI, **WSB** configuration, script mapping system, dark mode support, Windows Explorer Integration (optional) and customizable test scenarios.
 
 > **Note:** This project was extracted from [WAU-Settings-GUI](https://github.com/KnifMelti/WAU-Settings-GUI) and made into a standalone tool.<br>
 > It depends on the [SandboxTest-Shared](https://github.com/KnifMelti/SandboxTest-Shared) repository as a **Submodule** that also feeds the parent project with new features.
