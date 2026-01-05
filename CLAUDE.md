@@ -256,6 +256,85 @@ $sandboxPath = "$env:USERPROFILE\Desktop\MyTestFolder"
 4. Upload script to GitHub releases as asset (for automatic download)
 5. For adding a new Default Script the code in project must be modified too
 
+### Creating a Custom Std-File.ps1 Handler
+
+Users can create custom file handlers that won't be overwritten by GitHub sync updates. The system uses automatic detection via a `# CUSTOM OVERRIDE` header.
+
+**Use Cases:**
+- Custom .exe/.msi handling with specific parameters
+- Special .intunewin processing logic
+- Custom logging or error handling for file execution
+- Override default file type behavior (e.g., run .py files differently)
+
+**Method 1: Via GUI (Recommended for most users)**
+
+1. **Load default script:**
+   - Click "Load..." button in the GUI
+   - Navigate to `Source\wsb\Std-File.ps1`
+   - Script loads in editor
+
+2. **Create custom version:**
+   - Add `# CUSTOM OVERRIDE` as the **first line** in the editor
+   - Add descriptive comment on line 2 (e.g., `# My custom .exe handler`)
+   - Modify file type handlers as needed (see switch statement in script)
+   - Click "Save As..." and save as `Std-File.ps1` (overwrites default in wsb folder)
+
+3. **Automatic detection:**
+   - On next file selection, GUI detects custom header
+   - Custom script loads in editor (editable, Save button enabled)
+   - Status message shows "using CUSTOM Std-File.ps1"
+   - GitHub sync will skip this file (won't overwrite)
+
+**Method 2: Via External Editor**
+
+1. Open `Source\wsb\Std-File.ps1` in any text editor (VS Code, Notepad++, etc.)
+2. Add `# CUSTOM OVERRIDE` as the first line
+3. Modify file type handlers as needed
+4. Save changes (use UTF-8 encoding with CRLF line endings)
+
+**Example Custom Header:**
+
+```powershell
+# CUSTOM OVERRIDE
+# My custom file handler - logs all .exe executions to Desktop
+# Std-File.ps1 - Execute files in Windows Sandbox
+
+[CmdletBinding()]
+param(
+	[Parameter(Mandatory)]
+	[string]$SandboxFolderName,
+	[Parameter(Mandatory)]
+	[string]$FileName
+)
+
+# Custom logging
+$logFile = "$env:USERPROFILE\Desktop\FileExecutions.log"
+"$(Get-Date) - Executing: $FileName" | Out-File $logFile -Append
+
+# Rest of script...
+```
+
+**GitHub Sync Protection:**
+
+The `Sync-GitHubScriptsSelective` function in `Shared-Helpers.ps1` checks for the regex pattern `^\s*#\s*CUSTOM\s+OVERRIDE` and skips syncing if found.
+
+**Supported header formats:**
+- `# CUSTOM OVERRIDE` (standard)
+- `#CUSTOM OVERRIDE` (no space after #)
+- `  # CUSTOM OVERRIDE` (leading whitespace)
+
+**Reverting to Default:**
+
+1. **Delete file method:** Delete `wsb\Std-File.ps1` → GitHub sync re-downloads default on next GUI run
+2. **Remove header method:** Remove the `# CUSTOM OVERRIDE` line → GitHub sync overwrites on next run
+
+**Important Notes:**
+
+- Custom scripts must use UTF-8 encoding with CRLF line endings (Windows standard)
+- Always test custom scripts thoroughly before using in production
+- Default script parameters (`$SandboxFolderName`, `$FileName`) must be preserved
+- Custom scripts can add additional parameters or logic as needed
+
 ### Modifying the GUI Dialog
 
 Edit `Source/shared/Show-SandboxTestDialog.ps1`. Key sections:

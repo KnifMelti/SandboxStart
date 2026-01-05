@@ -1,4 +1,26 @@
 # Std-File.ps1 - Execute files in Windows Sandbox
+#
+# CUSTOMIZATION:
+# To create your own file handler that won't be overwritten by updates:
+# 1. In the GUI, click "Load..." button and navigate to Source\wsb\Std-File.ps1
+# 2. Add "# CUSTOM OVERRIDE" as the first line in the editor
+# 3. Modify the file type handlers below as needed
+# 4. Click "Save As..." and save as "Std-File.ps1" (overwrites default in wsb folder)
+# 5. The GUI will automatically detect and use your custom version on next file selection
+#
+# Example custom header:
+# # CUSTOM OVERRIDE
+# # My custom file handler for .exe and .msi files
+#
+# Alternative method (external editor):
+# - Edit Source\wsb\Std-File.ps1 directly in any text editor
+# - Add "# CUSTOM OVERRIDE" as first line and modify handlers
+# - Save changes - GUI will auto-detect custom version
+#
+# To revert to default:
+# - Delete wsb\Std-File.ps1 (GitHub sync will re-download default)
+# - Or remove the "# CUSTOM OVERRIDE" line (GitHub sync will overwrite)
+#
 [CmdletBinding()]
 param(
 	[Parameter(Mandatory)]
