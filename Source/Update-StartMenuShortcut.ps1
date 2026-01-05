@@ -174,7 +174,7 @@ function Uninstall-SandboxStart {
     try {
         # Ask for confirmation first
         $result = [System.Windows.Forms.MessageBox]::Show(
-            "This will completely remove SandboxStart integration from Windows:`n`n• Start Menu shortcuts`n• Context menu entries (if installed)`n`nWorking files will be kept and must be deleted manually if desired.`n`nContinue?",
+            "This will completely remove SandboxStart integration from Windows:`n`n  - Start Menu shortcuts`n  - Context menu entries (if installed)`n`nWorking files will be kept and must be deleted manually if desired.`n`nContinue?",
             "Confirm Uninstall",
             [System.Windows.Forms.MessageBoxButtons]::OKCancel,
             [System.Windows.Forms.MessageBoxIcon]::Warning
