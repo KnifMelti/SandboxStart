@@ -164,7 +164,7 @@ test-*.zip = ExtractAndTest.ps1
     1. Change to `All Files (*.*)` if you want to let **Windows** in **WSB** decide how to start it (`.reg`...)
 3. Script automatically generates appropriate execution command
 4. For `.ahk` or `.py` files: auto-selects required package list if networking enabled
-5. For `.intunewin` files: auto-downloads `IntuneWinAppUtilDecoder.exe` in **WSB** so it can be extracted correctly ([Oliver Kieselbach](https://oliverkieselbach.com/2022/03/30/ime-debugging-and-intune-win32-app-decoding-part-2/))
+5. For `.intunewin` files: auto-downloads `IntuneWinAppUtilDecoder.exe` in **WSB** so it can be extracted correctly
 6. Click OK
 7. Sandbox launches, installs dependencies (if needed) and runs the selected file
 
@@ -289,6 +289,7 @@ So, it's not as secure as **FLARE-VM**!
 ## Credits
 
 - Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1)
+- `IntuneWinAppUtilDecoder.exe`: [Oliver Kieselbach](https://oliverkieselbach.com/2022/03/30/ime-debugging-and-intune-win32-app-decoding-part-2/)
 
 ## Show Your Support
 
