@@ -27,28 +27,23 @@ switch ($extension) {
 		Start-Process powershell.exe -ArgumentList "-File `"$fullFilePath`"" -WorkingDirectory $sandboxPath
 	}
 	'.intunewin' {
-		# IntuneWin: Extract using IntunewinBuilder
+		# IntuneWin: Extract using IntuneWinAppUtilDecoder
 		$extractPath = Join-Path $env:TEMP "IntuneExtracted_$([guid]::NewGuid().ToString())"
 		New-Item -ItemType Directory -Path $extractPath -Force | Out-Null
 		
-		# Download and install IntunewinBuilder.msi if not present
-		$decoderPath = "$env:ProgramFiles\IntunewinBuilder\resources\IntuneWinAppUtilDecoder.exe"
+		# Download IntuneWinAppUtilDecoder.exe if not present
+		$decoderPath = Join-Path $env:TEMP "IntuneWinAppUtilDecoder.exe"
 		if (-not (Test-Path $decoderPath)) {
-			Write-Host "Downloading IntunewinBuilder.msi..."
-			$msiPath = Join-Path $env:TEMP "IntunewinBuilder.msi"
-			$downloadUrl = "https://github.com/rafallz10100/IntunewinBuilder/releases/latest/download/IntunewinBuilder.msi"
+			Write-Host "Downloading IntuneWinAppUtilDecoder.exe..."
+			$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/IntuneWinAppUtilDecoder.exe"
 			
 			try {
-				Invoke-WebRequest -Uri $downloadUrl -OutFile $msiPath -UseBasicParsing -ErrorAction Stop
+				Invoke-WebRequest -Uri $downloadUrl -OutFile $decoderPath -UseBasicParsing -ErrorAction Stop
 			} catch {
-				Write-Warning "Failed to download IntunewinBuilder.msi: $_"
+				Write-Warning "Failed to download IntuneWinAppUtilDecoder.exe: $_"
 				Write-Warning "Internet connection required. Aborting .intunewin extraction."
 				return
 			}
-			
-			Write-Host "Installing IntunewinBuilder..."
-			Start-Process msiexec.exe -ArgumentList "/i `"$msiPath`" /quiet /norestart" -Wait
-			Remove-Item $msiPath -Force -ErrorAction SilentlyContinue
 		}
 		
 		# Read Detection.xml to get setup file name
@@ -68,16 +63,12 @@ switch ($extension) {
 		}
 		$zipArchive.Dispose()
 		
-		# Copy .intunewin file to temp folder for decoding
-		$tempIntuneFile = Join-Path $extractPath ([System.IO.Path]::GetFileName($fullFilePath))
-		Copy-Item $fullFilePath $tempIntuneFile -Force
-		
 		# Decode using IntuneWinAppUtilDecoder
-		Write-Host "Decoding $tempIntuneFile..."
-		& $decoderPath $tempIntuneFile /s
+		$decodedZip = Join-Path $extractPath ([System.IO.Path]::GetFileNameWithoutExtension($fullFilePath) + ".decoded.zip")
+		Write-Host "Decoding $fullFilePath..."
+		& $decoderPath $fullFilePath /s /filePath:$decodedZip
 		
-		# Find and extract the decoded.zip file
-		$decodedZip = $tempIntuneFile -replace '\.intunewin$', '.decoded.zip'
+		# Extract the decoded.zip file
 		$decryptedPath = Join-Path $extractPath "Decrypted"
 		
 		if (Test-Path $decodedZip) {
