@@ -232,7 +232,7 @@ function Uninstall-SandboxStart {
         else {
             $message = "SandboxStart has been uninstalled.`n`nRemoved:"
             foreach ($item in $removed) {
-                $message += "`n• $item"
+                $message += "`n  - $item"
             }
             $message += "`n`nWorking directory files were kept.`nYou can manually delete the SandboxStart folder if desired."
         }
