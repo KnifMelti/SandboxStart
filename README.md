@@ -164,8 +164,9 @@ test-*.zip = ExtractAndTest.ps1
     1. Change to `All Files (*.*)` if you want to let **Windows** in **WSB** decide how to start it (`.reg`...)
 3. Script automatically generates appropriate execution command
 4. For `.ahk` or `.py` files: auto-selects required package list if networking enabled
-5. Click OK
-6. Sandbox launches, installs dependencies (if needed) and runs the selected file
+5. For `.intunewin` files: auto-downloads `IntuneWinAppUtilDecoder.exe` so in can be extracted correctly ([Oliver Kieselbach](https://oliverkieselbach.com/2022/03/30/ime-debugging-and-intune-win32-app-decoding-part-2/))
+6. Click OK
+7. Sandbox launches, installs dependencies (if needed) and runs the selected file
 
 ## Project Structure
 
