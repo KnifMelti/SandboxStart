@@ -2,14 +2,14 @@
 [CmdletBinding()]
 param(
 	[Parameter(Mandatory)]
-	[string]$SandboxFolderName,
+	[string]$SandboxFolderName,  # Relative path from Desktop (e.g., "SandboxTest\1.0.4.0" or "IntuneWinBuilder")
 
 	[Parameter(Mandatory)]
 	[string]$FileName
 )
 
-# Build full paths
-$sandboxPath = "$env:USERPROFILE\Desktop\$SandboxFolderName"
+# Build full paths - Join-Path handles both simple and nested folder structures
+$sandboxPath = Join-Path "$env:USERPROFILE\Desktop" $SandboxFolderName
 $fullFilePath = Join-Path $sandboxPath $FileName
 
 # Get file extension
