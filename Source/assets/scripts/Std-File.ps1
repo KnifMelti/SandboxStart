@@ -63,10 +63,14 @@ switch ($extension) {
 		}
 		$zipArchive.Dispose()
 		
+		# Copy .intunewin file to temp folder for decoding
+		$tempIntuneFile = Join-Path $extractPath ([System.IO.Path]::GetFileName($fullFilePath))
+		Copy-Item $fullFilePath $tempIntuneFile -Force
+		
 		# Decode using IntuneWinAppUtilDecoder
-		$decodedZip = Join-Path $extractPath ([System.IO.Path]::GetFileNameWithoutExtension($fullFilePath) + ".decoded.zip")
-		Write-Host "Decoding $fullFilePath..."
-		& $decoderPath $fullFilePath /s /filePath:$decodedZip
+		$decodedZip = $tempIntuneFile -replace '\.intunewin$', '.decoded.zip'
+		Write-Host "Decoding $tempIntuneFile..."
+		& $decoderPath $tempIntuneFile /s /filePath:$decodedZip
 		
 		# Extract the decoded.zip file
 		$decryptedPath = Join-Path $extractPath "Decrypted"
