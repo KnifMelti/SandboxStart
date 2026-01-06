@@ -27,7 +27,7 @@ switch ($extension) {
 	}
 	'.intunewin' {
 		# IntuneWin: Extract using IntuneWinAppUtilDecoder
-		$outputPath = Join-Path $env:TEMP "IntuneExtracted_$([guid]::NewGuid().ToString())"
+		$outputPath = Join-Path $env:TEMP "IntuneExtracted"
 		New-Item -ItemType Directory -Path $outputPath -Force | Out-Null
 		
 		# Download IntuneWinAppUtilDecoder.exe if not present
@@ -56,13 +56,25 @@ switch ($extension) {
 			$setupFileName = $xml.ApplicationInfo.SetupFile
 			Write-Host "Setup file from Detection.xml: $setupFileName"
 			
-			# Run the setup file
-			$setupFile = Join-Path $outputPath $setupFileName
-			if (Test-Path $setupFile) {
-				Write-Host "Running setup file: $setupFileName"
-				Start-Process $setupFile -WorkingDirectory $outputPath
+			# Find and extract the decoded.zip file
+			$decodedZip = Get-ChildItem -Path $outputPath -Filter "*.decoded.zip" | Select-Object -First 1
+			if ($decodedZip) {
+				$extractPath = Join-Path $outputPath "Extracted"
+				Write-Host "Extracting $($decodedZip.Name) to $extractPath..."
+				
+				Add-Type -AssemblyName System.IO.Compression.FileSystem
+				[System.IO.Compression.ZipFile]::ExtractToDirectory($decodedZip.FullName, $extractPath)
+				
+				# Run the setup file from extracted folder
+				$setupFile = Join-Path $extractPath $setupFileName
+				if (Test-Path $setupFile) {
+					Write-Host "Running setup file: $setupFileName"
+					Start-Process $setupFile -WorkingDirectory $extractPath
+				} else {
+					Write-Warning "Setup file not found: $setupFile"
+				}
 			} else {
-				Write-Warning "Setup file not found: $setupFile"
+				Write-Warning "No decoded.zip file found in output path: $outputPath"
 			}
 		} else {
 			Write-Warning "Detection.xml not found in output path: $detectionXmlPath"
