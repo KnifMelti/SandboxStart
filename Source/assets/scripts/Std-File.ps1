@@ -28,6 +28,11 @@ switch ($extension) {
 	'.intunewin' {
 		# IntuneWin: Extract using IntuneWinAppUtilDecoder
 		$outputPath = Join-Path $env:TEMP "IntuneExtracted"
+		
+		# Clean up previous extraction if it exists
+		if (Test-Path $outputPath) {
+			Remove-Item $outputPath -Recurse -Force -ErrorAction SilentlyContinue
+		}
 		New-Item -ItemType Directory -Path $outputPath -Force | Out-Null
 		
 		# Download IntuneWinAppUtilDecoder.exe if not present
@@ -45,39 +50,42 @@ switch ($extension) {
 			}
 		}
 		
-		# Decode directly to output path using /out parameter
+		# Decode to output path - creates Detection.xml and .decoded.zip
 		Write-Host "Decoding $fullFilePath to $outputPath..."
 		& $decoderPath $fullFilePath /s /out:$outputPath
 		
-		# Read Detection.xml from output path to get setup file name
+		# Read Detection.xml to get setup file name
 		$detectionXmlPath = Join-Path $outputPath "Detection.xml"
-		if (Test-Path $detectionXmlPath) {
-			[xml]$xml = Get-Content $detectionXmlPath
-			$setupFileName = $xml.ApplicationInfo.SetupFile
-			Write-Host "Setup file from Detection.xml: $setupFileName"
-			
-			# Find and extract the decoded.zip file
-			$decodedZip = Get-ChildItem -Path $outputPath -Filter "*.decoded.zip" | Select-Object -First 1
-			if ($decodedZip) {
-				$extractPath = Join-Path $outputPath "Extracted"
-				Write-Host "Extracting $($decodedZip.Name) to $extractPath..."
-				
-				Add-Type -AssemblyName System.IO.Compression.FileSystem
-				[System.IO.Compression.ZipFile]::ExtractToDirectory($decodedZip.FullName, $extractPath)
-				
-				# Run the setup file from extracted folder
-				$setupFile = Join-Path $extractPath $setupFileName
-				if (Test-Path $setupFile) {
-					Write-Host "Running setup file: $setupFileName"
-					Start-Process $setupFile -WorkingDirectory $extractPath
-				} else {
-					Write-Warning "Setup file not found: $setupFile"
-				}
-			} else {
-				Write-Warning "No decoded.zip file found in output path: $outputPath"
-			}
-		} else {
+		if (-not (Test-Path $detectionXmlPath)) {
 			Write-Warning "Detection.xml not found in output path: $detectionXmlPath"
+			return
+		}
+		
+		[xml]$xml = Get-Content $detectionXmlPath
+		$setupFileName = $xml.ApplicationInfo.SetupFile
+		Write-Host "Setup file from Detection.xml: $setupFileName"
+		
+		# Construct decoded.zip filename from original .intunewin filename
+		$baseName = [System.IO.Path]::GetFileNameWithoutExtension($FileName)
+		$decodedZipPath = Join-Path $outputPath "$baseName.decoded.zip"
+		
+		if (-not (Test-Path $decodedZipPath)) {
+			Write-Warning "Decoded zip file not found: $decodedZipPath"
+			return
+		}
+		
+		# Extract decoded.zip directly to output path
+		Write-Host "Extracting $baseName.decoded.zip..."
+		Add-Type -AssemblyName System.IO.Compression.FileSystem
+		[System.IO.Compression.ZipFile]::ExtractToDirectory($decodedZipPath, $outputPath)
+		
+		# Run the setup file
+		$setupFile = Join-Path $outputPath $setupFileName
+		if (Test-Path $setupFile) {
+			Write-Host "Running setup file: $setupFileName"
+			Start-Process $setupFile -WorkingDirectory $outputPath
+		} else {
+			Write-Warning "Setup file not found: $setupFile"
 		}
 	}
 	default {
