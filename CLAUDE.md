@@ -256,15 +256,63 @@ $sandboxPath = "$env:USERPROFILE\Desktop\MyTestFolder"
 4. Upload script to GitHub releases as asset (for automatic download)
 5. For adding a new Default Script the code in project must be modified too
 
-### Creating a Custom Std-File.ps1 Handler
+### Custom Override for Default Scripts (Std-*.ps1)
 
-Users can create custom file handlers that won't be overwritten by GitHub sync updates. The system uses automatic detection via a `# CUSTOM OVERRIDE` header.
+Users can override **any** default script (Std-Install.ps1, Std-Manifest.ps1, Std-WAU.ps1, Std-File.ps1) by adding a `# CUSTOM OVERRIDE` header. The system automatically detects this header and:
+- Enables the Save button in GUI
+- Protects the file from GitHub sync overwrites
+- Allows full customization of default script behavior
 
-**Use Cases:**
-- Custom .exe/.msi handling with specific parameters
-- Special .intunewin processing logic
-- Custom logging or error handling for file execution
-- Override default file type behavior (e.g., run .py files differently)
+**General Use Cases:**
+- Custom installer detection logic (Std-Install.ps1)
+- Custom manifest validation (Std-Manifest.ps1)
+- Custom WAU installation behavior (Std-WAU.ps1)
+- Custom file type handling (Std-File.ps1)
+- Add logging, error handling, or special processing to any default script
+
+#### Custom Override: General Instructions (All Std-*.ps1 Scripts)
+
+This works for **Std-Install.ps1, Std-Manifest.ps1, Std-WAU.ps1**:
+
+**Quick Method: Edit in GUI and Save**
+
+1. **Select folder to load default script:**
+   - Browse to a folder (script loads based on mappings)
+   - Default script appears in editor (e.g., Std-Install.ps1)
+
+2. **Add custom override header:**
+   - Add `# CUSTOM OVERRIDE` as the **first line** in the editor
+   - Add descriptive comment on line 2 (e.g., `# My custom installer with logging`)
+
+3. **Modify and save:**
+   - Make your changes to the script
+   - Click **"Save"** button (now enabled because of custom header)
+   - Script is saved to `Source\wsb\Std-[ScriptName].ps1`
+   - GitHub sync will skip this file (won't overwrite)
+
+4. **Future usage:**
+   - Next time you select a folder, your custom script loads
+   - You can continue to edit and save changes
+   - Script executes with your customizations
+
+**Alternative: Via Load Button**
+
+1. Click **"Load..."** button
+2. Navigate to `Source\wsb\Std-[ScriptName].ps1`
+3. Add `# CUSTOM OVERRIDE` as first line
+4. Modify the script as needed
+5. Click **"Save"** or **"Save As..."**
+
+**Alternative: Via External Editor**
+
+1. Open `Source\wsb\Std-[ScriptName].ps1` in any text editor (VS Code, Notepad++, etc.)
+2. Add `# CUSTOM OVERRIDE` as the first line
+3. Modify the script
+4. Save changes (use UTF-8 encoding with CRLF line endings)
+
+#### Custom Override: Std-File.ps1 Specific Instructions
+
+**Std-File.ps1 has special behavior** because it uses parameter blocks that must execute correctly:
 
 **Method 1: Via GUI (Recommended for most users)**
 
@@ -342,6 +390,21 @@ The `Sync-GitHubScriptsSelective` function in `Shared-Helpers.ps1` checks for th
 - Always test custom scripts thoroughly before using in production
 - Default script parameters (`$SandboxFolderName`, `$FileName`) must be preserved
 - Custom scripts can add additional parameters or logic as needed
+
+**Summary: Behavior Differences Between Scripts**
+
+| Script | Selection Method | GUI Display | Execution | Editing |
+|--------|-----------------|-------------|-----------|---------|
+| **Std-Install.ps1** | Select folder | Full script in editor | Runs inline | Edit directly & Save |
+| **Std-Manifest.ps1** | Select folder with `.installer.yaml` | Full script in editor | Runs inline | Edit directly & Save |
+| **Std-WAU.ps1** | Select folder with `InstallWSB.cmd` | Full script in editor | Runs inline | Edit directly & Save |
+| **Std-File.ps1** | Select individual file | Wrapper script in editor | Calls .ps1 file | Load → Edit → Save |
+
+**Why Std-File.ps1 is different:**
+- Uses `[CmdletBinding()]` and `param()` blocks that require file execution
+- Must be called as a script file (not run inline) for parameters to work correctly
+- GUI shows wrapper to ensure proper execution
+- To edit: Use Load button to view/edit full script content
 
 ### Modifying the GUI Dialog
 

@@ -120,8 +120,53 @@ Default scripts are **automatically downloaded from** [GitHub](https://github.co
 | `*.installer.yaml` | Std-Manifest.ps1 | Validates/installs a **WinGet** package from local manifest |
 | `*.*` | Std-Install.ps1 | Universal smart installer - detects and runs installers (`Install.*`, `Setup.*`, `Installer.msi`, etc.) with built-in priority, opens Explorer if none found |
 
-> **Note:** Default scripts can't be saved, only saved as...<br>
-> To customize behavior, create your own script and add/edit the mappings (see Custom Scripts below).
+> **Note:** Default scripts can't be saved directly in the GUI editor.<br>
+> To customize, either create your own script (see Custom Scripts below) or use Custom Override (see Advanced below).
+
+#### Advanced: Custom Override for Default Scripts
+
+You can override **any** default script (Std-*.ps1) by adding `# CUSTOM OVERRIDE` as the first line:
+
+**Method 1: Via GUI (Quick)**
+1. Select folder/file to load the default script in editor
+2. Add `# CUSTOM OVERRIDE` as the **first line**
+3. Modify the script as needed
+4. Click **"Save"** button (now enabled for custom scripts)
+5. The script is saved and won't be overwritten by GitHub sync
+
+**Method 2: Via Load Button (Full Edit)**
+1. Click **"Load..."** button
+2. Navigate to `Source\wsb\Std-[ScriptName].ps1`
+3. Add `# CUSTOM OVERRIDE` as first line
+4. Modify the script
+5. Click **"Save"** or **"Save As..."**
+
+**Example:**
+```powershell
+# CUSTOM OVERRIDE
+# My custom installer with logging
+# Std-Install.ps1 - Custom version
+
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)]
+    [string]$SandboxFolderName
+)
+
+# Add custom logging
+"$(Get-Date) - Starting installation" | Out-File "$env:USERPROFILE\Desktop\install.log"
+
+# ... rest of script ...
+```
+
+**Supported Scripts:**
+- `Std-Install.ps1` - Custom installer detection logic
+- `Std-Manifest.ps1` - Custom manifest validation
+- `Std-WAU.ps1` - Custom WAU installation behavior
+- `Std-File.ps1` - Custom file type handling (see [CLAUDE.md](CLAUDE.md#creating-a-custom-std-fileps1-handler))
+
+> **Note:** Scripts with `# CUSTOM OVERRIDE` are protected from GitHub sync updates.<br>
+> Remove the header or delete the file to revert to defaults.
 
 ### Custom Scripts
 
@@ -289,7 +334,7 @@ So, it's not as secure as **FLARE-VM**!
 ## Credits
 
 - Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1)
-- `IntuneWinAppUtilDecoder.exe`: [Oliver Kieselbach](https://oliverkieselbach.com/2022/03/30/ime-debugging-and-intune-win32-app-decoding-part-2/)
+- Uses `IntuneWinAppUtilDecoder.exe`: [Oliver Kieselbach](https://oliverkieselbach.com/2022/03/30/ime-debugging-and-intune-win32-app-decoding-part-2/)
 
 ## Show Your Support
 
