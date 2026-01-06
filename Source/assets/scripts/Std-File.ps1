@@ -28,6 +28,7 @@ switch ($extension) {
 	'.intunewin' {
 		# IntuneWin: Extract using IntuneWinAppUtilDecoder
 		$outputPath = Join-Path $env:TEMP "IntuneExtracted_$([guid]::NewGuid().ToString())"
+		New-Item -ItemType Directory -Path $outputPath -Force | Out-Null
 		
 		# Download IntuneWinAppUtilDecoder.exe if not present
 		$decoderPath = Join-Path $env:TEMP "IntuneWinAppUtilDecoder.exe"
