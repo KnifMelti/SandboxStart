@@ -123,6 +123,17 @@ Default scripts are **automatically downloaded from** [GitHub](https://github.co
 > **Note:** Default scripts can't be saved directly in the GUI editor.<br>
 > To customize, either create your own script (see Custom Scripts below) or use Custom Override (see Advanced below).
 
+### Custom Scripts
+
+Create your own scripts in the `wsb\` folder and add/edit mappings to/in `script-mappings.txt`:
+
+```
+# Custom mapping example
+myapp-*.exe = CustomInstaller.ps1
+test-*.zip = ExtractAndTest.ps1
+*.* = MyInstaller.ps1
+```
+
 #### Advanced: Custom Override for Default Scripts
 
 You can override **any** default script (Std-*.ps1) by adding `# CUSTOM OVERRIDE` as the first line:
@@ -163,21 +174,10 @@ param(
 - `Std-Install.ps1` - Custom installer detection logic
 - `Std-Manifest.ps1` - Custom manifest validation
 - `Std-WAU.ps1` - Custom WAU installation behavior
-- `Std-File.ps1` - Custom file type handling (see [CLAUDE.md](CLAUDE.md#creating-a-custom-std-fileps1-handler))
+- `Std-File.ps1` - Custom file type handling (see [CLAUDE.md](CLAUDE.md#custom-override-for-default-scripts-std-ps1))
 
 > **Note:** Scripts with `# CUSTOM OVERRIDE` are protected from GitHub sync updates.<br>
 > Remove the header or delete the file to revert to defaults.
-
-### Custom Scripts
-
-Create your own scripts in the `wsb\` folder and add/edit mappings to/in `script-mappings.txt`:
-
-```
-# Custom mapping example
-myapp-*.exe = CustomInstaller.ps1
-test-*.zip = ExtractAndTest.ps1
-*.* = MyInstaller.ps1
-```
 
 ## Examples
 
