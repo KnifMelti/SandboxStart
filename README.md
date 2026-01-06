@@ -334,7 +334,12 @@ So, it's not as secure as **FLARE-VM**!
 ## Credits
 
 - Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1)
-- Uses `IntuneWinAppUtilDecoder.exe`: [Oliver Kieselbach](https://oliverkieselbach.com/2022/03/30/ime-debugging-and-intune-win32-app-decoding-part-2/)
+- Provides (if needed/chosen in **WSB**):
+  - `IntuneWinAppUtilDecoder.exe`: [Oliver Kieselbach](https://oliverkieselbach.com/2022/03/30/ime-debugging-and-intune-win32-app-decoding-part-2/)
+  - `CMTrace.exe`: [Microsoft](https://learn.microsoft.com/en-us/intune/configmgr/core/support/cmtrace)
+  - [CTT Windows Utility](https://github.com/ChrisTitusTech/winutil)
+  - [AdvancedRun](https://www.nirsoft.net/utils/advanced_run.html)
+  - [UninstallView](https://www.nirsoft.net/utils/uninstall_view.html)
 
 ## Show Your Support
 
