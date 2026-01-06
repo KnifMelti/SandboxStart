@@ -19,10 +19,12 @@ switch ($extension) {
 	{ $_ -in @('.cmd', '.bat') } {
 		# CMD/BAT: Execute via cmd.exe with proper working directory
 		# Using cd /d ensures correct drive and directory, && ensures file only runs if cd succeeds
+		Write-Host "Running: $fullFilePath..."
 		Start-Process cmd.exe -ArgumentList "/c cd /d `"$sandboxPath`" && `"$FileName`""
 	}
 	'.ps1' {
 		# PS1: Execute via powershell.exe with working directory set
+		Write-Host "Running: $fullFilePath..."
 		Start-Process powershell.exe -ArgumentList "-File `"$fullFilePath`"" -WorkingDirectory $sandboxPath
 	}
 	'.intunewin' {
@@ -115,13 +117,16 @@ switch ($extension) {
 		}
 		
 		# Execute the .ahk/.au3 file
+		Write-Host "Running: $fullFilePath..."
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
 	}
 	default {
 		# Default: Direct execution with working directory
 		# Works for: .exe, .msi, .msix, .appx, .js, .py, etc.
+		Write-Host "Running: $fullFilePath..."
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
 	}
 }
+
 
 
