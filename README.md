@@ -208,7 +208,7 @@ param(
 - `Std-Install.ps1` - Custom installer detection logic
 - `Std-Manifest.ps1` - Custom manifest validation
 - `Std-WAU.ps1` - Custom WAU installation behavior
-- `Std-File.ps1` - Custom file type handling (see [CLAUDE.md](CLAUDE.md#custom-override-for-default-scripts-std-ps1))
+- `Std-File.ps1` - Custom file type handling (see [CLAUDE.md](https://github.com/KnifMelti/SandboxStart/blob/master/CLAUDE.md#custom-override-for-default-scripts-std-ps1))
 
 > **Note:** Scripts with `# CUSTOM OVERRIDE` are protected from GitHub sync updates.<br>
 > Remove the header or delete the file to revert to defaults.
