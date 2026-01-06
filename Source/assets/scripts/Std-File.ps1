@@ -27,14 +27,13 @@ switch ($extension) {
 	}
 	'.intunewin' {
 		# IntuneWin: Extract using IntuneWinAppUtilDecoder
-		$extractPath = Join-Path $env:TEMP "IntuneExtracted_$([guid]::NewGuid().ToString())"
-		New-Item -ItemType Directory -Path $extractPath -Force | Out-Null
+		$outputPath = Join-Path $env:TEMP "IntuneExtracted_$([guid]::NewGuid().ToString())"
 		
 		# Download IntuneWinAppUtilDecoder.exe if not present
 		$decoderPath = Join-Path $env:TEMP "IntuneWinAppUtilDecoder.exe"
 		if (-not (Test-Path $decoderPath)) {
 			Write-Host "Downloading IntuneWinAppUtilDecoder.exe..."
-			$downloadUrl = "https://github.com/okieselbach/Intune/raw/master/IntuneWinAppUtilDecoder/IntuneWinAppUtilDecoder/bin/Release/IntuneWinAppUtilDecoder.exe"
+			$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/IntuneWinAppUtilDecoder.exe"
 			
 			try {
 				Invoke-WebRequest -Uri $downloadUrl -OutFile $decoderPath -UseBasicParsing -ErrorAction Stop
@@ -45,49 +44,27 @@ switch ($extension) {
 			}
 		}
 		
-		# Read Detection.xml to get setup file name
-		Add-Type -AssemblyName System.IO.Compression.FileSystem
-		$zipArchive = [System.IO.Compression.ZipFile]::OpenRead($fullFilePath)
-		$detectionEntry = $zipArchive.Entries | Where-Object { $_.FullName -eq "IntuneWinPackage/Metadata/Detection.xml" }
+		# Decode directly to output path using /out parameter
+		Write-Host "Decoding $fullFilePath to $outputPath..."
+		& $decoderPath $fullFilePath /s /out:$outputPath
 		
-		$setupFileName = $null
-		if ($detectionEntry) {
-			$stream = $detectionEntry.Open()
-			$reader = New-Object System.IO.StreamReader($stream)
-			[xml]$xml = $reader.ReadToEnd()
+		# Read Detection.xml from output path to get setup file name
+		$detectionXmlPath = Join-Path $outputPath "Detection.xml"
+		if (Test-Path $detectionXmlPath) {
+			[xml]$xml = Get-Content $detectionXmlPath
 			$setupFileName = $xml.ApplicationInfo.SetupFile
-			Write-Host "Setup file from XML: $setupFileName"
-			$reader.Close()
-			$stream.Close()
-		}
-		$zipArchive.Dispose()
-		
-		# Copy .intunewin file to temp folder for decoding
-		$tempIntuneFile = Join-Path $extractPath ([System.IO.Path]::GetFileName($fullFilePath))
-		Copy-Item $fullFilePath $tempIntuneFile -Force
-		
-		# Decode using IntuneWinAppUtilDecoder
-		$decodedZip = $tempIntuneFile -replace '\.intunewin$', '.decoded.zip'
-		Write-Host "Decoding $tempIntuneFile..."
-		& $decoderPath $tempIntuneFile /s /filePath:$decodedZip
-		
-		# Extract the decoded.zip file
-		$decryptedPath = Join-Path $extractPath "Decrypted"
-		
-		if (Test-Path $decodedZip) {
-			Write-Host "Extracting $decodedZip to $decryptedPath"
-			[System.IO.Compression.ZipFile]::ExtractToDirectory($decodedZip, $decryptedPath)
+			Write-Host "Setup file from Detection.xml: $setupFileName"
 			
 			# Run the setup file
-			$setupFile = Join-Path $decryptedPath $setupFileName
+			$setupFile = Join-Path $outputPath $setupFileName
 			if (Test-Path $setupFile) {
 				Write-Host "Running setup file: $setupFileName"
-				Start-Process $setupFile -WorkingDirectory $decryptedPath
+				Start-Process $setupFile -WorkingDirectory $outputPath
 			} else {
 				Write-Warning "Setup file not found: $setupFile"
 			}
 		} else {
-			Write-Warning "Decoded ZIP not found: $decodedZip"
+			Write-Warning "Detection.xml not found in output path: $detectionXmlPath"
 		}
 	}
 	default {
