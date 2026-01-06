@@ -58,40 +58,6 @@ This will:
 4. Show configuration dialog
 5. Launch sandbox with your settings
 
-## How to use
-
-### Example 1: Test an Installer
-
-1. Browse to folder containing `Setup.exe`
-2. Script auto-selects `Std-Install.ps1`
-3. Click OK
-4. Sandbox launches and runs the installer
-
-### Example 2: Test WinGet Manifest
-
-1. Browse to folder containing a `*.installer.yaml` file
-2. Script auto-selects `Std-Manifest.ps1`
-3. Click OK
-4. Sandbox launches and validates/installs the package from manifest
-
-### Example 3: Custom Script Execution
-
-1. Browse to your test folder
-2. Edit script or load custom script
-3. Modify **PowerShell** code as needed
-4. Click OK
-5. Sandbox launches and executes your custom script
-
-### Example 4: Test Specific File
-
-1. Click [File...] to select a specific file:
-    1. Change to `All Files (*.*)` if you want to let **Windows** in **WSB** decide how to start it (`.reg`...)
-3. Script automatically generates appropriate execution command
-4. For `.ahk` or `.py` files: auto-selects required package list if networking enabled
-5. For `.intunewin` files: auto-downloads `IntuneWinAppUtilDecoder.exe` in **WSB** so it can be extracted correctly
-6. Click OK
-7. Sandbox launches, installs dependencies (if needed) and runs the selected file
-
 ## Configuration Dialog
 
 The dialog allows you to configure:
@@ -156,6 +122,40 @@ Default scripts are **automatically downloaded from** [GitHub](https://github.co
 
 > **Note:** Default scripts can't be saved directly in the GUI editor.<br>
 > To customize, either create your own script (see Custom Scripts below) or use Custom Override (see Advanced below).
+
+## How to use
+
+### Example 1: Test an Installer
+
+1. Browse to folder containing `Setup.exe`
+2. Script auto-selects `Std-Install.ps1`
+3. Click OK
+4. Sandbox launches and runs the installer
+
+### Example 2: Test WinGet Manifest
+
+1. Browse to folder containing a `*.installer.yaml` file
+2. Script auto-selects `Std-Manifest.ps1`
+3. Click OK
+4. Sandbox launches and validates/installs the package from manifest
+
+### Example 3: Test Specific File
+
+1. Click [File...] to select a specific file:
+    1. Change to `All Files (*.*)` if you want to let **Windows** in **WSB** decide how to start it (`.reg`...)
+3. Script automatically generates appropriate execution command
+4. For `.ahk` or `.py` files: auto-selects required package list if networking enabled
+5. For `.intunewin` files: auto-downloads `IntuneWinAppUtilDecoder.exe` in **WSB** so it can be extracted correctly
+6. Click OK
+7. Sandbox launches, installs dependencies (if needed) and runs the selected file
+
+### Example 4: Custom Script Execution
+
+1. Browse to your test folder
+2. Edit script or load custom script
+3. Modify **PowerShell** code as needed
+4. Click OK
+5. Sandbox launches and executes your custom script
 
 ### Custom Scripts
 
