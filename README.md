@@ -336,7 +336,7 @@ So, it's not as secure as **FLARE-VM**!
 - Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1)
 - Provides (if needed/chosen in **WSB**):
   - `IntuneWinAppUtilDecoder.exe`
-    - 1.0.0.4: with added parameter `/out` that redirects the file output and copies `Detection.xml`: [KnifMelti](https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/IntuneWinAppUtilDecoder.exe) (Digital Signature)
+    - 1.0.0.4: with added parameter `/out` that redirects the file output and preserves `Detection.xml`: [KnifMelti](https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/IntuneWinAppUtilDecoder.exe) (digitally signed)
     - 1.0.0.3: [Oliver Kieselbach](https://oliverkieselbach.com/2019/01/03/how-to-decode-intune-win32-app-packages/) (original project)
   - `CMTrace.exe`: [Microsoft](https://learn.microsoft.com/en-us/intune/configmgr/core/support/cmtrace)
   - [CTT Windows Utility](https://github.com/ChrisTitusTech/winutil)
