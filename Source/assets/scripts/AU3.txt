@@ -1,0 +1,5 @@
+# AutoIt Package List for SandboxStart
+# WinGet Package IDs - one per line
+# Lines starting with # are comments
+
+AutoIt.AutoIt

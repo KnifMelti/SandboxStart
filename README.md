@@ -20,7 +20,7 @@ Features automatic **WinGet** installation, follow-script-location shortcut, hig
 - **Easy-to-use** - interface for configuring sandbox parameters:
   - **DPI-responsive UI** - adds a vertical scrollbar if needed
   - **Folder/File Mapping** - map any folder or select specific file to test:
-    - `.exe`,`.msi`,`.msix`,`.cmd`,`.bat`,`.ps1`,`.appx`,`.appxbundle`,`.intunewin`,`.ahk`,`.py`,`.js` or `All Files (*.*)`
+    - `.exe`,`.msi`,`.msix`,`.cmd`,`.bat`,`.ps1`,`.appx`,`.appxbundle`,`.intunewin`,`.ahk`,`.au3`,`.py`,`.js` or `All Files (*.*)`
   - **Package Lists** - install predefined sets of applications via **WinGet** using custom package lists
   - **Version Control** - select specific **WinGet** version or use pre-release build
   - **Network-only mode** - enable internet access without **WinGet** installation
@@ -71,7 +71,7 @@ The dialog allows you to configure:
 
 ### File Selection
 - **Browse File**: select a specific file to run (automatically maps its parent folder):
-  - `.exe`,`.msi`,`.msix`,`.cmd`,`.bat`,`.ps1`,`.appx`,`.appxbundle`,`.intunewin`,`.ahk`,`.py`,`.js` or `All Files (*.*)`
+  - `.exe`,`.msi`,`.msix`,`.cmd`,`.bat`,`.ps1`,`.appx`,`.appxbundle`,`.intunewin`,`.ahk`,`.au3`,`.py`,`.js` or `All Files (*.*)`
 
 ### Package Lists
 - **Install Packages**: install predefined sets of applications via **WinGet** using custom package lists
@@ -144,7 +144,7 @@ Default scripts are **automatically downloaded from** [GitHub](https://github.co
 1. Click [File...] to select a specific file:
     1. Change to `All Files (*.*)` if you want to let **Windows** in **WSB** decide how to start it (`.reg`...)
 3. Script automatically generates appropriate execution command
-4. For `.ahk` or `.py` files: auto-selects required package list if networking enabled
+4. For `.ahk`,`.au3` or `.py` files: auto-selects required package list if networking enabled
 5. For `.intunewin` files: auto-downloads `IntuneWinAppUtilDecoder.exe` in **WSB** so it can be extracted correctly
 6. Click OK
 7. Sandbox launches, installs dependencies (if needed) and runs the selected file

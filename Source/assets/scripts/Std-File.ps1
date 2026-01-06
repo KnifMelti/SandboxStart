@@ -84,8 +84,8 @@ switch ($extension) {
 			Write-Warning "Setup file not found: $setupFile"
 		}
 	}
-	'.ahk' {
-		# AHK: Download and extract MATE.zip to Desktop\MATE, then execute
+	{ $_ -in @('.ahk', '.au3') } {
+		# AHK/AU3: Download and extract MATE.zip to Desktop\MATE, then execute
 		$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/MATE.zip"
 		$matePath = Join-Path "$env:USERPROFILE\Desktop" "MATE"
 		$zipPath = Join-Path $env:TEMP "MATE.zip"
@@ -114,7 +114,7 @@ switch ($extension) {
 			Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
 		}
 		
-		# Execute the .ahk file
+		# Execute the .ahk/.au3 file
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
 	}
 	default {
