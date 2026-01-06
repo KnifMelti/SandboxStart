@@ -57,7 +57,7 @@ switch ($extension) {
 		$decoderPath = Join-Path $env:TEMP "IntuneWinAppUtilDecoder.exe"
 		if (-not (Test-Path $decoderPath)) {
 			Write-Host "Downloading IntuneWinAppUtilDecoder.exe..."
-			$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/IntuneWinAppUtilDecoder.exe"
+			$downloadUrl = "https://github.com/okieselbach/Intune/raw/master/IntuneWinAppUtilDecoder/IntuneWinAppUtilDecoder/bin/Release/IntuneWinAppUtilDecoder.exe"
 			
 			try {
 				Invoke-WebRequest -Uri $downloadUrl -OutFile $decoderPath -UseBasicParsing -ErrorAction Stop
@@ -119,3 +119,4 @@ switch ($extension) {
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
 	}
 }
+
