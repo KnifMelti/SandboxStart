@@ -134,7 +134,7 @@ test-*.zip = ExtractAndTest.ps1
 *.* = MyInstaller.ps1
 ```
 
-#### Advanced: Custom Override for Default Scripts
+### Advanced: Custom Override for Default Scripts
 
 You can override **any** default script (Std-*.ps1) by adding `# CUSTOM OVERRIDE` as the first line:
 
@@ -179,7 +179,7 @@ param(
 > **Note:** Scripts with `# CUSTOM OVERRIDE` are protected from GitHub sync updates.<br>
 > Remove the header or delete the file to revert to defaults.
 
-## Examples
+## How to use
 
 ### Example 1: Test an Installer
 
