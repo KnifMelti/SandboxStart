@@ -29,10 +29,6 @@ switch ($extension) {
 		# IntuneWin: Extract using IntuneWinAppUtilDecoder
 		$outputPath = Join-Path $env:TEMP "IntuneExtracted"
 		
-		# Clean up previous extraction if it exists
-		if (Test-Path $outputPath) {
-			Remove-Item $outputPath -Recurse -Force -ErrorAction SilentlyContinue
-		}
 		New-Item -ItemType Directory -Path $outputPath -Force | Out-Null
 		
 		# Download IntuneWinAppUtilDecoder.exe if not present
@@ -88,9 +84,42 @@ switch ($extension) {
 			Write-Warning "Setup file not found: $setupFile"
 		}
 	}
+	'.ahk' {
+		# AHK: Download and extract MATE.zip to Desktop\MATE, then execute
+		$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/MATE.zip"
+		$matePath = Join-Path "$env:USERPROFILE\Desktop" "MATE"
+		$zipPath = Join-Path $env:TEMP "MATE.zip"
+		
+		# Create MATE folder if it doesn't exist
+		if (-not (Test-Path $matePath)) {
+			Write-Host "Creating MATE folder on Desktop..."
+			New-Item -ItemType Directory -Path $matePath -Force | Out-Null
+			
+			# Download MATE.zip
+			Write-Host "Downloading MATE.zip..."
+			try {
+				Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
+			} catch {
+				Write-Warning "Failed to download MATE.zip: $_"
+				Write-Warning "Internet connection required. Aborting .ahk execution."
+				return
+			}
+			
+			# Extract MATE.zip to Desktop\MATE
+			Write-Host "Extracting MATE.zip to Desktop\MATE..."
+			Add-Type -AssemblyName System.IO.Compression.FileSystem
+			[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $matePath)
+			
+			# Clean up zip file
+			Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
+		}
+		
+		# Execute the .ahk file
+		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
+	}
 	default {
 		# Default: Direct execution with working directory
-		# Works for: .exe, .msi, .msix, .appx, .js, .py, .ahk, etc.
+		# Works for: .exe, .msi, .msix, .appx, .js, .py, etc.
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
 	}
 }
