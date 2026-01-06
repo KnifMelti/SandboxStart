@@ -172,37 +172,13 @@ test-*.zip = ExtractAndTest.ps1
 
 You can override **any** default script (Std-*.ps1) by adding `# CUSTOM OVERRIDE` as the first line:
 
-**Method 1: Via GUI (Quick)**
-1. Select folder/file to load the default script in editor
-2. Add `# CUSTOM OVERRIDE` as the **first line**
-3. Modify the script as needed
-4. Click **"Save"** button (now enabled for custom scripts)
-5. The script is saved and won't be overwritten by GitHub sync
-
-**Method 2: Via Load Button (Full Edit)**
+**Method 1: Via Load Button**
 1. Click **"Load..."** button
-2. Navigate to `Source\wsb\Std-[ScriptName].ps1`
+2. Navigate to `wsb\Std-[ScriptName].ps1`
 3. Add `# CUSTOM OVERRIDE` as first line
 4. Modify the script
-5. Click **"Save"** or **"Save As..."**
-
-**Example:**
-```powershell
-# CUSTOM OVERRIDE
-# My custom installer with logging
-# Std-Install.ps1 - Custom version
-
-[CmdletBinding()]
-param(
-    [Parameter(Mandatory)]
-    [string]$SandboxFolderName
-)
-
-# Add custom logging
-"$(Get-Date) - Starting installation" | Out-File "$env:USERPROFILE\Desktop\install.log"
-
-# ... rest of script ...
-```
+5. Click **"Save"** button (now enabled for custom scripts)
+6. The script is saved and won't be overwritten by GitHub sync
 
 **Supported Scripts:**
 - `Std-Install.ps1` - Custom installer detection logic
