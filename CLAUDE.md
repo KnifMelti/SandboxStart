@@ -406,6 +406,130 @@ The `Sync-GitHubScriptsSelective` function in `Shared-Helpers.ps1` checks for th
 - GUI shows wrapper to ensure proper execution
 - To edit: Use Load button to view/edit full script content
 
+### Custom Override for Package Lists (Std-*.txt)
+
+Package lists follow the same CUSTOM OVERRIDE pattern as scripts.
+
+**Quick Method: Add Header to Prevent Sync**
+
+1. Open any Std-*.txt package list in a text editor
+2. Add `# CUSTOM OVERRIDE` as the first line
+3. Save the file
+4. GitHub sync will now skip this file
+
+**Example:**
+
+```
+# CUSTOM OVERRIDE
+# My customized Python packages
+Python.Python.3.14
+numpy
+pandas
+```
+
+**When to use:**
+- You've customized a default Std-*.txt list
+- You want to prevent GitHub from overwriting your changes
+- You want to preserve your package selections
+
+**Reverting to default:**
+- Remove the `# CUSTOM OVERRIDE` line
+- Next GUI startup will sync from GitHub (if changes exist)
+
+**Supported formats:**
+- `# CUSTOM OVERRIDE` (standard)
+- `#CUSTOM OVERRIDE` (no space after #)
+- `  # CUSTOM OVERRIDE` (leading whitespace)
+
+### Package List Configuration System
+
+**Configuration File:** `Source/wsb/package-lists.ini`
+
+Tracks enabled/disabled state for all package lists.
+
+**Format:**
+```ini
+# Package List Configuration
+# 1 = enabled, 0 = disabled/deleted
+Python=1
+AHK=1
+AutoInstall=1
+Tools=0
+```
+
+**Behavior:**
+- Auto-created on first GUI startup
+- Updated when lists are deleted (set to 0)
+- Lists with state=0 are hidden from dropdown
+- Preserved during GitHub sync
+
+### AutoInstall Package List
+
+**Special List:** `AutoInstall.txt`
+
+A local-only package list that installs automatically before any selected list.
+
+**Characteristics:**
+- Created automatically if missing
+- Always appears first in dropdown (with ⚙ icon)
+- Can be manually selected (installs only AutoInstall packages)
+- Can be edited via Edit button
+- Cannot be deleted via Delete key
+- Never synced from GitHub
+
+**Installation Order:**
+1. AutoInstall packages (if exists and not empty)
+2. Selected package list (if any)
+
+**Use Cases:**
+- Essential tools you want in every sandbox
+- Common dependencies needed by multiple test scenarios
+- Personal preference applications
+
+**Duplicate Handling:**
+
+If same package appears in both AutoInstall and selected list:
+- Installed during AutoInstall phase
+- WinGet skips reinstallation in second phase (already installed)
+
+### GitHub Sync for Package Lists
+
+**Naming Convention:** `Std-*.txt` (e.g., Std-Python.txt, Std-AHK.txt)
+
+**Sync Behavior:**
+- Downloads if missing locally
+- Updates if content changed on GitHub
+- **Skips if `# CUSTOM OVERRIDE` header present**
+- Same behavior as Std-*.ps1 scripts
+
+**Remote Cleanup:**
+- Detects when Std-*.txt files are removed from GitHub
+- Automatically deletes obsolete local versions
+- Updates .ini file (sets state to 0)
+
+**Migration System:**
+
+When first upgrading to this version, the system tracks original default list names (Python.txt, AHK.txt, etc.) in the .ini file. If GitHub later introduces Std-* replacements (e.g., Std-Python.txt), the original files are automatically removed and replaced with the GitHub versions.
+
+**Protection:**
+- Only tracked original defaults can be deleted during migration
+- Lists created after migration are never auto-deleted
+- CUSTOM OVERRIDE header always prevents deletion
+
+### Deleting Package Lists
+
+**Method:** Press Delete key when a list is selected in the dropdown
+
+**Behavior:**
+1. Shows confirmation dialog
+2. Deletes the .txt file from wsb/ folder
+3. Updates .ini file (sets state to 0)
+4. List disappears from dropdown
+
+**Protection:**
+- Cannot delete AutoInstall (special list)
+- Cannot delete empty selection or "[Create new list...]"
+
 ### Modifying the GUI Dialog
 
 Edit `Source/shared/Show-SandboxTestDialog.ps1`. Key sections:

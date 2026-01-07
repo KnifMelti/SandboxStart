@@ -21,7 +21,11 @@ Features automatic **WinGet** installation, follow-script-location shortcut, hig
   - **DPI-responsive UI** - adds a vertical scrollbar if needed
   - **Folder/File Mapping** - map any folder or select specific file to test:
     - `.exe`,`.msi`,`.msix`,`.cmd`,`.bat`,`.ps1`,`.appx`,`.appxbundle`,`.intunewin`,`.ahk`,`.au3`,`.py`,`.js` or `All Files (*.*)`
-  - **Package Lists** - install predefined sets of applications via **WinGet** using custom package lists
+  - **Package Lists** - install predefined sets of applications via **WinGet** using custom package lists:
+    - **AutoInstall List** (⚙) - special list that always installs first, useful for common dependencies
+    - **Delete Lists** - press Delete key when a list is selected to remove it
+    - **Custom Override** - add `# CUSTOM OVERRIDE` as first line to prevent GitHub sync from overwriting your changes
+    - **GitHub Sync** - automatically downloads/updates default package lists (`Std-*.txt`) from GitHub
   - **Version Control** - select specific **WinGet** version or use pre-release build
   - **Network-only mode** - enable internet access without **WinGet** installation
   - **WSB Configuration** - control network access, memory allocation, and GPU virtualization:
@@ -75,6 +79,16 @@ The dialog allows you to configure:
 
 ### Package Lists
 - **Install Packages**: install predefined sets of applications via **WinGet** using custom package lists
+- **⚙ AutoInstall** - special list (appears first with gear icon) that always installs before any selected list:
+  - Useful for common tools you want in every sandbox session
+  - Can be manually selected to install only AutoInstall packages
+  - Cannot be deleted
+  - Local-only (never synced from GitHub)
+- **Deleting Lists** - select a list and press **Delete** key on keyboard to remove it (with confirmation)
+- **Custom Package Lists**:
+  - Create your own `.txt` files in `wsb\` folder (one WinGet package ID per line)
+  - Add `# CUSTOM OVERRIDE` as first line to protect from GitHub sync
+  - Default lists (`Std-*.txt`) are automatically downloaded/updated from GitHub
 - Useful editable lists are automatically downloaded from the repository
 
 ### WinGet Options
@@ -157,6 +171,63 @@ Default scripts are **automatically downloaded from** [GitHub](https://github.co
 4. Click OK
 5. Sandbox launches and executes your custom script
 
+### Example 5: Using AutoInstall for Common Tools
+
+**Scenario:** You want Notepad++ and 7-Zip available in every sandbox session
+
+1. Edit `wsb\AutoInstall.txt` in any text editor
+2. Add your packages:
+   ```
+   # AutoInstall Package List
+   # These packages install first in every sandbox session
+   Notepad++.Notepad++
+   7zip.7zip
+   ```
+3. Save the file
+4. Launch any sandbox test - Notepad++ and 7-Zip will install automatically before your selected packages
+5. **⚙ AutoInstall** appears first in the package list dropdown with gear icon
+
+**Installation Order:**
+- If you select "Python" from dropdown:
+  1. AutoInstall packages install first (Notepad++, 7-Zip)
+  2. Python packages install second
+- If you select "⚙ AutoInstall" manually:
+  - Only AutoInstall packages install (Notepad++, 7-Zip)
+
+### Example 6: Customizing Default Package Lists
+
+**Scenario:** You want to customize the Python package list from GitHub
+
+1. Wait for `Std-Python.txt` to download from GitHub (happens automatically)
+2. Open `wsb\Std-Python.txt` in text editor
+3. Add `# CUSTOM OVERRIDE` as first line
+4. Add your preferred packages:
+   ```
+   # CUSTOM OVERRIDE
+   # My customized Python development environment
+   Python.Python.3.14
+   Git.Git
+   Microsoft.VisualStudioCode
+   ```
+5. Save the file
+6. GitHub sync will now skip this file (your changes are protected)
+7. To revert: Delete the file or remove `# CUSTOM OVERRIDE` header
+
+### Example 7: Deleting Package Lists
+
+**Scenario:** You no longer need a package list
+
+1. Open the package list dropdown
+2. Select the list you want to delete (e.g., "Tools")
+3. Press **Delete** key on keyboard
+4. Confirm deletion in dialog
+5. List is removed and won't appear in dropdown anymore
+
+**Protected Lists:**
+- ⚙ AutoInstall - Cannot be deleted (special list)
+- Empty selection - Cannot be deleted
+- [Create new list...] - Cannot be deleted
+
 ### Custom Scripts
 
 Create your own scripts in the `wsb\` folder and add/edit mappings to/in `script-mappings.txt`:
@@ -168,9 +239,11 @@ test-*.zip = ExtractAndTest.ps1
 *.* = MyInstaller.ps1
 ```
 
-### Advanced: Custom Override for Default Scripts
+### Advanced: Custom Override for Default Scripts and Package Lists
 
-You can override **any** default script (Std-*.ps1) by adding `# CUSTOM OVERRIDE` as the first line:
+You can override **any** default script (Std-*.ps1) or package list (Std-*.txt) by adding `# CUSTOM OVERRIDE` as the first line:
+
+#### Custom Override for Scripts
 
 **Method 1: Via Load Button**
 1. Click **"Load..."** button
@@ -186,7 +259,33 @@ You can override **any** default script (Std-*.ps1) by adding `# CUSTOM OVERRIDE
 - `Std-WAU.ps1` - Custom WAU installation behavior
 - `Std-File.ps1` - Custom file type handling (see <a href="https://github.com/KnifMelti/SandboxStart/blob/master/CLAUDE.md#custom-override-for-default-scripts-std-ps1">CLAUDE.md</a>)
 
-> **Note:** Scripts with `# CUSTOM OVERRIDE` are protected from GitHub sync updates.<br>
+#### Custom Override for Package Lists
+
+**Method: Via External Editor**
+1. Open `wsb\Std-[ListName].txt` in any text editor (Notepad, VS Code, Notepad++, etc.)
+2. Add `# CUSTOM OVERRIDE` as the first line
+3. Modify the package list (add/remove WinGet package IDs)
+4. Save changes
+5. GitHub sync will skip this file (won't overwrite your changes)
+
+**Example:**
+
+```
+# CUSTOM OVERRIDE
+# My customized Python packages
+Python.Python.3.14
+numpy
+pandas
+matplotlib
+```
+
+**Supported Package Lists:**
+- `Std-Python.txt` - Python and related tools
+- `Std-AHK.txt` - AutoHotkey and dependencies
+- `Std-Tools.txt` - General development tools
+- Any other `Std-*.txt` files from GitHub
+
+> **Note:** Files with `# CUSTOM OVERRIDE` are protected from GitHub sync updates.<br>
 > Remove the header or delete the file to revert to defaults.
 
 ## Project Structure
@@ -204,11 +303,15 @@ SandboxStart/
 |   └── Show-SandboxTestDialog.ps1 # GUI dialog
 └── wsb/                           # Created at first run
     ├── script-mappings.txt        # Pattern→Script mappings (created at first run)
+    ├── package-lists.ini          # Package list configuration (tracks enabled/deleted lists)
+    ├── AutoInstall.txt            # Special auto-install list (always installs first)
     ├── Std-WAU.ps1                # Default script (created at folder file match)
     ├── Std-Manifest.ps1           # Default script (             "              )
     ├── Std-Install.ps1            # Universal smart installer detector & fallback (*.*)
     ├── Std-File.ps1               # Default script for direct file execution
-    └── [custom scripts]           # Your own scripts
+    ├── [Std-*.txt]                # Default package lists (synced from GitHub)
+    ├── [custom scripts]           # Your own scripts
+    └── [custom lists]             # Your own package lists
 ```
 
 ## For Developers
@@ -261,6 +364,31 @@ Restart-Computer
 - Ensure Windows Sandbox feature is fully installed
 - Check that mapped folders are accessible
 
+### Package List Issues
+
+**Package list not appearing in dropdown:**
+- Check that file has `.txt` extension (not `.txt.txt`)
+- Verify file is in `wsb\` directory
+- Check `wsb\package-lists.ini` - list should have `ListName=1` (not `0`)
+- Restart GUI to refresh dropdown
+
+**AutoInstall packages not installing:**
+- Open `wsb\AutoInstall.txt` and verify it contains package IDs
+- Remove comment lines (`#`) to see actual packages
+- Check that file is not empty (must have at least one non-comment line)
+- Verify networking is enabled in WSB Configuration
+
+**Custom override not working (GitHub overwrites changes):**
+- Ensure `# CUSTOM OVERRIDE` is the **first line** of the file
+- No spaces before the `#` character
+- Save file with UTF-8 encoding
+- Restart GUI and check if changes persist
+
+**Delete key not working:**
+- Ensure a list is actually selected (highlighted) in dropdown
+- Cannot delete AutoInstall, empty selection, or "[Create new list...]"
+- Try clicking the list first, then pressing Delete key
+
 ## Use Cases
 
 ### For Home Users
@@ -286,6 +414,8 @@ Restart-Computer
 - Validate package updates
 - Test different installation scenarios
 - Verify clean uninstallation
+- Create custom package lists for testing dependency chains
+- Use AutoInstall for common testing tools (CMTrace, AdvancedRun, etc.)
 
 ### For Security Professionals
 - Analyze suspicious executables in isolated environment
