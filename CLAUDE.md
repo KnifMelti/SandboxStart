@@ -497,15 +497,23 @@ If same package appears in both AutoInstall and selected list:
 **Naming Convention:** `Std-*.txt` (e.g., Std-Python.txt, Std-AHK.txt)
 
 **Sync Behavior:**
-- Downloads if missing locally
+- Downloads if missing locally (unless marked state=0 in .ini)
 - Updates if content changed on GitHub
 - **Skips if `# CUSTOM OVERRIDE` header present**
+- **Skips if user deleted the list** (state=0 in .ini)
 - Same behavior as Std-*.ps1 scripts
+
+**Skip Conditions:**
+
+The sync will NOT download/update a Std-*.txt file if ANY of these conditions are true:
+1. File exists locally with `# CUSTOM OVERRIDE` header (respects user customization)
+2. File is missing locally AND .ini has `Std-ListName=0` (respects user deletion)
 
 **Remote Cleanup:**
 - Detects when Std-*.txt files are removed from GitHub
 - Automatically deletes obsolete local versions
 - Updates .ini file (sets state to 0)
+- Protected by CUSTOM OVERRIDE (never deletes customized files)
 
 **Migration System:**
 
@@ -521,7 +529,7 @@ When first upgrading to this version, the system tracks original default list na
 **Method:** Press Delete key when a list is selected in the dropdown
 
 **Behavior:**
-1. Shows confirmation dialog
+1. Shows confirmation dialog (themed to match GUI)
 2. Deletes the .txt file from wsb/ folder
 3. Updates .ini file (sets state to 0)
 4. List disappears from dropdown
@@ -529,6 +537,21 @@ When first upgrading to this version, the system tracks original default list na
 **Protection:**
 - Cannot delete AutoInstall (special list)
 - Cannot delete empty selection or "[Create new list...]"
+
+**Important: Std-*.txt Lists (GitHub-synced)**
+
+When deleting a Std-*.txt list (e.g., Std-Python.txt):
+- The file is deleted locally
+- .ini file is updated with `Std-ListName=0`
+- **The list will NOT be re-downloaded** on next GUI startup (user's choice is respected)
+- To restore a deleted Std-*.txt list:
+  - Remove the `Std-ListName=0` line from .ini file, OR
+  - Change `Std-ListName=0` to `Std-ListName=1`
+  - Next GUI startup will re-download from GitHub
+
+**User-Created Lists:**
+- Deleted lists remain deleted (not on GitHub, so never re-downloaded)
+- Can be restored by creating a new list with the same name
 
 ### Modifying the GUI Dialog
 

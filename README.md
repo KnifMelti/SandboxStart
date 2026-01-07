@@ -23,9 +23,10 @@ Features automatic **WinGet** installation, follow-script-location shortcut, hig
     - `.exe`,`.msi`,`.msix`,`.cmd`,`.bat`,`.ps1`,`.appx`,`.appxbundle`,`.intunewin`,`.ahk`,`.au3`,`.py`,`.js` or `All Files (*.*)`
   - **Package Lists** - install predefined sets of applications via **WinGet** using custom package lists:
     - **AutoInstall List** (⚙) - special list that always installs first, useful for common dependencies
-    - **Delete Lists** - press Delete key when a list is selected to remove it
+    - **Delete Lists** - press Delete key when a list is selected to remove it (respects user choice - won't re-download)
     - **Custom Override** - add `# CUSTOM OVERRIDE` as first line to prevent GitHub sync from overwriting your changes
     - **GitHub Sync** - automatically downloads/updates default package lists (`Std-*.txt`) from GitHub
+    - **Configuration Tracking** - `.ini` file tracks enabled/deleted lists and survives GitHub sync
   - **Version Control** - select specific **WinGet** version or use pre-release build
   - **Network-only mode** - enable internet access without **WinGet** installation
   - **WSB Configuration** - control network access, memory allocation, and GPU virtualization:
@@ -84,7 +85,10 @@ The dialog allows you to configure:
   - Can be manually selected to install only AutoInstall packages
   - Cannot be deleted
   - Local-only (never synced from GitHub)
-- **Deleting Lists** - select a list and press **Delete** key on keyboard to remove it (with confirmation)
+- **Deleting Lists** - select a list and press **Delete** key on keyboard to remove it (with confirmation):
+  - **User-created lists**: permanently deleted (create new with same name to restore)
+  - **GitHub-synced lists (`Std-*.txt`)**: deleted locally and marked in `.ini` file - will NOT re-download automatically
+  - **To restore deleted Std-* list**: edit `wsb\package-lists.ini` and remove the `Std-ListName=0` line (or change to `=1`)
 - **Custom Package Lists**:
   - Create your own `.txt` files in `wsb\` folder (one WinGet package ID per line)
   - Add `# CUSTOM OVERRIDE` as first line to protect from GitHub sync
