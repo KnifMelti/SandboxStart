@@ -1,7 +1,9 @@
 # Test Package List (Std-Test.txt)
 # This is a test list for GitHub sync verification
-# Version: 1.0
+# Version: 2.0 - UPDATED!
 
 # Example packages for testing
 7zip.7zip
 Notepad++.Notepad++
+Git.Git
+# New package added in v2.0
