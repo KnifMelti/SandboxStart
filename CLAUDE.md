@@ -2,6 +2,26 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Documentation Structure
+
+SandboxStart documentation is organized as follows:
+
+- **README.md** - Quick start guide and overview (simplified)
+- **GitHub Wiki** - Comprehensive documentation (11 pages)
+  - Getting Started
+  - User Guide
+  - Script Mapping System
+  - Package List System
+  - Advanced Features
+  - Troubleshooting
+  - FAQ
+  - Use Cases
+  - Developer Guide
+  - Architecture
+- **CLAUDE.md** - Detailed developer/AI assistant reference (this file)
+
+When helping users, direct them to the appropriate wiki page for detailed information.
+
 ## Project Overview
 
 SandboxStart is a Windows Sandbox testing tool for easily testing applications, scripts, and installers in an isolated environment. It provides a GUI for configuring sandbox parameters, automatic WinGet installation, and a script mapping system.
@@ -954,7 +974,7 @@ The `Shared-Helpers.ps1` module provides these functions:
 - Check `cache_metadata.json` for corruption
 
 ## Important Constraints
-
+-
 1. **Never hardcode paths** - Always use `$SandboxFolderName` placeholder in default scripts
 2. **Always use ASCII encoding** - Sandbox scripts must be ASCII-encoded with CRLF line endings
 3. **Preserve dark mode sync** - When modifying pre-install script, maintain theme detection logic
