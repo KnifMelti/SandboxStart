@@ -4,7 +4,7 @@
 
 # SandboxStart
 
-A Windows Sandbox testing tool for easily testing applications, scripts, and installers in an isolated environment.
+A Windows Sandbox (WSB) testing tool for easily testing applications, scripts, and installers in an isolated environment.
 
 Test software safely before installing on your main system with automatic WinGet installation, customizable test scenarios, and an easy-to-use interface.
 
