@@ -4,7 +4,7 @@
 
 # SandboxStart
 
-A Windows Sandbox (WSB) testing tool for easily testing applications, scripts, and installers in an isolated environment.
+A Windows Sandbox (**WSB**) testing tool for easily testing applications, scripts, and installers in an isolated environment.
 
 Test software safely before installing on your main system with automatic WinGet installation, customizable test scenarios, and an easy-to-use interface.
 
@@ -79,7 +79,7 @@ For detailed information, please visit the [**Wiki**](https://github.com/KnifMel
 - Test malware behavior safely (sandbox isolation)
 - Conduct safe security research and testing
 
-> **Nota bene:** Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) requires a RW mapping to `%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside WSB. See the [Use Cases Wiki](https://github.com/KnifMelti/SandboxStart/wiki/Use-Cases#for-security-professionals) for detailed security considerations.
+> **Nota bene:** Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) requires a **R/W** mapping to `%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside **WSB**. See the [Use Cases Wiki](https://github.com/KnifMelti/SandboxStart/wiki/Use-Cases#for-security-professionals) for detailed security considerations.
 
 ## Quick Examples
 
@@ -150,7 +150,7 @@ SandboxStart/
 
 ## Contributing
 
-Contributions are welcome! Please see the [Developer Guide](https://github.com/KnifMelti/SandboxStart/wiki/Developer-Guide) for information on:
+Contributions are (maybe) welcome! Please see the [Developer Guide](https://github.com/KnifMelti/SandboxStart/wiki/Developer-Guide) for information on:
 - Source code structure
 - Git submodule management
 - Development workflow
