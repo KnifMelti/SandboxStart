@@ -31,24 +31,15 @@ Test software safely before installing on your main system with automatic WinGet
 1. **Download** the latest release: [SandboxStart-v#.#.#.#.zip](https://github.com/KnifMelti/SandboxStart/releases/latest)
 2. **Extract** and unblock the ZIP file
 3. **Right-click** `SandboxStart.ps1` and select "Run with PowerShell"
-4. **Configure** your test scenario in the dialog
-5. **Launch** sandbox with your settings
 
-The first run will:
-- Create a Start Menu shortcut
-- Check if Windows Sandbox is available (prompt to install if not)
-- Reboot if needed after installation
+See [Getting Started](https://github.com/KnifMelti/SandboxStart/wiki/Getting-Started) for detailed installation instructions.
 
 ## Documentation
 
 For detailed information, please visit the [**Wiki**](https://github.com/KnifMelti/SandboxStart/wiki):
 
 - [Getting Started](https://github.com/KnifMelti/SandboxStart/wiki/Getting-Started) - Installation and first steps
-- [User Guide](https://github.com/KnifMelti/SandboxStart/wiki/User-Guide) - Complete feature guide with examples
-- [Script Mapping System](https://github.com/KnifMelti/SandboxStart/wiki/Script-Mapping-System) - How scripts are automatically selected
-- [Package Lists](https://github.com/KnifMelti/SandboxStart/wiki/Package-List-System) - Managing WinGet package lists
-- [Advanced Features](https://github.com/KnifMelti/SandboxStart/wiki/Advanced-Features) - Network-only mode, theming, context menu
-- [Developer Guide](https://github.com/KnifMelti/SandboxStart/wiki/Developer-Guide) - Contributing and development setup
+- [User Guide](https://github.com/KnifMelti/SandboxStart/wiki/User-Guide) - Features and examples
 - [Troubleshooting](https://github.com/KnifMelti/SandboxStart/wiki/Troubleshooting) - Common issues and solutions
 - [FAQ](https://github.com/KnifMelti/SandboxStart/wiki/FAQ) - Frequently asked questions
 
@@ -79,7 +70,7 @@ For detailed information, please visit the [**Wiki**](https://github.com/KnifMel
 - Test malware behavior safely (sandbox isolation)
 - Conduct safe security research and testing
 
-> **Nota bene:** Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) requires a **R/W** mapping to `%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside **WSB**. See the [Use Cases Wiki](https://github.com/KnifMelti/SandboxStart/wiki/Use-Cases#for-security-professionals) for detailed security considerations.
+> **Nota bene:** Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) requires a **R/W** mapping to `%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside **WSB**.
 
 ## Quick Examples
 
@@ -100,32 +91,11 @@ For detailed information, please visit the [**Wiki**](https://github.com/KnifMel
 
 > **See the [User Guide](https://github.com/KnifMelti/SandboxStart/wiki/User-Guide) for more examples**
 
-## Basic Configuration
+## Need Help?
 
-The dialog allows you to configure:
-
-- **Folder Mapping** - Map any folder or select specific file to test
-- **Package Lists** - Install predefined sets of applications via WinGet
-- **WinGet Options** - Select version, use prerelease, clear cache
-- **Runtime Options** - Verbose mode, network-only mode
-- **WSB Configuration** - Networking, memory allocation, GPU virtualization
-- **Script Editor** - PowerShell script to run after sandbox initialization
-
-## Troubleshooting
-
-### Windows Sandbox Not Available
-SandboxStart will automatically prompt to enable the feature (requires elevation and restart).
-
-### Script Not Running
-- Check script syntax is valid PowerShell
-- Try with Verbose flag to see detailed execution
-
-### WinGet Installation Fails
-- Check internet connection
-- Try specifying a specific WinGet version
-- Use "Clean (cached dependencies)" option
-
-> **See the [Troubleshooting Wiki](https://github.com/KnifMelti/SandboxStart/wiki/Troubleshooting) for more solutions**
+- See the [User Guide](https://github.com/KnifMelti/SandboxStart/wiki/User-Guide) for features and configuration
+- Check [Troubleshooting](https://github.com/KnifMelti/SandboxStart/wiki/Troubleshooting) for common issues
+- Read the [FAQ](https://github.com/KnifMelti/SandboxStart/wiki/FAQ) for quick answers
 
 ## Project Structure
 
@@ -150,11 +120,7 @@ SandboxStart/
 
 ## Contributing
 
-Contributions are (maybe) welcome! Please see the [Developer Guide](https://github.com/KnifMelti/SandboxStart/wiki/Developer-Guide) for information on:
-- Source code structure
-- Git submodule management
-- Development workflow
-- Coding standards
+Contributions are (maybe) welcome! See [CLAUDE.md](CLAUDE.md) for developer information.
 
 ## Additional Resources
 
