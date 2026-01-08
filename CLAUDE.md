@@ -457,25 +457,38 @@ pandas
 
 ### Package List Configuration System
 
-**Configuration File:** `Source/wsb/package-lists.ini`
+**Configuration File:** `Source/wsb/sandboxtest-config.ini`
 
-Tracks enabled/disabled state for all package lists.
+A sectioned INI file that manages both package list states and file extension mappings.
 
-**Format:**
+**Structure:**
 ```ini
-# Package List Configuration
-# 1 = enabled, 0 = disabled/deleted
+# SandboxTest Configuration File
+
+[Lists]
+# Package list states: 1 = enabled, 0 = disabled/deleted
 Python=1
 AHK=1
 AutoInstall=1
 Tools=0
+_MigrationCompleted=1
+
+[Extensions]
+# Maps file extensions to preferred package lists
+# Format: extension=PackageListName
+# Fallback: If preferred list doesn't exist, tries variations (Std-AHK -> AHK)
+py=Std-Python
+ahk=Std-AHK
+au3=Std-AU3
 ```
 
 **Behavior:**
 - Auto-created on first GUI startup
-- Updated when lists are deleted (set to 0)
+- **[Lists] section:** Tracks enabled/disabled state (1 = enabled, 0 = disabled/deleted)
+- **[Extensions] section:** Maps file extensions to package lists for auto-selection
 - Lists with state=0 are hidden from dropdown
 - Preserved during GitHub sync
+- Users can add custom extension mappings without code changes
 
 ### AutoInstall Package List
 
