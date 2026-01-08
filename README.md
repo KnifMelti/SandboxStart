@@ -79,7 +79,7 @@ For detailed information, please visit the [**Wiki**](https://github.com/KnifMel
 - Test malware behavior safely (sandbox isolation)
 - Conduct safe security research and testing
 
-> **Nota bene:** Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) requires a **RW** mapping to `%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside **WSB**. See the [Use Cases Wiki](https://github.com/KnifMelti/SandboxStart/wiki/Use-Cases#for-security-professionals) for detailed security considerations.
+> **Nota bene:** Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) requires a **R/W** mapping to `%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside **WSB**. See the [Use Cases Wiki](https://github.com/KnifMelti/SandboxStart/wiki/Use-Cases#for-security-professionals) for detailed security considerations.
 
 ## Quick Examples
 
