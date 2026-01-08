@@ -150,7 +150,7 @@ SandboxStart/
 
 ## Contributing
 
-Contributions are welcome! Please see the [Developer Guide](https://github.com/KnifMelti/SandboxStart/wiki/Developer-Guide) for information on:
+Contributions are (maybe) welcome! Please see the [Developer Guide](https://github.com/KnifMelti/SandboxStart/wiki/Developer-Guide) for information on:
 - Source code structure
 - Git submodule management
 - Development workflow
