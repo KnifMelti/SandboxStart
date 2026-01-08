@@ -7,20 +7,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 SandboxStart documentation is organized as follows:
 
 - **README.md** - Quick start guide and overview (simplified)
-- **GitHub Wiki** - Comprehensive documentation (11 pages)
-  - Getting Started
-  - User Guide
-  - Script Mapping System
-  - Package List System
-  - Advanced Features
-  - Troubleshooting
-  - FAQ
-  - Use Cases
-  - Developer Guide
-  - Architecture
+- **GitHub Wiki** - User documentation (4 pages)
+  - Getting Started - Installation and first steps
+  - User Guide - Features and examples
+  - Troubleshooting - Common issues and solutions
+  - FAQ - Frequently asked questions
 - **CLAUDE.md** - Detailed developer/AI assistant reference (this file)
 
-When helping users, direct them to the appropriate wiki page for detailed information.
+When helping users, direct them to the appropriate wiki page for user-facing information. Developer/technical details remain in this file.
 
 ## Project Overview
 
