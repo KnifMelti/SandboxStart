@@ -18,7 +18,7 @@ Test software safely before installing on your main system with automatic WinGet
 - **Package Lists** - Install predefined sets of applications via WinGet
 - **Dark Mode Support** - UI adapts to Windows theme automatically
 - **Explorer Integration** - Right-click files/folders to test directly in sandbox (optional)
-- **Network-Only Mode** - Enable internet access without WinGet installation (~30-60s faster)
+- **Network-Only Mode** - Enable internet access without WinGet installation (~20-30s faster)
 - **Desktop Shortcuts** - Useful tools (CMTrace, Sysinternals, NirSoft, etc.) pre-configured
 
 ## Requirements
@@ -29,7 +29,7 @@ Test software safely before installing on your main system with automatic WinGet
 ## Quick Start
 
 1. **Download** the latest release: [SandboxStart-v#.#.#.#.zip](https://github.com/KnifMelti/SandboxStart/releases/latest)
-2. **Extract** and unblock the ZIP file
+2. **Unblock** and extract the ZIP file
 3. **Right-click** `SandboxStart.ps1` and select "Run with PowerShell"
 
 See [Getting Started](https://github.com/KnifMelti/SandboxStart/wiki/Getting-Started) for detailed installation instructions.
@@ -67,7 +67,7 @@ For detailed information, please visit the [**Wiki**](https://github.com/KnifMel
 
 ### For Security Professionals
 - Analyze suspicious executables in isolated environment
-- Test malware behavior safely (sandbox isolation)
+- Test malware behavior relatively safe (sandbox isolation)
 - Conduct safe security research and testing
 
 > **Nota bene:** Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) requires a **R/W** mapping to `%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside **WSB**.
