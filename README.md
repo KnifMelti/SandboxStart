@@ -111,7 +111,7 @@ SandboxStart/
 │   └── Show-SandboxTestDialog.ps1 # GUI dialog
 └── wsb/                           # Created at first run
     ├── script-mappings.txt        # Pattern→Script mappings
-    ├── package-lists.ini          # Package list configuration
+    ├── sandboxtest-config.ini     # Package lists/extensions configuration
     ├── AutoInstall.txt            # Special auto-install list
     ├── Std-*.ps1                  # Default scripts (auto-downloaded)
     ├── Std-*.txt                  # Default package lists (auto-downloaded)
