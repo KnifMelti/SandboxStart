@@ -97,7 +97,7 @@ For detailed information, please visit the [**Wiki**](https://github.com/KnifMel
 - Check [Troubleshooting](https://github.com/KnifMelti/SandboxStart/wiki/Troubleshooting) for common issues
 - Read the [FAQ](https://github.com/KnifMelti/SandboxStart/wiki/FAQ) for quick answers
 
-## Project Structure
+## Release Structure
 
 ```
 SandboxStart/
