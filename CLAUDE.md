@@ -457,7 +457,7 @@ pandas
 
 ### Package List Configuration System
 
-**Configuration File:** `Source/wsb/sandboxtest-config.ini`
+**Configuration File:** `Source/wsb/config.ini`
 
 A sectioned INI file that manages both package list states and file extension mappings.
 
