@@ -97,28 +97,27 @@ switch ($extension) {
 		$matePath = Join-Path "$env:USERPROFILE\Desktop" "MATE"
 		$zipPath = Join-Path $env:TEMP "MATE.zip"
 		
-		# Create MATE folder if it doesn't exist
+		# Download and extract MATE.zip if it doesn't exist
 		if (-not (Test-Path $matePath)) {
-			Write-Host "Creating MATE folder on Desktop..."
-			New-Item -ItemType Directory -Path $matePath -Force | Out-Null
-			
-			# Download MATE.zip
 			Write-Host "Downloading MATE.zip..."
 			try {
 				Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
+				
+				# Create MATE folder on Desktop
+				Write-Host "Creating MATE folder on Desktop..."
+				New-Item -ItemType Directory -Path $matePath -Force | Out-Null
+				
+				# Extract MATE.zip to Desktop\MATE
+				Write-Host "Extracting MATE.zip to Desktop\MATE..."
+				Add-Type -AssemblyName System.IO.Compression.FileSystem
+				[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $matePath)
+				
+				# Clean up zip file
+				Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
 			} catch {
-				Write-Warning "Failed to download MATE.zip: $_"
-				Write-Warning "Internet connection required. Aborting .ahk execution."
-				return
+				Write-Warning "Failed to download/extract MATE.zip: $_"
+				Write-Warning "Continuing with .ahk execution anyway..."
 			}
-			
-			# Extract MATE.zip to Desktop\MATE
-			Write-Host "Extracting MATE.zip to Desktop\MATE..."
-			Add-Type -AssemblyName System.IO.Compression.FileSystem
-			[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $matePath)
-			
-			# Clean up zip file
-			Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
 		}
 		
 		# Execute the .ahk/.au3 file
