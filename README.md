@@ -132,7 +132,7 @@ Contributions are (maybe) welcome! See [CLAUDE.md](CLAUDE.md) for developer info
 ## Credits
 
 - Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1)
-- Provides tools: CMTrace, IntuneWinAppUtilDecoder, CTT Windows Utility, AdvancedRun, UninstallView
+- Provides downloadable tools in WSB: CMTrace, IntuneWinAppUtilDecoder, CTT Windows Utility, AdvancedRun, UninstallView
 
 ## Show Your Support
 
