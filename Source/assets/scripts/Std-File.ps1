@@ -81,7 +81,12 @@ switch ($extension) {
 		$setupFile = Join-Path $outputPath $setupFileName
 		if (Test-Path $setupFile) {
 			Write-Host "Running setup file: $setupFileName"
-			Start-Process $setupFile -WorkingDirectory $outputPath
+			$setupExtension = [System.IO.Path]::GetExtension($setupFileName).ToLower()
+			if ($setupExtension -eq '.ps1') {
+				Start-Process powershell.exe -ArgumentList "-File `"$setupFile`"" -WorkingDirectory $outputPath
+			} else {
+				Start-Process $setupFile -WorkingDirectory $outputPath
+			}
 		} else {
 			Write-Warning "Setup file not found: $setupFile"
 		}
