@@ -116,7 +116,7 @@ switch ($extension) {
 				Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
 			} catch {
 				Write-Warning "Failed to download/extract MATE.zip: $_"
-				Write-Warning "Continuing with .ahk execution anyway..."
+				Write-Warning "Continuing with script execution anyway..."
 			}
 		}
 		
