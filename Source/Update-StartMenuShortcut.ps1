@@ -256,6 +256,15 @@ function Uninstall-SandboxStart {
 			$removed += "Context menu integration"
 		}
 
+		# Remove registry key HKEY_CURRENT_USER\Software\SandboxStart if it exists
+		$sandboxStartKeyReg = 'HKCU\Software\SandboxStart'
+		$keyCheck = reg.exe query "$sandboxStartKeyReg" 2>&1 | Where-Object { $_ -match 'SandboxStart' }
+		if ($null -ne $keyCheck) {
+			$null = reg.exe delete "$sandboxStartKeyReg" /f 2>&1
+			Write-Verbose "Removed SandboxStart registry key"
+			$removed += "Registry settings"
+		}
+
 		# Build result message
 		if ($removed.Count -eq 0) {
 			$message = "No SandboxStart components found to remove."
