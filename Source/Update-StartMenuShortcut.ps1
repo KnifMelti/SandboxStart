@@ -184,11 +184,13 @@ function Test-ContextMenuIntegration {
 	# Use reg.exe instead of Test-Path to avoid performance issues with HKCU:\Software\Classes\*
 	$folderKeyReg = 'HKCU\Software\Classes\Directory\shell\SandboxStart'
 	$fileKeyReg = 'HKCU\Software\Classes\*\shell\SandboxStart'
+	$driveKeyReg = 'HKCU\Software\Classes\Drive\shell\SandboxStart'
 
 	$folderExists = $null -ne (reg.exe query "$folderKeyReg" 2>&1 | Where-Object { $_ -match 'SandboxStart' })
 	$fileExists = $null -ne (reg.exe query "$fileKeyReg" 2>&1 | Where-Object { $_ -match 'SandboxStart' })
+	$driveExists = $null -ne (reg.exe query "$driveKeyReg" 2>&1 | Where-Object { $_ -match 'SandboxStart' })
 
-	return ($folderExists -and $fileExists)
+	return ($folderExists -and $fileExists -and $driveExists)
 }
 
 function Uninstall-SandboxStart {
@@ -242,6 +244,7 @@ function Uninstall-SandboxStart {
 		# Remove context menu integration (check each key independently using reg.exe for performance)
 		$folderKeyReg = 'HKCU\Software\Classes\Directory\shell\SandboxStart'
 		$fileKeyReg = 'HKCU\Software\Classes\*\shell\SandboxStart'
+		$driveKeyReg = 'HKCU\Software\Classes\Drive\shell\SandboxStart'
 
 		$contextMenuRemoved = $false
 
@@ -258,6 +261,14 @@ function Uninstall-SandboxStart {
 		if ($null -ne $fileCheck) {
 			$null = reg.exe delete "$fileKeyReg" /f 2>&1
 			Write-Verbose "Removed file context menu registry key"
+			$contextMenuRemoved = $true
+		}
+
+		# Check and remove drive context menu
+		$driveCheck = reg.exe query "$driveKeyReg" 2>&1 | Where-Object { $_ -match 'SandboxStart' }
+		if ($null -ne $driveCheck) {
+			$null = reg.exe delete "$driveKeyReg" /f 2>&1
+			Write-Verbose "Removed drive context menu registry key"
 			$contextMenuRemoved = $true
 		}
 
