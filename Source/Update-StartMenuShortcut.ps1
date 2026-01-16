@@ -205,7 +205,7 @@ function Uninstall-SandboxStart {
 	try {
 		# Ask for confirmation first
 		$result = [System.Windows.Forms.MessageBox]::Show(
-			"This will completely remove SandboxStart integration from Windows:`n`n  - Start Menu shortcuts`n  - Context menu entries (if installed)`n`nWorking files will be kept and must be deleted manually if desired.`n`nContinue?",
+			"This will completely remove SandboxStart integration from Windows:`n`n  - Start Menu shortcuts`n  - Registry settings`n  - Context menu entries (if installed)`n`nWorking files will be kept and must be deleted manually if desired.`n`nContinue?",
 			"Confirm Uninstall",
 			[System.Windows.Forms.MessageBoxButtons]::OKCancel,
 			[System.Windows.Forms.MessageBoxIcon]::Warning
@@ -228,6 +228,15 @@ function Uninstall-SandboxStart {
 		if (Test-Path $uninstallShortcut) {
 			Remove-Item $uninstallShortcut -Force
 			$removed += "Uninstall shortcut"
+		}
+
+		# Remove registry key HKEY_CURRENT_USER\Software\SandboxStart if it exists
+		$sandboxStartKeyReg = 'HKCU\Software\SandboxStart'
+		$keyCheck = reg.exe query "$sandboxStartKeyReg" 2>&1 | Where-Object { $_ -match 'SandboxStart' }
+		if ($null -ne $keyCheck) {
+			$null = reg.exe delete "$sandboxStartKeyReg" /f 2>&1
+			Write-Verbose "Removed SandboxStart registry key"
+			$removed += "Registry settings"
 		}
 
 		# Remove context menu integration (check each key independently using reg.exe for performance)
@@ -254,15 +263,6 @@ function Uninstall-SandboxStart {
 
 		if ($contextMenuRemoved) {
 			$removed += "Context menu integration"
-		}
-
-		# Remove registry key HKEY_CURRENT_USER\Software\SandboxStart if it exists
-		$sandboxStartKeyReg = 'HKCU\Software\SandboxStart'
-		$keyCheck = reg.exe query "$sandboxStartKeyReg" 2>&1 | Where-Object { $_ -match 'SandboxStart' }
-		if ($null -ne $keyCheck) {
-			$null = reg.exe delete "$sandboxStartKeyReg" /f 2>&1
-			Write-Verbose "Removed SandboxStart registry key"
-			$removed += "Registry settings"
 		}
 
 		# Build result message
