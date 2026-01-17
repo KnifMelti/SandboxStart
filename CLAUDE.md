@@ -526,36 +526,30 @@ Write-Host "`nScript execution complete." -ForegroundColor Green
 
 Create a separate custom script specifically for .winget files:
 
+**IMPORTANT:** This method requires the script to be called as a file (like Std-File.ps1), not run inline. The example below uses a simplified approach without `[CmdletBinding()]` to work inline.
+
 1. **Create new script:**
    - Click "Load..." in GUI
    - Save as `Custom-WinGetConfig.ps1` in `wsb/` folder
 
-2. **Script content:**
+2. **Script content (simplified for inline execution):**
 
 ```powershell
 # Custom-WinGetConfig.ps1
 # Executes WinGet Configuration files in sandbox
-
-[CmdletBinding()]
-param(
-	[Parameter(Mandatory)]
-	[string]$SandboxFolderName,
-
-	[Parameter()]
-	[string]$ConfigFileName = "*.winget"
-)
+# NOTE: Uses placeholder variable $SandboxFolderName (replaced at runtime)
 
 $sandboxPath = "$env:USERPROFILE\Desktop\$SandboxFolderName"
 
 Write-Host "=== WinGet Configuration Runner ===" -ForegroundColor Cyan
-Write-Host "Searching for configuration files matching: $ConfigFileName" -ForegroundColor Yellow
+Write-Host "Searching for .winget configuration files..." -ForegroundColor Yellow
 
-$wingetFiles = Get-ChildItem -Path $sandboxPath -Filter $ConfigFileName -File -ErrorAction SilentlyContinue
+$wingetFiles = Get-ChildItem -Path $sandboxPath -Filter "*.winget" -File -ErrorAction SilentlyContinue
 
 if (-not $wingetFiles) {
-	Write-Error "No WinGet configuration files found in $sandboxPath"
-	Write-Host "Expected file pattern: $ConfigFileName" -ForegroundColor Yellow
-	exit 1
+	Write-Host "`n[ERROR] No WinGet configuration files found in $sandboxPath" -ForegroundColor Red
+	Write-Host "Expected file pattern: *.winget" -ForegroundColor Yellow
+	return
 }
 
 foreach ($wingetFile in $wingetFiles) {
@@ -589,6 +583,18 @@ Write-Host "`n=== Configuration Complete ===" -ForegroundColor Cyan
    - Load the custom script manually in GUI
    - Browse to folder containing .winget file
    - Click Test to execute
+
+**Alternative: File-based execution (for advanced param usage)**
+
+If you need `[CmdletBinding()]` and advanced parameters, you must save the script as a file and call it:
+
+```powershell
+# In GUI editor (main script):
+# Call external script file
+& "$PSScriptRoot\wsb\Custom-WinGetConfig.ps1" -SandboxFolderName $SandboxFolderName
+```
+
+Then create `wsb\Custom-WinGetConfig.ps1` with full parameter syntax. This approach is similar to how Std-File.ps1 works.
 
 **Method 3: Script Mapping (Advanced)**
 
