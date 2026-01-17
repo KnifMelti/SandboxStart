@@ -477,7 +477,8 @@ Create a custom override that automatically detects and executes .winget files:
 # CUSTOM
 # WinGet Configuration Handler - Detects and runs .winget files
 
-# Standard variables (replaced at runtime)
+# Standard variables (replaced at runtime by SandboxTest.ps1)
+$SandboxFolderName = "DefaultFolder"
 $sandboxPath = "$env:USERPROFILE\Desktop\$SandboxFolderName"
 
 # Check for .winget configuration files
@@ -537,8 +538,9 @@ Create a separate custom script specifically for .winget files:
 ```powershell
 # Custom-WinGetConfig.ps1
 # Executes WinGet Configuration files in sandbox
-# NOTE: Uses placeholder variable $SandboxFolderName (replaced at runtime)
+# NOTE: $SandboxFolderName is replaced at runtime by SandboxTest.ps1
 
+$SandboxFolderName = "DefaultFolder"
 $sandboxPath = "$env:USERPROFILE\Desktop\$SandboxFolderName"
 
 Write-Host "=== WinGet Configuration Runner ===" -ForegroundColor Cyan
