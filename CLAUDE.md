@@ -491,9 +491,9 @@ if ($wingetFiles) {
 		Write-Host "`nExecuting configuration: $($wingetFile.Name)" -ForegroundColor Yellow
 		Write-Host "Opening in separate PowerShell window..." -ForegroundColor Cyan
 
-		# Run WinGet configuration in separate PowerShell window
+		# Run WinGet configuration in separate PowerShell window (non-blocking)
 		$configCommand = "winget configure --file `"$($wingetFile.FullName)`" --accept-configuration-agreements --verbose; Write-Host '`nPress any key to close...'; `$null = `$Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')"
-		Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", $configCommand -Wait
+		Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", $configCommand
 	}
 
 	Write-Host "`n=== WinGet Configuration Complete ===" -ForegroundColor Cyan
@@ -550,9 +550,9 @@ foreach ($wingetFile in $wingetFiles) {
 	Write-Host "File path: $($wingetFile.FullName)" -ForegroundColor Gray
 	Write-Host "Opening in separate PowerShell window..." -ForegroundColor Yellow
 
-	# Run WinGet configuration in separate PowerShell window
+	# Run WinGet configuration in separate PowerShell window (non-blocking)
 	$configCommand = "winget configure --file `"$($wingetFile.FullName)`" --accept-configuration-agreements --verbose; Write-Host '`nPress any key to close...'; `$null = `$Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')"
-	Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", $configCommand -Wait
+	Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", $configCommand
 }
 
 Write-Host "`n=== Configuration Complete ===" -ForegroundColor Cyan
