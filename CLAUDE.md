@@ -474,11 +474,11 @@ Create a custom override that automatically detects and executes .winget files:
 2. **Example custom script:**
 
 ```powershell
+# To prevent GitHub sync from overwriting your changes, uncomment the line below:
 # CUSTOM
-# WinGet Configuration Handler - Detects and runs .winget files
 
 # Standard variables (replaced at runtime by SandboxTest.ps1)
-$SandboxFolderName = "DefaultFolder"
+$SandboxFolderName = "SandboxStart"
 $sandboxPath = "$env:USERPROFILE\Desktop\$SandboxFolderName"
 
 # Check for .winget configuration files
