@@ -420,6 +420,244 @@ The `Sync-GitHubScriptsSelective` function in `Shared-Helpers.ps1` checks for th
 - GUI shows wrapper to ensure proper execution
 - To edit: Use Load button to view/edit full script content
 
+### Advanced: Using WinGet Configuration Files (.winget)
+
+**For power users:** WinGet Configuration (DSC) files provide declarative package installation with advanced features like dependency management and configuration-as-code.
+
+#### What are .winget Files?
+
+WinGet Configuration files use YAML/JSON syntax to define:
+- Packages to install with version constraints
+- Complex dependency chains
+- WinGet settings and sources
+- Conditional installations based on environment
+
+**Example .winget file:**
+```yaml
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+properties:
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: powershell
+      directives:
+        description: Install PowerShell 7
+        securityContext: elevated
+      settings:
+        id: Microsoft.PowerShell
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: vsPackage
+      directives:
+        description: Install Visual Studio 2022 Community
+        securityContext: elevated
+      settings:
+        id: Microsoft.VisualStudio.2022.Community
+        source: winget
+  configurationVersion: 0.2.0
+```
+
+#### Integration with SandboxStart
+
+SandboxStart doesn't have built-in GUI support for .winget files, but power users can easily integrate them using custom scripts.
+
+**Method 1: Custom Std-Install.ps1 (Recommended)**
+
+Create a custom override that automatically detects and executes .winget files:
+
+1. **Create custom Std-Install.ps1:**
+   - Select any folder in GUI to load default Std-Install.ps1
+   - Add `# CUSTOM` as first line
+   - Add `# WinGet Configuration Handler` as second line
+   - Add detection logic (see example below)
+   - Click Save
+
+2. **Example custom script:**
+
+```powershell
+# CUSTOM
+# WinGet Configuration Handler - Detects and runs .winget files
+
+# Standard variables (replaced at runtime)
+$sandboxPath = "$env:USERPROFILE\Desktop\$SandboxFolderName"
+
+# Check for .winget configuration files
+$wingetFiles = Get-ChildItem -Path $sandboxPath -Filter "*.winget" -File -ErrorAction SilentlyContinue
+
+if ($wingetFiles) {
+	Write-Host "`n=== WinGet Configuration Detected ===" -ForegroundColor Cyan
+
+	foreach ($wingetFile in $wingetFiles) {
+		Write-Host "`nExecuting configuration: $($wingetFile.Name)" -ForegroundColor Yellow
+
+		try {
+			# Run WinGet configuration
+			winget configure --file $wingetFile.FullName --accept-configuration-agreements --verbose
+
+			if ($LASTEXITCODE -eq 0) {
+				Write-Host "`n[SUCCESS] Configuration applied: $($wingetFile.Name)" -ForegroundColor Green
+			} else {
+				Write-Host "`n[ERROR] Configuration failed with exit code: $LASTEXITCODE" -ForegroundColor Red
+			}
+		}
+		catch {
+			Write-Error "Failed to execute WinGet configuration: $_"
+		}
+	}
+
+	Write-Host "`n=== WinGet Configuration Complete ===" -ForegroundColor Cyan
+} else {
+	# Fallback to standard installer detection
+	Write-Host "No .winget files found. Searching for installers..." -ForegroundColor Yellow
+
+	# Insert standard installer detection logic here
+	# (copy from default Std-Install.ps1)
+}
+
+Write-Host "`nScript execution complete." -ForegroundColor Green
+```
+
+3. **Usage:**
+   - Place `.winget` file in your test folder
+   - Select folder in SandboxStart GUI
+   - Your custom script automatically detects and runs the configuration
+   - Falls back to standard installer detection if no .winget files found
+
+**Method 2: Dedicated Custom Script**
+
+Create a separate custom script specifically for .winget files:
+
+1. **Create new script:**
+   - Click "Load..." in GUI
+   - Save as `Custom-WinGetConfig.ps1` in `wsb/` folder
+
+2. **Script content:**
+
+```powershell
+# Custom-WinGetConfig.ps1
+# Executes WinGet Configuration files in sandbox
+
+[CmdletBinding()]
+param(
+	[Parameter(Mandatory)]
+	[string]$SandboxFolderName,
+
+	[Parameter()]
+	[string]$ConfigFileName = "*.winget"
+)
+
+$sandboxPath = "$env:USERPROFILE\Desktop\$SandboxFolderName"
+
+Write-Host "=== WinGet Configuration Runner ===" -ForegroundColor Cyan
+Write-Host "Searching for configuration files matching: $ConfigFileName" -ForegroundColor Yellow
+
+$wingetFiles = Get-ChildItem -Path $sandboxPath -Filter $ConfigFileName -File -ErrorAction SilentlyContinue
+
+if (-not $wingetFiles) {
+	Write-Error "No WinGet configuration files found in $sandboxPath"
+	Write-Host "Expected file pattern: $ConfigFileName" -ForegroundColor Yellow
+	exit 1
+}
+
+foreach ($wingetFile in $wingetFiles) {
+	Write-Host "`nApplying configuration: $($wingetFile.Name)" -ForegroundColor Cyan
+	Write-Host "File path: $($wingetFile.FullName)" -ForegroundColor Gray
+
+	# Display file content for debugging
+	Write-Host "`nConfiguration content:" -ForegroundColor Yellow
+	Get-Content $wingetFile.FullName | Write-Host -ForegroundColor Gray
+
+	Write-Host "`nExecuting configuration..." -ForegroundColor Yellow
+
+	try {
+		winget configure --file $wingetFile.FullName --accept-configuration-agreements --verbose
+
+		if ($LASTEXITCODE -eq 0) {
+			Write-Host "`n[SUCCESS] Configuration applied successfully" -ForegroundColor Green
+		} else {
+			Write-Host "`n[ERROR] Configuration failed with exit code: $LASTEXITCODE" -ForegroundColor Red
+		}
+	}
+	catch {
+		Write-Error "Exception during configuration: $_"
+	}
+}
+
+Write-Host "`n=== Configuration Complete ===" -ForegroundColor Cyan
+```
+
+3. **Usage:**
+   - Load the custom script manually in GUI
+   - Browse to folder containing .winget file
+   - Click Test to execute
+
+**Method 3: Script Mapping (Advanced)**
+
+Add automatic mapping for .winget files:
+
+1. **Edit `wsb/script-mappings.txt`:**
+   ```
+   *.winget = Custom-WinGetConfig.ps1
+   ```
+
+2. **Create `Custom-WinGetConfig.ps1`** (use Method 2 script above)
+
+3. **Usage:**
+   - Select folder or file with `.winget` extension
+   - Script automatically loads and executes
+
+#### Requirements and Considerations
+
+**Prerequisites:**
+- WinGet must be installed in sandbox (enable Networking in GUI)
+- Do NOT enable "Skip WinGet installation" checkbox
+- .winget files require WinGet CLI version 1.6.0 or later
+
+**Limitations:**
+- No GUI editor for .winget files (edit externally with VS Code/Notepad++)
+- No GitHub sync for custom .winget files
+- Complex JSON/YAML syntax (requires technical knowledge)
+- Error messages can be cryptic
+
+**When to Use .winget vs Package Lists:**
+
+| Feature | Package Lists (.txt) | WinGet Config (.winget) |
+|---------|---------------------|------------------------|
+| **Complexity** | Low (one package per line) | High (YAML/JSON) |
+| **GUI Support** | Full (editor + dropdown) | None (external editor) |
+| **Dependencies** | Manual (list packages in order) | Automatic (declarative) |
+| **Version Locking** | No | Yes |
+| **Configuration** | No | Yes (settings, sources) |
+| **Learning Curve** | Minimal | Steep |
+| **Best For** | Quick testing, simple installations | Dev environments, reproducible setups |
+
+**Recommendation:**
+- Use **package lists** for simple, quick testing scenarios
+- Use **.winget files** when you need reproducible development environments or complex dependency chains
+- Combine both: AutoInstall.txt for common tools + .winget for project-specific setup
+
+#### Troubleshooting
+
+**"winget configure: command not found":**
+- Ensure networking is enabled in GUI
+- Verify "Skip WinGet installation" is NOT checked
+- WinGet configure requires WinGet CLI 1.6.0+
+
+**"Configuration failed with exit code 1":**
+- Check .winget file syntax (validate YAML/JSON)
+- Enable `--verbose` flag for detailed error messages
+- Verify package IDs exist in WinGet repository
+
+**"Access denied" errors:**
+- Some configurations require elevated privileges
+- Add `securityContext: elevated` to resource directives
+- Note: Sandbox runs as admin by default
+
+#### Additional Resources
+
+- [WinGet Configuration Documentation](https://learn.microsoft.com/en-us/windows/package-manager/configuration/)
+- [DSC Schema Reference](https://aka.ms/configuration-dsc-schema/0.2)
+- [Example Configurations](https://github.com/microsoft/winget-cli/tree/master/doc/examples/configurations)
+
 ### Custom Override for Package Lists (Std-*.txt)
 
 Package lists follow the same CUSTOM pattern as scripts.
