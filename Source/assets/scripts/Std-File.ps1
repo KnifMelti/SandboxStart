@@ -120,6 +120,16 @@ switch ($extension) {
 			}
 		}
 		
+		# Set UTF8 registry key for .ahk files (for AutoHotkey v1)
+		if ($extension -eq '.ahk') {
+			$regPath = "HKCU:\Software\AutoHotkey\Launcher\v1"
+			if (-not (Test-Path $regPath)) {
+				New-Item -Path $regPath -Force | Out-Null
+			}
+			Set-ItemProperty -Path $regPath -Name "UTF8" -Value 1 -Type String
+			Write-Host "Set AutoHotkey UTF8 registry key"
+		}
+		
 		# Execute the .ahk/.au3 file
 		Write-Host "Running: $FileName..."
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
