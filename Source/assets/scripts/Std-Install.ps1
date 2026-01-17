@@ -1,4 +1,7 @@
-﻿$SandboxFolderName = "DefaultFolder"
+﻿# To prevent GitHub sync from overwriting your changes, uncomment the line below:
+# # CUSTOM
+
+$SandboxFolderName = "DefaultFolder"
 $sandboxPath = "$env:USERPROFILE\Desktop\$SandboxFolderName"
 
 # Look for installer files (priority order)

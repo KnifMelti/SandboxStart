@@ -1,3 +1,6 @@
+# To prevent GitHub sync from overwriting your changes, uncomment the line below:
+# # CUSTOM
+
 # Missing in WSB Package List for SandboxStart
 # WinGet Package IDs - one per line
 # Lines starting with # are comments

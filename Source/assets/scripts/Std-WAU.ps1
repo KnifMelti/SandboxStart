@@ -1,4 +1,7 @@
-﻿$SandboxFolderName = "DefaultFolder"
+﻿# To prevent GitHub sync from overwriting your changes, uncomment the line below:
+# # CUSTOM
+
+$SandboxFolderName = "DefaultFolder"
 $InstallCmdPath = "$env:USERPROFILE\Desktop\$SandboxFolderName\InstallWSB.cmd"
 
 if (-not (Test-Path -Path $InstallCmdPath)) {

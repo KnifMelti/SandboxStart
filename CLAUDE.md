@@ -272,7 +272,7 @@ $sandboxPath = "$env:USERPROFILE\Desktop\MyTestFolder"
 
 ### Custom Override for Default Scripts (Std-*.ps1)
 
-Users can override **any** default script (Std-Install.ps1, Std-Manifest.ps1, Std-WAU.ps1, Std-File.ps1) by adding a `# CUSTOM OVERRIDE` header. The system automatically detects this header and:
+Users can override **any** default script (Std-Install.ps1, Std-Manifest.ps1, Std-WAU.ps1, Std-File.ps1) by adding a `# CUSTOM` header. The system automatically detects this header and:
 - Enables the Save button in GUI
 - Protects the file from GitHub sync overwrites
 - Allows full customization of default script behavior
@@ -295,7 +295,7 @@ This works for **Std-Install.ps1, Std-Manifest.ps1, Std-WAU.ps1**:
    - Default script appears in editor (e.g., Std-Install.ps1)
 
 2. **Add custom override header:**
-   - Add `# CUSTOM OVERRIDE` as the **first line** in the editor
+   - Add `# CUSTOM` as the **first line** in the editor
    - Add descriptive comment on line 2 (e.g., `# My custom installer with logging`)
 
 3. **Modify and save:**
@@ -313,14 +313,14 @@ This works for **Std-Install.ps1, Std-Manifest.ps1, Std-WAU.ps1**:
 
 1. Click **"Load..."** button
 2. Navigate to `Source\wsb\Std-[ScriptName].ps1`
-3. Add `# CUSTOM OVERRIDE` as first line
+3. Add `# CUSTOM` as first line
 4. Modify the script as needed
 5. Click **"Save"** or **"Save As..."**
 
 **Alternative: Via External Editor**
 
 1. Open `Source\wsb\Std-[ScriptName].ps1` in any text editor (VS Code, Notepad++, etc.)
-2. Add `# CUSTOM OVERRIDE` as the first line
+2. Add `# CUSTOM` as the first line
 3. Modify the script
 4. Save changes (use UTF-8 encoding with CRLF line endings)
 
@@ -336,7 +336,7 @@ This works for **Std-Install.ps1, Std-Manifest.ps1, Std-WAU.ps1**:
    - Script loads in editor
 
 2. **Create custom version:**
-   - Add `# CUSTOM OVERRIDE` as the **first line** in the editor
+   - Add `# CUSTOM` as the **first line** in the editor
    - Add descriptive comment on line 2 (e.g., `# My custom .exe handler`)
    - Modify file type handlers as needed (see switch statement in script)
    - Click "Save As..." and save as `Std-File.ps1` (overwrites default in wsb folder)
@@ -358,14 +358,14 @@ This works for **Std-Install.ps1, Std-Manifest.ps1, Std-WAU.ps1**:
 **Method 2: Via External Editor**
 
 1. Open `Source\wsb\Std-File.ps1` in any text editor (VS Code, Notepad++, etc.)
-2. Add `# CUSTOM OVERRIDE` as the first line
+2. Add `# CUSTOM` as the first line
 3. Modify file type handlers as needed
 4. Save changes (use UTF-8 encoding with CRLF line endings)
 
 **Example Custom Header:**
 
 ```powershell
-# CUSTOM OVERRIDE
+# CUSTOM
 # My custom file handler - logs all .exe executions to Desktop
 # Std-File.ps1 - Execute files in Windows Sandbox
 
@@ -389,14 +389,14 @@ $logFile = "$env:USERPROFILE\Desktop\FileExecutions.log"
 The `Sync-GitHubScriptsSelective` function in `Shared-Helpers.ps1` checks for the regex pattern `^\s*#\s*CUSTOM\s+OVERRIDE` and skips syncing if found.
 
 **Supported header formats:**
-- `# CUSTOM OVERRIDE` (standard)
-- `#CUSTOM OVERRIDE` (no space after #)
-- `  # CUSTOM OVERRIDE` (leading whitespace)
+- `# CUSTOM` (standard)
+- `#CUSTOM` (no space after #)
+- `  # CUSTOM` (leading whitespace)
 
 **Reverting to Default:**
 
 1. **Delete file method:** Delete `wsb\Std-File.ps1` → GitHub sync re-downloads default on next GUI run
-2. **Remove header method:** Remove the `# CUSTOM OVERRIDE` line → GitHub sync overwrites on next run
+2. **Remove header method:** Remove the `# CUSTOM` line → GitHub sync overwrites on next run
 
 **Important Notes:**
 
@@ -422,19 +422,19 @@ The `Sync-GitHubScriptsSelective` function in `Shared-Helpers.ps1` checks for th
 
 ### Custom Override for Package Lists (Std-*.txt)
 
-Package lists follow the same CUSTOM OVERRIDE pattern as scripts.
+Package lists follow the same CUSTOM pattern as scripts.
 
 **Quick Method: Add Header to Prevent Sync**
 
 1. Open any Std-*.txt package list in a text editor
-2. Add `# CUSTOM OVERRIDE` as the first line
+2. Add `# CUSTOM` as the first line
 3. Save the file
 4. GitHub sync will now skip this file
 
 **Example:**
 
 ```
-# CUSTOM OVERRIDE
+# CUSTOM
 # My customized Python packages
 Python.Python.3.14
 numpy
@@ -447,13 +447,13 @@ pandas
 - You want to preserve your package selections
 
 **Reverting to default:**
-- Remove the `# CUSTOM OVERRIDE` line
+- Remove the `# CUSTOM` line
 - Next GUI startup will sync from GitHub (if changes exist)
 
 **Supported formats:**
-- `# CUSTOM OVERRIDE` (standard)
-- `#CUSTOM OVERRIDE` (no space after #)
-- `  # CUSTOM OVERRIDE` (leading whitespace)
+- `# CUSTOM` (standard)
+- `#CUSTOM` (no space after #)
+- `  # CUSTOM` (leading whitespace)
 
 ### Package List Configuration System
 
@@ -526,21 +526,21 @@ If same package appears in both AutoInstall and selected list:
 **Sync Behavior:**
 - Downloads if missing locally (unless marked state=0 in .ini)
 - Updates if content changed on GitHub
-- **Skips if `# CUSTOM OVERRIDE` header present**
+- **Skips if `# CUSTOM` header present**
 - **Skips if user deleted the list** (state=0 in .ini)
 - Same behavior as Std-*.ps1 scripts
 
 **Skip Conditions:**
 
 The sync will NOT download/update a Std-*.txt file if ANY of these conditions are true:
-1. File exists locally with `# CUSTOM OVERRIDE` header (respects user customization)
+1. File exists locally with `# CUSTOM` header (respects user customization)
 2. File is missing locally AND .ini has `Std-ListName=0` (respects user deletion)
 
 **Remote Cleanup:**
 - Detects when Std-*.txt files are removed from GitHub
 - Automatically deletes obsolete local versions
 - Updates .ini file (sets state to 0)
-- Protected by CUSTOM OVERRIDE (never deletes customized files)
+- Protected by CUSTOM (never deletes customized files)
 
 **Migration System:**
 
@@ -549,7 +549,7 @@ When first upgrading to this version, the system tracks original default list na
 **Protection:**
 - Only tracked original defaults can be deleted during migration
 - Lists created after migration are never auto-deleted
-- CUSTOM OVERRIDE header always prevents deletion
+- CUSTOM header always prevents deletion
 
 ### Deleting Package Lists
 

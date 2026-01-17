@@ -1,4 +1,7 @@
-﻿$SandboxFolderName = "DefaultFolder"
+﻿# To prevent GitHub sync from overwriting your changes, uncomment the line below:
+# # CUSTOM
+
+$SandboxFolderName = "DefaultFolder"
 
 $command = "Set-Location C:\; " +
 	"winget validate '$env:USERPROFILE\Desktop\$SandboxFolderName'; " +

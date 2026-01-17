@@ -1,3 +1,6 @@
+# To prevent GitHub sync from overwriting your changes, uncomment the line below:
+# # CUSTOM
+
 [CmdletBinding()]
 param(
 	[Parameter(Mandatory)]
