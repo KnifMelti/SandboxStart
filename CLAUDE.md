@@ -489,20 +489,11 @@ if ($wingetFiles) {
 
 	foreach ($wingetFile in $wingetFiles) {
 		Write-Host "`nExecuting configuration: $($wingetFile.Name)" -ForegroundColor Yellow
+		Write-Host "Opening in separate PowerShell window..." -ForegroundColor Cyan
 
-		try {
-			# Run WinGet configuration
-			winget configure --file $wingetFile.FullName --accept-configuration-agreements --verbose
-
-			if ($LASTEXITCODE -eq 0) {
-				Write-Host "`n[SUCCESS] Configuration applied: $($wingetFile.Name)" -ForegroundColor Green
-			} else {
-				Write-Host "`n[ERROR] Configuration failed with exit code: $LASTEXITCODE" -ForegroundColor Red
-			}
-		}
-		catch {
-			Write-Error "Failed to execute WinGet configuration: $_"
-		}
+		# Run WinGet configuration in separate PowerShell window
+		$configCommand = "winget configure --file `"$($wingetFile.FullName)`" --accept-configuration-agreements --verbose; Write-Host '`nPress any key to close...'; `$null = `$Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')"
+		Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", $configCommand -Wait
 	}
 
 	Write-Host "`n=== WinGet Configuration Complete ===" -ForegroundColor Cyan
@@ -557,25 +548,11 @@ if (-not $wingetFiles) {
 foreach ($wingetFile in $wingetFiles) {
 	Write-Host "`nApplying configuration: $($wingetFile.Name)" -ForegroundColor Cyan
 	Write-Host "File path: $($wingetFile.FullName)" -ForegroundColor Gray
+	Write-Host "Opening in separate PowerShell window..." -ForegroundColor Yellow
 
-	# Display file content for debugging
-	Write-Host "`nConfiguration content:" -ForegroundColor Yellow
-	Get-Content $wingetFile.FullName | Write-Host -ForegroundColor Gray
-
-	Write-Host "`nExecuting configuration..." -ForegroundColor Yellow
-
-	try {
-		winget configure --file $wingetFile.FullName --accept-configuration-agreements --verbose
-
-		if ($LASTEXITCODE -eq 0) {
-			Write-Host "`n[SUCCESS] Configuration applied successfully" -ForegroundColor Green
-		} else {
-			Write-Host "`n[ERROR] Configuration failed with exit code: $LASTEXITCODE" -ForegroundColor Red
-		}
-	}
-	catch {
-		Write-Error "Exception during configuration: $_"
-	}
+	# Run WinGet configuration in separate PowerShell window
+	$configCommand = "winget configure --file `"$($wingetFile.FullName)`" --accept-configuration-agreements --verbose; Write-Host '`nPress any key to close...'; `$null = `$Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')"
+	Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", $configCommand -Wait
 }
 
 Write-Host "`n=== Configuration Complete ===" -ForegroundColor Cyan
