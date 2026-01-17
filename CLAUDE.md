@@ -474,7 +474,7 @@ Create a custom override that automatically detects and executes .winget files:
 2. **Example custom script:**
 
 ```powershell
-# To prevent GitHub sync from overwriting your changes, uncomment the line below (it skould read # CUSTOM):
+# To prevent GitHub sync from overwriting your changes, uncomment the line below (it skould read `# CUSTOM`):
 # CUSTOM
 
 # Standard variables (replaced at runtime by SandboxTest.ps1)
