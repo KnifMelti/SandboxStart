@@ -128,6 +128,14 @@ switch ($extension) {
 			}
 			Set-ItemProperty -Path $regPath -Name "UTF8" -Value 1 -Type String
 			Write-Host "Set AutoHotkey UTF8 registry key"
+			
+			# Set default editor for AutoHotkey scripts
+			$editCommandPath = "HKCU:\SOFTWARE\Classes\AutoHotkeyScript\shell\edit\command"
+			if (-not (Test-Path $editCommandPath)) {
+				New-Item -Path $editCommandPath -Force | Out-Null
+			}
+			Set-ItemProperty -Path $editCommandPath -Name "(Default)" -Value '"C:\Windows\notepad.exe" "%l"'
+			Write-Host "Set AutoHotkey default editor to Notepad"
 		}
 		
 		# Execute the .ahk/.au3 file
