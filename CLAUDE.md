@@ -521,7 +521,8 @@ Create a separate custom script specifically for .winget files:
 **IMPORTANT:** This method requires the script to be called as a file (like Std-File.ps1), not run inline. The example below uses a simplified approach without `[CmdletBinding()]` to work inline.
 
 1. **Create new script:**
-   - Click "Load..." in GUI
+   - Clear the Editor `[X]` in GUI
+   - Paste the content below
    - Save as `Custom-WinGetConfig.ps1` in `wsb/` folder
 
 2. **Script content (simplified for inline execution):**
@@ -559,9 +560,9 @@ Write-Host "`n=== Configuration Complete ===" -ForegroundColor Cyan
 ```
 
 3. **Usage:**
-   - Load the custom script manually in GUI
    - Browse to folder containing .winget file
-   - Click Test to execute
+   - Load the custom script manually in GUI
+   - Click `[OK]` to execute
 
 **Alternative: File-based execution (for advanced param usage)**
 
