@@ -71,6 +71,7 @@ For detailed information, please visit the [**Wiki**](https://github.com/KnifMel
 - Conduct safe security research and testing
 
 > **Nota bene:** Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1) requires a **R/W** mapping to `%LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\SandboxTest\` for writing the script based execution inside **WSB**.
+> For secured testing, use [windows-sandbox-init](https://github.com/jm33-m0/windows-sandbox-init) or [FLARE-VM](https://github.com/mandiant/flare-vm)
 
 ## Quick Examples
 
