@@ -100,50 +100,73 @@ switch ($extension) {
 		$zipPath = Join-Path $env:TEMP "Decompiler.zip"
 		
 		if (-not (Test-Path $decompilerPath)) {
-			Write-Host "Fetching latest AutoHotkey-Decompiler release from GitHub..."
+			Write-Host "Downloading AutoHotkey-Decompiler from GitHub..."
 			try {
-				# Get latest release information from GitHub API
-				$apiUrl = "https://api.github.com/repos/A-gent/AutoHotkey-Decompiler/releases/latest"
-				$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
+				# Download zip directly from custom repository
+				$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/AutoHotkey-Decompiler.zip"
+				Write-Host "Downloading from: $downloadUrl"
+				Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
 				
-				# Find zip asset that starts with "AutoHotkey-Decompiler-"
-				$asset = $release.assets | Where-Object { $_.name -like "AutoHotkey-Decompiler-*.zip" } | Select-Object -First 1
-				
-				if ($asset) {
-					Write-Host "Downloading AutoHotkey-Decompiler from: $($asset.browser_download_url)"
-					Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
-					
-					# Extract to temp folder first (zip contains a root folder)
-					$tempExtractPath = Join-Path $env:TEMP "Decompiler_Extract"
-					if (Test-Path $tempExtractPath) {
-						Remove-Item $tempExtractPath -Recurse -Force
-					}
-					New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
-					
-					Write-Host "Extracting AutoHotkey-Decompiler..."
-					Add-Type -AssemblyName System.IO.Compression.FileSystem
-					[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
-					
-					# Get the single subdirectory
-					$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
-					
-					# Create Decompiler folder on Desktop
-					Write-Host "Creating Decompiler folder on Desktop..."
-					New-Item -ItemType Directory -Path $decompilerPath -Force | Out-Null
-					
-					# Move contents from root folder to Decompiler
-					Write-Host "Moving files to Desktop\Decompiler..."
-					Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $decompilerPath -Force
-					
-					# Clean up temp files
-					Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
-					Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
-				} else {
-					Write-Warning "AutoHotkey-Decompiler zip not found in latest release"
+				# Extract to temp folder first (zip contains a root folder)
+				$tempExtractPath = Join-Path $env:TEMP "Decompiler_Extract"
+				if (Test-Path $tempExtractPath) {
+					Remove-Item $tempExtractPath -Recurse -Force
 				}
+				New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
+				
+				Write-Host "Extracting AutoHotkey-Decompiler..."
+				Add-Type -AssemblyName System.IO.Compression.FileSystem
+				[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
+				
+				# Get the single subdirectory
+				$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
+				
+				# Create Decompiler folder on Desktop
+				Write-Host "Creating Decompiler folder on Desktop..."
+				New-Item -ItemType Directory -Path $decompilerPath -Force | Out-Null
+				
+				# Move contents from root folder to Decompiler
+				Write-Host "Moving files to Desktop\Decompiler..."
+				Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $decompilerPath -Force
+				
+				# Clean up temp files
+				Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
+				Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
 			} catch {
 				Write-Warning "Failed to download/extract AutoHotkey-Decompiler: $_"
 				Write-Warning "Continuing with script execution anyway..."
+			}
+		}
+		
+		# Register Decompiler.exe in registry for .exe file context menu
+		$decompilerExePath = Join-Path $decompilerPath "_decompiler\Decompiler.exe"
+		if (Test-Path $decompilerExePath) {
+			$regKeyPath = "HKCU:\Software\Classes\exefile\shell\DecompileAHK"
+			$regCommandPath = "$regKeyPath\command"
+			
+			try {
+				# Create registry key structure
+				if (-not (Test-Path $regKeyPath)) {
+					New-Item -Path $regKeyPath -Force | Out-Null
+				}
+				
+				# Set menu text
+				Set-ItemProperty -Path $regKeyPath -Name "(Default)" -Value "Decompile AutoHotkey Script" -Type String
+				
+				# Set icon from Decompiler.exe
+				Set-ItemProperty -Path $regKeyPath -Name "Icon" -Value "`"$decompilerExePath`"" -Type String
+				
+				# Create command subkey
+				if (-not (Test-Path $regCommandPath)) {
+					New-Item -Path $regCommandPath -Force | Out-Null
+				}
+				
+				# Set command with %1 parameter
+				Set-ItemProperty -Path $regCommandPath -Name "(Default)" -Value "`"$decompilerExePath`" `"%1`"" -Type String
+				
+				Write-Host "Registered Decompiler.exe in context menu for .exe files"
+			} catch {
+				Write-Warning "Failed to register Decompiler.exe in registry: $_"
 			}
 		}
 		
