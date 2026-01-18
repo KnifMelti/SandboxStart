@@ -95,28 +95,55 @@ switch ($extension) {
 		}
 	}
 	'.ahk' {
-		# AHK: Download ahk-decompiler.exe to Desktop
-		$decompilerPath = Join-Path "$env:USERPROFILE\Desktop" "ahk-decompiler.exe"
+		# AHK: Download and extract AutoHotkey-Decompiler to Desktop\Decompiler
+		$decompilerPath = Join-Path "$env:USERPROFILE\Desktop" "Decompiler"
+		$zipPath = Join-Path $env:TEMP "Decompiler.zip"
 		
 		if (-not (Test-Path $decompilerPath)) {
-			Write-Host "Downloading ahk-decompiler.exe to Desktop..."
+			Write-Host "Fetching latest AutoHotkey-Decompiler release from GitHub..."
 			try {
 				# Get latest release information from GitHub API
-				$apiUrl = "https://api.github.com/repos/SmookeyDev/ahk-decompiler/releases/latest"
+				$apiUrl = "https://api.github.com/repos/A-gent/AutoHotkey-Decompiler/releases/latest"
 				$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
 				
-				# Find ahk-decompiler.exe asset
-				$asset = $release.assets | Where-Object { $_.name -eq "ahk-decompiler.exe" } | Select-Object -First 1
+				# Find zip asset that starts with "AutoHotkey-Decompiler-"
+				$asset = $release.assets | Where-Object { $_.name -like "AutoHotkey-Decompiler-*.zip" } | Select-Object -First 1
 				
 				if ($asset) {
-					Write-Host "Downloading from: $($asset.browser_download_url)"
-					Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $decompilerPath -UseBasicParsing -ErrorAction Stop
-					Write-Host "ahk-decompiler.exe downloaded successfully"
+					Write-Host "Downloading AutoHotkey-Decompiler from: $($asset.browser_download_url)"
+					Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
+					
+					# Extract to temp folder first (zip contains a root folder)
+					$tempExtractPath = Join-Path $env:TEMP "Decompiler_Extract"
+					if (Test-Path $tempExtractPath) {
+						Remove-Item $tempExtractPath -Recurse -Force
+					}
+					New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
+					
+					Write-Host "Extracting AutoHotkey-Decompiler..."
+					Add-Type -AssemblyName System.IO.Compression.FileSystem
+					[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
+					
+					# Get the single subdirectory
+					$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
+					
+					# Create Decompiler folder on Desktop
+					Write-Host "Creating Decompiler folder on Desktop..."
+					New-Item -ItemType Directory -Path $decompilerPath -Force | Out-Null
+					
+					# Move contents from root folder to Decompiler
+					Write-Host "Moving files to Desktop\Decompiler..."
+					Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $decompilerPath -Force
+					
+					# Clean up temp files
+					Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
+					Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
+					Write-Host "AutoHotkey-Decompiler extracted successfully"
 				} else {
-					Write-Warning "ahk-decompiler.exe not found in latest release"
+					Write-Warning "AutoHotkey-Decompiler zip not found in latest release"
 				}
 			} catch {
-				Write-Warning "Failed to download ahk-decompiler.exe: $_"
+				Write-Warning "Failed to download/extract AutoHotkey-Decompiler: $_"
 				Write-Warning "Continuing with script execution anyway..."
 			}
 		}
@@ -168,20 +195,19 @@ FileEncoding "UTF-8"
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
 	}
 	'.au3' {
-		# AU3: Download and extract source code from latest GitHub release to Desktop\MATE, then execute
+		# AU3: Download and extract source code from latest GitHub release to Desktop\Decompiler, then execute
 		$apiUrl = "https://api.github.com/repos/daovantrong/myAutToExe/releases/latest"
-		$matePath = Join-Path "$env:USERPROFILE\Desktop" "MATE"
+		$matePath = Join-Path "$env:USERPROFILE\Desktop" "Decompiler"
 		$zipPath = Join-Path $env:TEMP "MATE.zip"
 		
 		# Download and extract source code if it doesn't exist
 		if (-not (Test-Path $matePath)) {
-			Write-Host "Fetching latest release from GitHub..."
 			try {
 				# Get latest release information from GitHub API
 				$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
 				$downloadUrl = $release.zipball_url
 				
-				Write-Host "Downloading source code from: $downloadUrl"
+				Write-Host "Downloading AutoIT-Decompiler from: $downloadUrl"
 				Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
 				
 				# Extract to temp folder first (GitHub zipballs contain a root folder)
@@ -191,7 +217,7 @@ FileEncoding "UTF-8"
 				}
 				New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
 				
-				Write-Host "Extracting source code..."
+				Write-Host "Extracting AutoIT-Decompiler..."
 				Add-Type -AssemblyName System.IO.Compression.FileSystem
 				[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
 				
@@ -199,18 +225,18 @@ FileEncoding "UTF-8"
 				$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
 				
 				# Create MATE folder on Desktop
-				Write-Host "Creating MATE folder on Desktop..."
+				Write-Host "Creating Decompiler folder on Desktop..."
 				New-Item -ItemType Directory -Path $matePath -Force | Out-Null
 				
 				# Move contents from root folder to MATE
-				Write-Host "Moving files to Desktop\MATE..."
+				Write-Host "Moving files to Desktop\Decompiler..."
 				Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $matePath -Force
 				
 				# Clean up temp files
 				Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
 				Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
 			} catch {
-				Write-Warning "Failed to download/extract source code: $_"
+				Write-Warning "Failed to download/extract AutoIT-Decompiler: $_"
 				Write-Warning "Continuing with script execution anyway..."
 			}
 		}
