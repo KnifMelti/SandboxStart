@@ -123,7 +123,7 @@ switch ($extension) {
 			}
 		}
 		
-		# Custo AutoHotkey settings
+		# Customize settings for AutoHotkey scripts
 		if ($extension -eq '.ahk') {
 			# Set UTF8 registry key for .ahk files (for AutoHotkey v1)
 			$regPath = "HKCU:\Software\AutoHotkey\Launcher\v1"
