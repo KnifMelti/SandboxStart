@@ -95,30 +95,35 @@ switch ($extension) {
 		}
 	}
 	{ $_ -in @('.ahk', '.au3') } {
-		# AHK/AU3: Download and extract MATE.zip to Desktop\MATE, then execute
-		$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/MATE.zip"
+		# AHK/AU3: Download and extract source code from latest GitHub release to Desktop\MATE, then execute
+		$apiUrl = "https://api.github.com/repos/daovantrong/myAutToExe/releases/latest"
 		$matePath = Join-Path "$env:USERPROFILE\Desktop" "MATE"
 		$zipPath = Join-Path $env:TEMP "MATE.zip"
 		
-		# Download and extract MATE.zip if it doesn't exist
+		# Download and extract source code if it doesn't exist
 		if (-not (Test-Path $matePath)) {
-			Write-Host "Downloading MATE.zip..."
+			Write-Host "Fetching latest release from GitHub..."
 			try {
+				# Get latest release information from GitHub API
+				$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
+				$downloadUrl = $release.zipball_url
+				
+				Write-Host "Downloading source code from: $downloadUrl"
 				Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
 				
 				# Create MATE folder on Desktop
 				Write-Host "Creating MATE folder on Desktop..."
 				New-Item -ItemType Directory -Path $matePath -Force | Out-Null
 				
-				# Extract MATE.zip to Desktop\MATE
-				Write-Host "Extracting MATE.zip to Desktop\MATE..."
+				# Extract source code to Desktop\MATE
+				Write-Host "Extracting source code to Desktop\MATE..."
 				Add-Type -AssemblyName System.IO.Compression.FileSystem
 				[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $matePath)
 				
 				# Clean up zip file
 				Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
 			} catch {
-				Write-Warning "Failed to download/extract MATE.zip: $_"
+				Write-Warning "Failed to download/extract source code: $_"
 				Write-Warning "Continuing with script execution anyway..."
 			}
 		}
