@@ -111,16 +111,30 @@ switch ($extension) {
 				Write-Host "Downloading source code from: $downloadUrl"
 				Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
 				
+				# Extract to temp folder first (GitHub zipballs contain a root folder)
+				$tempExtractPath = Join-Path $env:TEMP "MATE_Extract"
+				if (Test-Path $tempExtractPath) {
+					Remove-Item $tempExtractPath -Recurse -Force
+				}
+				New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
+				
+				Write-Host "Extracting source code..."
+				Add-Type -AssemblyName System.IO.Compression.FileSystem
+				[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
+				
+				# Get the single subdirectory (GitHub zipball root folder)
+				$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
+				
 				# Create MATE folder on Desktop
 				Write-Host "Creating MATE folder on Desktop..."
 				New-Item -ItemType Directory -Path $matePath -Force | Out-Null
 				
-				# Extract source code to Desktop\MATE
-				Write-Host "Extracting source code to Desktop\MATE..."
-				Add-Type -AssemblyName System.IO.Compression.FileSystem
-				[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $matePath)
+				# Move contents from root folder to MATE
+				Write-Host "Moving files to Desktop\MATE..."
+				Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $matePath -Force
 				
-				# Clean up zip file
+				# Clean up temp files
+				Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
 				Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
 			} catch {
 				Write-Warning "Failed to download/extract source code: $_"
