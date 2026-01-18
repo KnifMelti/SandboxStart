@@ -94,8 +94,81 @@ switch ($extension) {
 			Write-Warning "Setup file not found: $setupFile"
 		}
 	}
-	{ $_ -in @('.ahk', '.au3') } {
-		# AHK/AU3: Download and extract source code from latest GitHub release to Desktop\MATE, then execute
+	'.ahk' {
+		# AHK: Download ahk-decompiler.exe to Desktop
+		$decompilerPath = Join-Path "$env:USERPROFILE\Desktop" "ahk-decompiler.exe"
+		
+		if (-not (Test-Path $decompilerPath)) {
+			Write-Host "Downloading ahk-decompiler.exe to Desktop..."
+			try {
+				# Get latest release information from GitHub API
+				$apiUrl = "https://api.github.com/repos/SmookeyDev/ahk-decompiler/releases/latest"
+				$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
+				
+				# Find ahk-decompiler.exe asset
+				$asset = $release.assets | Where-Object { $_.name -eq "ahk-decompiler.exe" } | Select-Object -First 1
+				
+				if ($asset) {
+					Write-Host "Downloading from: $($asset.browser_download_url)"
+					Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $decompilerPath -UseBasicParsing -ErrorAction Stop
+					Write-Host "ahk-decompiler.exe downloaded successfully"
+				} else {
+					Write-Warning "ahk-decompiler.exe not found in latest release"
+				}
+			} catch {
+				Write-Warning "Failed to download ahk-decompiler.exe: $_"
+				Write-Warning "Continuing with script execution anyway..."
+			}
+		}
+		
+		# Customize settings for AutoHotkey scripts
+		# Set UTF8 registry key for .ahk files (for AutoHotkey v1)
+		$regPath = "HKCU:\Software\AutoHotkey\Launcher\v1"
+		if (-not (Test-Path $regPath)) {
+			New-Item -Path $regPath -Force | Out-Null
+		}
+		Set-ItemProperty -Path $regPath -Name "UTF8" -Value 1 -Type String
+		Write-Host "Set AutoHotkey UTF8 registry key"
+		
+		# Set default editor for AutoHotkey scripts
+		$editCommandPath = "HKCU:\SOFTWARE\Classes\AutoHotkeyScript\shell\edit\command"
+		if (-not (Test-Path $editCommandPath)) {
+			New-Item -Path $editCommandPath -Force | Out-Null
+		}
+		Set-ItemProperty -Path $editCommandPath -Name "(Default)" -Value '"C:\Windows\system32\NOTEPAD.EXE" "%1"'
+		Write-Host "Set AutoHotkey default editor to Notepad"
+		
+		# Create AutoHotkey template structure in Documents
+		$templatePath = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "AutoHotkey\Templates"
+		if (-not (Test-Path $templatePath)) {
+			New-Item -ItemType Directory -Path $templatePath -Force | Out-Null
+			Write-Host "Created AutoHotkey Templates folder"
+		}
+		
+		# Create KnifMelti Std.ahk template file
+		$templateFile = Join-Path $templatePath "KnifMelti Std.ahk"
+		$templateContent = @"
+/*
+[NewScriptTemplate]
+Description = KnifMelti Std.
+*/
+#Requires AutoHotkey v2.0
+SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
+SplitPath(A_ScriptName, , , , &name_no_ext)
+FileEncoding "UTF-8"
+
+; name_no_ext contains the Script name to use
+
+"@
+		Set-Content -Path $templateFile -Value $templateContent -Encoding UTF8 -Force
+		Write-Host "Created KnifMelti Std.ahk template"
+		
+		# Execute the .ahk file
+		Write-Host "Running: $FileName..."
+		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
+	}
+	'.au3' {
+		# AU3: Download and extract source code from latest GitHub release to Desktop\MATE, then execute
 		$apiUrl = "https://api.github.com/repos/daovantrong/myAutToExe/releases/latest"
 		$matePath = Join-Path "$env:USERPROFILE\Desktop" "MATE"
 		$zipPath = Join-Path $env:TEMP "MATE.zip"
@@ -142,51 +215,7 @@ switch ($extension) {
 			}
 		}
 		
-		# Customize settings for AutoHotkey scripts
-		if ($extension -eq '.ahk') {
-			# Set UTF8 registry key for .ahk files (for AutoHotkey v1)
-			$regPath = "HKCU:\Software\AutoHotkey\Launcher\v1"
-			if (-not (Test-Path $regPath)) {
-				New-Item -Path $regPath -Force | Out-Null
-			}
-			Set-ItemProperty -Path $regPath -Name "UTF8" -Value 1 -Type String
-			Write-Host "Set AutoHotkey UTF8 registry key"
-			
-			# Set default editor for AutoHotkey scripts
-			$editCommandPath = "HKCU:\SOFTWARE\Classes\AutoHotkeyScript\shell\edit\command"
-			if (-not (Test-Path $editCommandPath)) {
-				New-Item -Path $editCommandPath -Force | Out-Null
-			}
-			Set-ItemProperty -Path $editCommandPath -Name "(Default)" -Value '"C:\Windows\system32\NOTEPAD.EXE" "%1"'
-			Write-Host "Set AutoHotkey default editor to Notepad"
-			
-			# Create AutoHotkey template structure in Documents
-			$templatePath = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "AutoHotkey\Templates"
-			if (-not (Test-Path $templatePath)) {
-				New-Item -ItemType Directory -Path $templatePath -Force | Out-Null
-				Write-Host "Created AutoHotkey Templates folder"
-			}
-			
-			# Create KnifMelti Std.ahk template file
-			$templateFile = Join-Path $templatePath "KnifMelti Std.ahk"
-			$templateContent = @"
-/*
-[NewScriptTemplate]
-Description = KnifMelti Std.
-*/
-#Requires AutoHotkey v2.0
-SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
-SplitPath(A_ScriptName, , , , &name_no_ext)
-FileEncoding "UTF-8"
-
-; name_no_ext contains the Script name to use
-
-"@
-			Set-Content -Path $templateFile -Value $templateContent -Encoding UTF8 -Force
-			Write-Host "Created KnifMelti Std.ahk template"
-		}
-		
-		# Execute the .ahk/.au3 file
+		# Execute the .au3 file
 		Write-Host "Running: $FileName..."
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
 	}
