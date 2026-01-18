@@ -137,7 +137,7 @@ switch ($extension) {
 			if (-not (Test-Path $editCommandPath)) {
 				New-Item -Path $editCommandPath -Force | Out-Null
 			}
-			Set-ItemProperty -Path $editCommandPath -Name "(Default)" -Value '"C:\Windows\notepad.exe" "%l"'
+			Set-ItemProperty -Path $editCommandPath -Name "(Default)" -Value '"C:\Windows\system32\NOTEPAD.EXE" "%1"'
 			Write-Host "Set AutoHotkey default editor to Notepad"
 		}
 		
