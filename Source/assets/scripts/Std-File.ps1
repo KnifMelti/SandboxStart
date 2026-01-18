@@ -202,6 +202,7 @@ FileEncoding "UTF-8"
 		
 		# Download and extract source code if it doesn't exist
 		if (-not (Test-Path $matePath)) {
+			Write-Host "Fetching latest AutoIT-Decompiler release from GitHub..."
 			try {
 				# Get latest release information from GitHub API
 				$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
