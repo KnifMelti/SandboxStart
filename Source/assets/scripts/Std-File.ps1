@@ -138,7 +138,6 @@ switch ($extension) {
 					# Clean up temp files
 					Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
 					Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
-					Write-Host "AutoHotkey-Decompiler extracted successfully"
 				} else {
 					Write-Warning "AutoHotkey-Decompiler zip not found in latest release"
 				}
@@ -202,13 +201,13 @@ FileEncoding "UTF-8"
 		
 		# Download and extract source code if it doesn't exist
 		if (-not (Test-Path $matePath)) {
-			Write-Host "Fetching latest AutoIT-Decompiler release from GitHub..."
+			Write-Host "Fetching latest AutoIt-Decompiler release from GitHub..."
 			try {
 				# Get latest release information from GitHub API
 				$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
 				$downloadUrl = $release.zipball_url
 				
-				Write-Host "Downloading AutoIT-Decompiler from: $downloadUrl"
+				Write-Host "Downloading AutoIt-Decompiler from: $downloadUrl"
 				Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
 				
 				# Extract to temp folder first (GitHub zipballs contain a root folder)
@@ -218,7 +217,7 @@ FileEncoding "UTF-8"
 				}
 				New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
 				
-				Write-Host "Extracting AutoIT-Decompiler..."
+				Write-Host "Extracting AutoIt-Decompiler..."
 				Add-Type -AssemblyName System.IO.Compression.FileSystem
 				[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
 				
@@ -237,7 +236,7 @@ FileEncoding "UTF-8"
 				Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
 				Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
 			} catch {
-				Write-Warning "Failed to download/extract AutoIT-Decompiler: $_"
+				Write-Warning "Failed to download/extract AutoIt-Decompiler: $_"
 				Write-Warning "Continuing with script execution anyway..."
 			}
 		}
