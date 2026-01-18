@@ -5,4 +5,5 @@
 # WinGet Package IDs - one per line
 # Lines starting with # are comments
 
+Microsoft.VCRedist.2015+.x64
 AutoIt.AutoIt
