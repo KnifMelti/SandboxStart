@@ -151,6 +151,10 @@ switch ($extension) {
 			# Create KnifMelti Std.ahk template file
 			$templateFile = Join-Path $templatePath "KnifMelti Std.ahk"
 			$templateContent = @"
+/*
+[NewScriptTemplate]
+Description = KnifMelti Std.
+*/
 #Requires AutoHotkey v2.0
 SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 SplitPath(A_ScriptName, , , , &name_no_ext)
