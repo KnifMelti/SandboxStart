@@ -123,8 +123,9 @@ switch ($extension) {
 			}
 		}
 		
-		# Set UTF8 registry key for .ahk files (for AutoHotkey v1)
+		# Custo AutoHotkey settings
 		if ($extension -eq '.ahk') {
+			# Set UTF8 registry key for .ahk files (for AutoHotkey v1)
 			$regPath = "HKCU:\Software\AutoHotkey\Launcher\v1"
 			if (-not (Test-Path $regPath)) {
 				New-Item -Path $regPath -Force | Out-Null
@@ -139,6 +140,27 @@ switch ($extension) {
 			}
 			Set-ItemProperty -Path $editCommandPath -Name "(Default)" -Value '"C:\Windows\system32\NOTEPAD.EXE" "%1"'
 			Write-Host "Set AutoHotkey default editor to Notepad"
+			
+			# Create AutoHotkey template structure in Documents
+			$templatePath = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "AutoHotkey\Templates"
+			if (-not (Test-Path $templatePath)) {
+				New-Item -ItemType Directory -Path $templatePath -Force | Out-Null
+				Write-Host "Created AutoHotkey Templates folder"
+			}
+			
+			# Create KnifMelti Std.ahk template file
+			$templateFile = Join-Path $templatePath "KnifMelti Std.ahk"
+			$templateContent = @"
+#Requires AutoHotkey v2.0
+SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
+SplitPath(A_ScriptName, , , , &name_no_ext)
+FileEncoding "UTF-8"
+
+; name_no_ext contains the Script name to use
+
+"@
+			Set-Content -Path $templateFile -Value $templateContent -Encoding UTF8 -Force
+			Write-Host "Created KnifMelti Std.ahk template"
 		}
 		
 		# Execute the .ahk/.au3 file
