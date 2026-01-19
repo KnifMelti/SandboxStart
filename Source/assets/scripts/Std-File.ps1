@@ -95,78 +95,65 @@ switch ($extension) {
 		}
 	}
 	'.ahk' {
-		# AHK: Download and extract AutoHotkey-Decompiler to Desktop\Decompiler
-		$decompilerPath = Join-Path "$env:USERPROFILE\Desktop" "Decompiler"
-		$zipPath = Join-Path $env:TEMP "Decompiler.zip"
+		# AHK: Download and extract AHK-Hacker to Desktop\AHK-Hacker
+		$apiUrl = "https://api.github.com/repos/KnifMelti/AHK-Hacker/releases/latest"
+		$ahkHackerPath = Join-Path "$env:USERPROFILE\Desktop" "AHK-Hacker"
+		$zipPath = Join-Path $env:TEMP "AHK-Hacker.zip"
 		
-		if (-not (Test-Path $decompilerPath)) {
-			Write-Host "Downloading AutoHotkey-Decompiler from GitHub..."
+		if (-not (Test-Path $ahkHackerPath)) {
+			Write-Host "Fetching latest AHK-Hacker release from GitHub..."
 			try {
-				# Download zip directly from custom repository
-				$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/AutoHotkey-Decompiler.zip"
-				Write-Host "Downloading from: $downloadUrl"
+				# Get latest release information from GitHub API
+				$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
+				
+				# Find the AHK-Hacker-*.zip asset
+				$asset = $release.assets | Where-Object { $_.name -like "AHK-Hacker-*.zip" } | Select-Object -First 1
+				if (-not $asset) {
+					throw "No AHK-Hacker-*.zip file found in latest release"
+				}
+				
+				$downloadUrl = $asset.browser_download_url
+				Write-Host "Downloading AHK-Hacker from: $downloadUrl"
 				Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
 				
 				# Extract to temp folder first (zip contains a root folder)
-				$tempExtractPath = Join-Path $env:TEMP "Decompiler_Extract"
+				$tempExtractPath = Join-Path $env:TEMP "AHK-Hacker_Extract"
 				if (Test-Path $tempExtractPath) {
 					Remove-Item $tempExtractPath -Recurse -Force
 				}
 				New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
 				
-				Write-Host "Extracting AutoHotkey-Decompiler..."
+				Write-Host "Extracting AHK-Hacker..."
 				Add-Type -AssemblyName System.IO.Compression.FileSystem
 				[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
 				
 				# Get the single subdirectory
 				$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
 				
-				# Create Decompiler folder on Desktop
-				Write-Host "Creating Decompiler folder on Desktop..."
-				New-Item -ItemType Directory -Path $decompilerPath -Force | Out-Null
+				# Create AHK-Hacker folder on Desktop
+				Write-Host "Creating AHK-Hacker folder on Desktop..."
+				New-Item -ItemType Directory -Path $ahkHackerPath -Force | Out-Null
 				
-				# Move contents from root folder to Decompiler
-				Write-Host "Moving files to Desktop\Decompiler..."
-				Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $decompilerPath -Force
+				# Move contents from root folder to AHK-Hacker
+				Write-Host "Moving files to Desktop\AHK-Hacker..."
+				Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $ahkHackerPath -Force
 				
 				# Clean up temp files
 				Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
 				Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
+				
+				# Run Install.ps1 to register everything
+				$installScript = Join-Path $ahkHackerPath "Install.ps1"
+				if (Test-Path $installScript) {
+					Write-Host "Running Install.ps1 to register AHK-Hacker..."
+					Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -File `"$installScript`"" -WorkingDirectory $ahkHackerPath -Wait
+					Write-Host "AHK-Hacker installation completed"
+				} else {
+					Write-Warning "Install.ps1 not found in AHK-Hacker folder"
+				}
 			} catch {
-				Write-Warning "Failed to download/extract AutoHotkey-Decompiler: $_"
+				Write-Warning "Failed to download/extract AHK-Hacker: $_"
 				Write-Warning "Continuing with script execution anyway..."
-			}
-		}
-		
-		# Register Decompiler.exe in registry for .exe file context menu
-		$decompilerExePath = Join-Path $decompilerPath "_decompiler\Decompiler.exe"
-		if (Test-Path $decompilerExePath) {
-			$regKeyPath = "HKCU:\Software\Classes\exefile\shell\DecompileAHK"
-			$regCommandPath = "$regKeyPath\command"
-			
-			try {
-				# Create registry key structure
-				if (-not (Test-Path $regKeyPath)) {
-					New-Item -Path $regKeyPath -Force | Out-Null
-				}
-				
-				# Set menu text
-				Set-ItemProperty -Path $regKeyPath -Name "(Default)" -Value "Decompile AutoHotkey Script" -Type String
-				
-				# Set icon from Decompiler.exe
-				Set-ItemProperty -Path $regKeyPath -Name "Icon" -Value "`"$decompilerExePath`"" -Type String
-				
-				# Create command subkey
-				if (-not (Test-Path $regCommandPath)) {
-					New-Item -Path $regCommandPath -Force | Out-Null
-				}
-				
-				# Set command with %1 parameter
-				Set-ItemProperty -Path $regCommandPath -Name "(Default)" -Value "`"$decompilerExePath`" `"%1`"" -Type String
-				
-				Write-Host "Registered Decompiler.exe in context menu for .exe files"
-			} catch {
-				Write-Warning "Failed to register Decompiler.exe in registry: $_"
 			}
 		}
 		
