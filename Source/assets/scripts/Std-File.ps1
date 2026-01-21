@@ -101,59 +101,87 @@ switch ($extension) {
 		$zipPath = Join-Path $env:TEMP "AHK-Hacker.zip"
 		
 		if (-not (Test-Path $ahkHackerPath)) {
-			Write-Host "Fetching latest AHK-Hacker release from GitHub..."
-			try {
-				# Get latest release information from GitHub API
-				$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
-				
-				# Find the AHK-Hacker-*.zip asset
-				$asset = $release.assets | Where-Object { $_.name -like "AHK-Hacker-*.zip" } | Select-Object -First 1
-				if (-not $asset) {
-					throw "No AHK-Hacker-*.zip file found in latest release"
+			# Prompt user to download decompiler with 5-second timeout
+			Write-Host "`nDo you want to download the AHK-Hacker decompiler?" -ForegroundColor Yellow
+			Write-Host "Press ENTER to download, ESC to skip (auto-skip in 5 seconds)..." -ForegroundColor Cyan
+			
+			$shouldDownload = $false
+			$timeout = 5
+			$startTime = Get-Date
+			
+			while (((Get-Date) - $startTime).TotalSeconds -lt $timeout) {
+				if ([Console]::KeyAvailable) {
+					$key = [Console]::ReadKey($true)
+					if ($key.Key -eq 'Enter') {
+						$shouldDownload = $true
+						break
+					} elseif ($key.Key -eq 'Escape') {
+						Write-Host "Skipping AHK-Hacker download.`n" -ForegroundColor Gray
+						break
+					}
 				}
-				
-				$downloadUrl = $asset.browser_download_url
-				Write-Host "Downloading AHK-Hacker from: $downloadUrl"
-				Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
-				
-				# Extract to temp folder first (zip contains a root folder)
-				$tempExtractPath = Join-Path $env:TEMP "AHK-Hacker_Extract"
-				if (Test-Path $tempExtractPath) {
-					Remove-Item $tempExtractPath -Recurse -Force
+				Start-Sleep -Milliseconds 100
+			}
+			
+			if (-not $shouldDownload) {
+				if (((Get-Date) - $startTime).TotalSeconds -ge $timeout) {
+					Write-Host "Timeout reached. Skipping AHK-Hacker download.`n" -ForegroundColor Gray
 				}
-				New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
-				
-				Write-Host "Extracting AHK-Hacker..."
-				Add-Type -AssemblyName System.IO.Compression.FileSystem
-				[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
-				
-				# Get the single subdirectory
-				$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
-				
-				# Create AHK-Hacker folder on Desktop
-				Write-Host "Creating AHK-Hacker folder on Desktop..."
-				New-Item -ItemType Directory -Path $ahkHackerPath -Force | Out-Null
-				
-				# Move contents from root folder to AHK-Hacker
-				Write-Host "Moving files to Desktop\AHK-Hacker..."
-				Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $ahkHackerPath -Force
-				
-				# Clean up temp files
-				Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
-				Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
-				
-				# Run Install.ps1 to register everything
-				$installScript = Join-Path $ahkHackerPath "Install.ps1"
-				if (Test-Path $installScript) {
-					Write-Host "Running Install.ps1 to register AHK-Hacker..."
-					Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -File `"$installScript`"" -WorkingDirectory $ahkHackerPath -Wait
-					Write-Host "AHK-Hacker installation completed"
-				} else {
-					Write-Warning "Install.ps1 not found in AHK-Hacker folder"
+			} else {
+				Write-Host "Fetching latest AHK-Hacker release from GitHub..."
+				try {
+					# Get latest release information from GitHub API
+					$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
+					
+					# Find the AHK-Hacker-*.zip asset
+					$asset = $release.assets | Where-Object { $_.name -like "AHK-Hacker-*.zip" } | Select-Object -First 1
+					if (-not $asset) {
+						throw "No AHK-Hacker-*.zip file found in latest release"
+					}
+					
+					$downloadUrl = $asset.browser_download_url
+					Write-Host "Downloading AHK-Hacker from: $downloadUrl"
+					Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
+					
+					# Extract to temp folder first (zip contains a root folder)
+					$tempExtractPath = Join-Path $env:TEMP "AHK-Hacker_Extract"
+					if (Test-Path $tempExtractPath) {
+						Remove-Item $tempExtractPath -Recurse -Force
+					}
+					New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
+					
+					Write-Host "Extracting AHK-Hacker..."
+					Add-Type -AssemblyName System.IO.Compression.FileSystem
+					[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
+					
+					# Get the single subdirectory
+					$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
+					
+					# Create AHK-Hacker folder on Desktop
+					Write-Host "Creating AHK-Hacker folder on Desktop..."
+					New-Item -ItemType Directory -Path $ahkHackerPath -Force | Out-Null
+					
+					# Move contents from root folder to AHK-Hacker
+					Write-Host "Moving files to Desktop\AHK-Hacker..."
+					Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $ahkHackerPath -Force
+					
+					# Clean up temp files
+					Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
+					Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
+					
+					# Run Install.ahk to register everything
+					$installScript = Join-Path $ahkHackerPath "Install.ahk"
+					if (Test-Path $installScript) {
+						Write-Host "Running Install.ahk to register AHK-Hacker..."
+						Start-Process $installScript -WorkingDirectory $ahkHackerPath -Wait
+						Write-Host "AHK-Hacker installation completed"
+					} else {
+						Write-Warning "Install.ahk not found in AHK-Hacker folder"
+					}
+				} catch {
+					Write-Warning "Failed to download/extract AHK-Hacker: $_"
+					Write-Warning "Continuing with script execution anyway..."
 				}
-			} catch {
-				Write-Warning "Failed to download/extract AHK-Hacker: $_"
-				Write-Warning "Continuing with script execution anyway..."
 			}
 		}
 		
@@ -211,43 +239,71 @@ FileEncoding "UTF-8"
 		
 		# Download and extract source code if it doesn't exist
 		if (-not (Test-Path $matePath)) {
-			Write-Host "Fetching latest AutoIt-Decompiler release from GitHub..."
-			try {
-				# Get latest release information from GitHub API
-				$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
-				$downloadUrl = $release.zipball_url
-				
-				Write-Host "Downloading AutoIt-Decompiler from: $downloadUrl"
-				Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
-				
-				# Extract to temp folder first (GitHub zipballs contain a root folder)
-				$tempExtractPath = Join-Path $env:TEMP "MATE_Extract"
-				if (Test-Path $tempExtractPath) {
-					Remove-Item $tempExtractPath -Recurse -Force
+			# Prompt user to download decompiler with 5-second timeout
+			Write-Host "`nDo you want to download the AutoIt decompiler?" -ForegroundColor Yellow
+			Write-Host "Press ENTER to download, ESC to skip (auto-skip in 5 seconds)..." -ForegroundColor Cyan
+			
+			$shouldDownload = $false
+			$timeout = 5
+			$startTime = Get-Date
+			
+			while (((Get-Date) - $startTime).TotalSeconds -lt $timeout) {
+				if ([Console]::KeyAvailable) {
+					$key = [Console]::ReadKey($true)
+					if ($key.Key -eq 'Enter') {
+						$shouldDownload = $true
+						break
+					} elseif ($key.Key -eq 'Escape') {
+						Write-Host "Skipping AutoIt-Decompiler download.`n" -ForegroundColor Gray
+						break
+					}
 				}
-				New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
-				
-				Write-Host "Extracting AutoIt-Decompiler..."
-				Add-Type -AssemblyName System.IO.Compression.FileSystem
-				[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
-				
-				# Get the single subdirectory (GitHub zipball root folder)
-				$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
-				
-				# Create MATE folder on Desktop
-				Write-Host "Creating Decompiler folder on Desktop..."
-				New-Item -ItemType Directory -Path $matePath -Force | Out-Null
-				
-				# Move contents from root folder to MATE
-				Write-Host "Moving files to Desktop\Decompiler..."
-				Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $matePath -Force
-				
-				# Clean up temp files
-				Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
-				Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
-			} catch {
-				Write-Warning "Failed to download/extract AutoIt-Decompiler: $_"
-				Write-Warning "Continuing with script execution anyway..."
+				Start-Sleep -Milliseconds 100
+			}
+			
+			if (-not $shouldDownload) {
+				if (((Get-Date) - $startTime).TotalSeconds -ge $timeout) {
+					Write-Host "Timeout reached. Skipping AutoIt-Decompiler download.`n" -ForegroundColor Gray
+				}
+			} else {
+				Write-Host "Fetching latest AutoIt-Decompiler release from GitHub..."
+				try {
+					# Get latest release information from GitHub API
+					$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
+					$downloadUrl = $release.zipball_url
+					
+					Write-Host "Downloading AutoIt-Decompiler from: $downloadUrl"
+					Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
+					
+					# Extract to temp folder first (GitHub zipballs contain a root folder)
+					$tempExtractPath = Join-Path $env:TEMP "MATE_Extract"
+					if (Test-Path $tempExtractPath) {
+						Remove-Item $tempExtractPath -Recurse -Force
+					}
+					New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
+					
+					Write-Host "Extracting AutoIt-Decompiler..."
+					Add-Type -AssemblyName System.IO.Compression.FileSystem
+					[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
+					
+					# Get the single subdirectory (GitHub zipball root folder)
+					$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
+					
+					# Create MATE folder on Desktop
+					Write-Host "Creating Decompiler folder on Desktop..."
+					New-Item -ItemType Directory -Path $matePath -Force | Out-Null
+					
+					# Move contents from root folder to MATE
+					Write-Host "Moving files to Desktop\Decompiler..."
+					Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $matePath -Force
+					
+					# Clean up temp files
+					Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
+					Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
+				} catch {
+					Write-Warning "Failed to download/extract AutoIt-Decompiler: $_"
+					Write-Warning "Continuing with script execution anyway..."
+				}
 			}
 		}
 		
