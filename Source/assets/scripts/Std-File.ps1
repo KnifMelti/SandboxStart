@@ -232,12 +232,12 @@ FileEncoding "UTF-8"
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
 	}
 	'.au3' {
-		# AU3: Download and extract source code from latest GitHub release to Desktop\Decompiler, then execute
-		$apiUrl = "https://api.github.com/repos/daovantrong/myAutToExe/releases/latest"
-		$matePath = Join-Path "$env:USERPROFILE\Desktop" "Decompiler"
-		$zipPath = Join-Path $env:TEMP "MATE.zip"
+		# AU3: Download and extract mATE from GitHub to Desktop\mATE, then execute
+		$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/mATE.zip"
+		$matePath = Join-Path "$env:USERPROFILE\Desktop" "mATE"
+		$zipPath = Join-Path $env:TEMP "mATE.zip"
 		
-		# Download and extract source code if it doesn't exist
+		# Download and extract mATE if it doesn't exist
 		if (-not (Test-Path $matePath)) {
 			# Prompt user to download decompiler with 5-second timeout
 			Write-Host "`nDo you want to download the AutoIt decompiler?" -ForegroundColor Yellow
@@ -266,36 +266,32 @@ FileEncoding "UTF-8"
 					Write-Host "Timeout reached. Skipping AutoIt-Decompiler download.`n" -ForegroundColor Gray
 				}
 			} else {
-				Write-Host "Fetching latest AutoIt-Decompiler release from GitHub..."
+				Write-Host "Downloading AutoIt-Decompiler from GitHub..."
 				try {
-					# Get latest release information from GitHub API
-					$release = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing -ErrorAction Stop
-					$downloadUrl = $release.zipball_url
-					
-					Write-Host "Downloading AutoIt-Decompiler from: $downloadUrl"
+					Write-Host "Downloading mATE from: $downloadUrl"
 					Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
 					
-					# Extract to temp folder first (GitHub zipballs contain a root folder)
-					$tempExtractPath = Join-Path $env:TEMP "MATE_Extract"
+					# Extract to temp folder first
+					$tempExtractPath = Join-Path $env:TEMP "mATE_Extract"
 					if (Test-Path $tempExtractPath) {
 						Remove-Item $tempExtractPath -Recurse -Force
 					}
 					New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
 					
-					Write-Host "Extracting AutoIt-Decompiler..."
+					Write-Host "Extracting mATE..."
 					Add-Type -AssemblyName System.IO.Compression.FileSystem
 					[System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
 					
-					# Get the single subdirectory (GitHub zipball root folder)
-					$rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
+					# Get the mATE subdirectory from the zip
+					$mateFolder = Join-Path $tempExtractPath "mATE"
 					
-					# Create MATE folder on Desktop
-					Write-Host "Creating Decompiler folder on Desktop..."
-					New-Item -ItemType Directory -Path $matePath -Force | Out-Null
-					
-					# Move contents from root folder to MATE
-					Write-Host "Moving files to Desktop\Decompiler..."
-					Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $matePath -Force
+					if (Test-Path $mateFolder) {
+						# Move mATE folder to Desktop
+						Write-Host "Moving mATE folder to Desktop..."
+						Move-Item -Path $mateFolder -Destination $matePath -Force
+					} else {
+						Write-Warning "mATE folder not found in extracted archive"
+					}
 					
 					# Clean up temp files
 					Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
