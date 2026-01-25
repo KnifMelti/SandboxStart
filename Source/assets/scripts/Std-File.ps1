@@ -271,11 +271,30 @@ FileEncoding "UTF-8"
 				Add-Type -AssemblyName System.IO.Compression.FileSystem
 				[System.IO.Compression.ZipFile]::ExtractToDirectory($tempZip, $extractPath)
 
-				# Install to versioned directory (matching launcher behavior)
+				# Install matching launcher structure:
+				# - Shared files (Compiler, UX, license.txt, etc.) go to AutoHotkey root
+				# - Version-specific EXE files go to v{version}\ subdirectory
+				Write-Host "Installing to $ahkBaseDir..."
+
+				# Create base directory if it doesn't exist
+				if (-not (Test-Path $ahkBaseDir)) {
+					New-Item -ItemType Directory -Path $ahkBaseDir -Force | Out-Null
+				}
+
+				# Copy shared files/folders to root (if they don't exist)
+				$sharedItems = @('Compiler', 'UX', 'license.txt', 'WindowSpy.ahk')
+				foreach ($item in $sharedItems) {
+					$sourcePath = Join-Path $extractPath $item
+					$destPath = Join-Path $ahkBaseDir $item
+					if ((Test-Path $sourcePath) -and -not (Test-Path $destPath)) {
+						Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
+					}
+				}
+
+				# Copy EXE files to versioned directory
 				$ahkV1Path = "$ahkBaseDir\v$exactVersion"
-				Write-Host "Installing to $ahkV1Path..."
 				New-Item -ItemType Directory -Path $ahkV1Path -Force | Out-Null
-				Copy-Item -Path "$extractPath\*" -Destination $ahkV1Path -Recurse -Force
+				Get-ChildItem -Path $extractPath -Filter "*.exe" | Copy-Item -Destination $ahkV1Path -Force
 
 				# Cleanup
 				Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
