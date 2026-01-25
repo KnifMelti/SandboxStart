@@ -245,69 +245,7 @@ FileEncoding "UTF-8"
 "@
 		Set-Content -Path $templateFile -Value $templateContent -Encoding UTF8 -Force
 		Write-Host "Created KnifMelti Std.ahk template"
-
-		# Install AutoHotkey v1 if not present (required for older scripts)
-		$ahkBaseDir = "$env:ProgramFiles\AutoHotkey"
-		$existingV1 = Get-ChildItem -Path $ahkBaseDir -Directory -Filter "v1.*" -ErrorAction SilentlyContinue | Select-Object -First 1
-
-		if (-not $existingV1) {
-			Write-Host "AutoHotkey v1.1 not installed. Installing..." -ForegroundColor Yellow
-
-			try {
-				# Fetch latest v1.1 version
-				$versionUrl = "https://www.autohotkey.com/download/1.1/version.txt"
-				$exactVersion = (Invoke-WebRequest -Uri $versionUrl -UseBasicParsing -ErrorAction Stop).Content.Trim()
-
-				# Download zip
-				$zipUrl = "https://www.autohotkey.com/download/1.1/AutoHotkey_$exactVersion.zip"
-				$tempZip = Join-Path $env:TEMP "AutoHotkey_$exactVersion.zip"
-				$extractPath = Join-Path $env:TEMP "AHK_Install"
-
-				Write-Host "Downloading AutoHotkey v$exactVersion from $zipUrl..."
-				Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip -UseBasicParsing -ErrorAction Stop
-
-				Write-Host "Extracting to $extractPath..."
-				if (Test-Path $extractPath) { Remove-Item $extractPath -Recurse -Force }
-				Add-Type -AssemblyName System.IO.Compression.FileSystem
-				[System.IO.Compression.ZipFile]::ExtractToDirectory($tempZip, $extractPath)
-
-				# Install matching launcher structure:
-				# - Shared files (Compiler, UX, license.txt, etc.) go to AutoHotkey root
-				# - Version-specific EXE files go to v{version}\ subdirectory
-				Write-Host "Installing to $ahkBaseDir..."
-
-				# Create base directory if it doesn't exist
-				if (-not (Test-Path $ahkBaseDir)) {
-					New-Item -ItemType Directory -Path $ahkBaseDir -Force | Out-Null
-				}
-
-				# Copy shared files/folders to root (if they don't exist)
-				$sharedItems = @('Compiler', 'UX', 'license.txt', 'WindowSpy.ahk')
-				foreach ($item in $sharedItems) {
-					$sourcePath = Join-Path $extractPath $item
-					$destPath = Join-Path $ahkBaseDir $item
-					if ((Test-Path $sourcePath) -and -not (Test-Path $destPath)) {
-						Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
-					}
-				}
-
-				# Copy EXE files to versioned directory
-				$ahkV1Path = "$ahkBaseDir\v$exactVersion"
-				New-Item -ItemType Directory -Path $ahkV1Path -Force | Out-Null
-				Get-ChildItem -Path $extractPath -Filter "*.exe" | Copy-Item -Destination $ahkV1Path -Force
-
-				# Cleanup
-				Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
-				Remove-Item $extractPath -Recurse -Force -ErrorAction SilentlyContinue
-
-				Write-Host "AutoHotkey v$exactVersion installed successfully!" -ForegroundColor Green
-			}
-			catch {
-				Write-Warning "Failed to install AutoHotkey v1.1: $_"
-				Write-Warning "Script may fail if it requires v1.1"
-			}
-		}
-
+		
 		# Execute the .ahk file
 		Write-Host "Running: $FileName..."
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
