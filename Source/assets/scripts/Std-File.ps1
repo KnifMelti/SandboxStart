@@ -109,16 +109,13 @@ param(
     [string]$zipPath
 )
 
-$logPath = Join-Path $env:TEMP "AHK-Hacker-Download.log"
-Start-Transcript -Path $logPath -Append | Out-Null
-
 try {
-    # Prompt user to download decompiler with 5-second timeout
+    # Prompt user to download decompiler with 10-second timeout
     Write-Host "`nDo you want to download the AHK-Hacker decompiler?" -ForegroundColor Yellow
-    Write-Host "Press ENTER to download, ESC to skip (auto-skip in 5 seconds)..." -ForegroundColor Cyan
+    Write-Host "Press ENTER to download, ESC to skip (auto-skip in 10 seconds)..." -ForegroundColor Cyan
     
     $shouldDownload = $false
-    $timeout = 5
+    $timeout = 10
     $startTime = Get-Date
     
     while (((Get-Date) - $startTime).TotalSeconds -lt $timeout) {
@@ -197,9 +194,6 @@ try {
     }
 } catch {
     Write-Warning "Unhandled error: $_"
-} finally {
-    Write-Host "Log saved to: $logPath" -ForegroundColor Cyan
-    Stop-Transcript | Out-Null
 }
 '@
 
@@ -279,16 +273,13 @@ param(
     [string]$zipPath
 )
 
-$logPath = Join-Path $env:TEMP "AutoIt-Decompiler-Download.log"
-Start-Transcript -Path $logPath -Append | Out-Null
-
 try {
-    # Prompt user to download decompiler with 5-second timeout
+    # Prompt user to download decompiler with 10-second timeout
     Write-Host "`nDo you want to download the AutoIt decompiler?" -ForegroundColor Yellow
-    Write-Host "Press ENTER to download, ESC to skip (auto-skip in 5 seconds)..." -ForegroundColor Cyan
+    Write-Host "Press ENTER to download, ESC to skip (auto-skip in 10 seconds)..." -ForegroundColor Cyan
     
     $shouldDownload = $false
-    $timeout = 5
+    $timeout = 10
     $startTime = Get-Date
     
     while (((Get-Date) - $startTime).TotalSeconds -lt $timeout) {
@@ -347,9 +338,6 @@ try {
     }
 } catch {
     Write-Warning "Unhandled error: $_"
-} finally {
-    Write-Host "Log saved to: $logPath" -ForegroundColor Cyan
-    Stop-Transcript | Out-Null
 }
 '@
 
