@@ -152,28 +152,21 @@ try {
             Write-Host "Downloading AHK-Hacker from: $downloadUrl"
             Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
             
-            # Extract to temp folder first (zip contains a root folder)
+            # Extract zip to temp folder
             $tempExtractPath = Join-Path $env:TEMP "AHK-Hacker_Extract"
             if (Test-Path $tempExtractPath) {
                 Remove-Item $tempExtractPath -Recurse -Force
             }
-            New-Item -ItemType Directory -Path $tempExtractPath -Force | Out-Null
-            
+
             Write-Host "Extracting AHK-Hacker..."
             Add-Type -AssemblyName System.IO.Compression.FileSystem
             [System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempExtractPath)
-            
-            # Get the single subdirectory
-            $rootFolder = Get-ChildItem -Path $tempExtractPath -Directory | Select-Object -First 1
-            
-            # Create AHK-Hacker folder on Desktop
-            Write-Host "Creating AHK-Hacker folder on Desktop..."
-            New-Item -ItemType Directory -Path $ahkHackerPath -Force | Out-Null
-            
-            # Move contents from root folder to AHK-Hacker
-            Write-Host "Moving files to Desktop\AHK-Hacker..."
-            Get-ChildItem -Path $rootFolder.FullName -Recurse | Move-Item -Destination $ahkHackerPath -Force
-            
+
+            # Move AHK-Hacker folder directly to Desktop
+            Write-Host "Moving AHK-Hacker to Desktop..."
+            $extractedFolder = Join-Path $tempExtractPath "AHK-Hacker"
+            Move-Item -Path $extractedFolder -Destination $ahkHackerPath -Force
+
             # Clean up temp files
             Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
             Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
@@ -252,7 +245,50 @@ FileEncoding "UTF-8"
 "@
 		Set-Content -Path $templateFile -Value $templateContent -Encoding UTF8 -Force
 		Write-Host "Created KnifMelti Std.ahk template"
-		
+
+		# Install AutoHotkey v1 if not present (required for older scripts)
+		$ahkBaseDir = "$env:ProgramFiles\AutoHotkey"
+		$existingV1 = Get-ChildItem -Path $ahkBaseDir -Directory -Filter "v1.*" -ErrorAction SilentlyContinue | Select-Object -First 1
+
+		if (-not $existingV1) {
+			Write-Host "AutoHotkey v1.1 not installed. Installing..." -ForegroundColor Yellow
+
+			try {
+				# Fetch latest v1.1 version
+				$versionUrl = "https://www.autohotkey.com/download/1.1/version.txt"
+				$exactVersion = (Invoke-WebRequest -Uri $versionUrl -UseBasicParsing -ErrorAction Stop).Content.Trim()
+
+				# Download zip
+				$zipUrl = "https://www.autohotkey.com/download/1.1/AutoHotkey_$exactVersion.zip"
+				$tempZip = Join-Path $env:TEMP "AutoHotkey_$exactVersion.zip"
+				$extractPath = Join-Path $env:TEMP "AHK_Install"
+
+				Write-Host "Downloading AutoHotkey v$exactVersion from $zipUrl..."
+				Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip -UseBasicParsing -ErrorAction Stop
+
+				Write-Host "Extracting to $extractPath..."
+				if (Test-Path $extractPath) { Remove-Item $extractPath -Recurse -Force }
+				Add-Type -AssemblyName System.IO.Compression.FileSystem
+				[System.IO.Compression.ZipFile]::ExtractToDirectory($tempZip, $extractPath)
+
+				# Install to versioned directory (matching launcher behavior)
+				$ahkV1Path = "$ahkBaseDir\v$exactVersion"
+				Write-Host "Installing to $ahkV1Path..."
+				New-Item -ItemType Directory -Path $ahkV1Path -Force | Out-Null
+				Copy-Item -Path "$extractPath\*" -Destination $ahkV1Path -Recurse -Force
+
+				# Cleanup
+				Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
+				Remove-Item $extractPath -Recurse -Force -ErrorAction SilentlyContinue
+
+				Write-Host "AutoHotkey v$exactVersion installed successfully!" -ForegroundColor Green
+			}
+			catch {
+				Write-Warning "Failed to install AutoHotkey v1.1: $_"
+				Write-Warning "Script may fail if it requires v1.1"
+			}
+		}
+
 		# Execute the .ahk file
 		Write-Host "Running: $FileName..."
 		Start-Process $fullFilePath -WorkingDirectory $sandboxPath
