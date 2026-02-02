@@ -171,15 +171,15 @@ try {
             Remove-Item $tempExtractPath -Recurse -Force -ErrorAction SilentlyContinue
             Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
             
-            # Run Install.ahk to register everything
-            $installScript = Join-Path $ahkHackerPath "Install.ahk"
-            if (Test-Path $installScript) {
-                Write-Host "Running Install.ahk to register AHK-Hacker..."
-                Start-Process $installScript -WorkingDirectory $ahkHackerPath -Wait
-                Write-Host "AHK-Hacker installation completed"
-            } else {
-                Write-Warning "Install.ahk not found in AHK-Hacker folder"
-            }
+			# Run AHK-Hacker.exe to register everything
+			$exePath = Join-Path $ahkHackerPath "AHK-Hacker.exe"
+			if (Test-Path $exePath) {
+				Write-Host "Running AHK-Hacker.exe /install /silent..."
+				Start-Process -FilePath $exePath -ArgumentList '/install /silent' -WorkingDirectory $ahkHackerPath -Wait
+				Write-Host "AHK-Hacker installation completed"
+			} else {
+				Write-Warning "AHK-Hacker.exe not found in AHK-Hacker folder"
+			}
         } catch {
             Write-Warning "Failed to download/extract AHK-Hacker: $_"
             Write-Warning "Continuing with script execution anyway..."
