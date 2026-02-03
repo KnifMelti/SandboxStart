@@ -252,7 +252,7 @@ FileEncoding "UTF-8"
 	}
 	'.au3' {
 		# AU3: Download and extract mATE from GitHub to Desktop\mATE, then execute
-		$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/mATE.zip"
+		$downloadUrl = "https://github.com/KnifMelti/AHK-Hacker/raw/main/src/res/mATE.zip"
 		$matePath = Join-Path "$env:USERPROFILE\Desktop" "mATE"
 		$zipPath = Join-Path $env:TEMP "mATE.zip"
 		
