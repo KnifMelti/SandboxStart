@@ -231,6 +231,81 @@ file FileName.txt
 # Should output: ASCII text, with CRLF line terminators
 ```
 
+## Settings Persistence
+
+SandboxStart includes a settings persistence system that saves user preferences to Windows Registry, allowing settings to be restored across sessions.
+
+### Registry Location
+
+**Path**: `HKCU:\Software\SandboxStart\Settings`
+
+**Stored Settings**:
+- MapFolder (string) - Last used mapped folder path
+- MapFolderReadOnly (boolean) - Read-only flag
+- Networking (boolean) - Enable networking
+- SkipWinGetInstallation (boolean) - Network-only mode
+- Prerelease (boolean) - WinGet pre-release versions
+- Clean (boolean) - Clear cached dependencies
+- Verbose (boolean) - Verbose output
+- ProtectedClient (boolean) - AppContainer isolation
+- MemoryInMB (integer) - Sandbox memory allocation
+- vGPU (string) - GPU virtualization setting
+
+### Registry Helper Functions
+
+**File**: `Source/shared/Shared-Helpers.ps1`
+
+- `Get-SandboxStartSettings` - Reads all settings from registry, returns hashtable or $null
+- `Set-SandboxStartSettings` - Saves settings hashtable to registry
+
+**Usage**:
+```powershell
+# Save settings
+$settings = @{
+    MapFolder = "C:\Test"
+    Networking = "True"
+    MemoryInMB = "8192"
+    # ... other settings
+}
+Set-SandboxStartSettings -Settings $settings
+
+# Load settings
+$savedSettings = Get-SandboxStartSettings
+if ($null -ne $savedSettings) {
+    $mapFolder = $savedSettings.MapFolder
+}
+```
+
+### Context Menu Integration
+
+Settings can be managed via right-click context menu on the main GUI form:
+
+**Menu Items**:
+- **Save Settings** - Saves current GUI configuration to registry
+- **Reset to Defaults** - Restores default values and clears registry
+
+**Behavior**:
+- Settings auto-load when GUI starts (silent, no confirmation)
+- Save Settings shows confirmation dialog
+- Reset to Defaults asks for confirmation before clearing
+- Settings menu appears after theme selector in context menu
+- Menu items styled to match current theme (Auto/Light/Dark/Custom)
+
+**Implementation Details**:
+- Context menu integration in `Show-ThemeContextMenu` function
+- Auto-load logic runs after theme is applied but before form is shown
+- Memory dropdown uses lazy loading - saved value added to Items if not present
+- MapFolder reset uses initial calculated value (handles both SandboxStart and WAU-Settings-GUI)
+- SandboxFolderName recalculated when MapFolder is reset
+
+### Settings Excluded from Persistence
+
+The following are intentionally not persisted (project-specific or session-specific):
+- SandboxFolderName (auto-generated per session based on MapFolder)
+- WinGetVersion (may change between releases)
+- InstallPackageList (project-specific choice)
+- Script content (project-specific)
+
 ## Key Variables
 
 ### In SandboxTest.ps1
