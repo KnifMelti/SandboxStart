@@ -14,13 +14,15 @@ Test software safely before installing on your main system with automatic WinGet
 
 - **Auto-Installation** - Prompts to enable Windows Sandbox if not available
 - **Easy-to-Use Interface** - Configure sandbox parameters with high-DPI responsive UI
-- **Persistent Settings** - Save/restore your preferences via right-click context menu
 - **Smart Script Mapping** - Automatically selects appropriate scripts based on file patterns
 - **Package Lists** - Install predefined sets of applications via WinGet
 - **Dark Mode Support** - UI adapts to Windows theme automatically
-- **Explorer Integration** - Right-click files/folders to test in sandbox (optional)
 - **Network-Only Mode** - Enable internet access without WinGet installation (~20-30s faster)
 - **Desktop Shortcuts** - Useful tools (CMTrace, Sysinternals, NirSoft, etc.) pre-configured
+-  **Right-click context menu**:
+    -  **Explorer Integration** - Right-click files/folders to test in sandbox
+    -  **Theme Settings** - Custom Theme editor
+    -  **Persistent Settings** - Save/restore your preferences
 
 ## Requirements
 
