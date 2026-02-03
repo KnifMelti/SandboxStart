@@ -18,7 +18,7 @@ Test software safely before installing on your main system with automatic WinGet
 - **Package Lists** - Install predefined sets of applications via WinGet
 - **Dark Mode Support** - UI adapts to Windows theme automatically
 - **Network-Only Mode** - Enable internet access without WinGet installation (~20-30s faster)
-- **Desktop Shortcuts** - Useful tools (CMTrace, Sysinternals, NirSoft, etc.) pre-configured
+- **WSB Desktop Shortcuts** - Useful tools (CMTrace, Sysinternals, NirSoft, etc.) pre-configured
 -  **Right-click context menu**:
     -  **Explorer Integration** - Right-click files/folders to test in sandbox
     -  **Theme Settings** - Custom Theme editor
