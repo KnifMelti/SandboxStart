@@ -22,7 +22,7 @@ Test software safely before installing on your main system with automatic WinGet
 -  **Right-click context menu**:
     -  **Explorer Integration** - Right-click files/folders to test in sandbox
     -  **Theme Settings** - Custom Theme editor
-    -  **Persistent Settings** - Save/restore your preferences
+    -  **Persistent Settings** - Save/reset (autorestores) your preferences
 
 ## Requirements
 
