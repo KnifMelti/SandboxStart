@@ -8,7 +8,15 @@ A Windows Sandbox (**WSB**) testing tool for easily testing applications, script
 
 Test software safely before installing on your main system with automatic WinGet installation, customizable test scenarios, and an easy-to-use interface.
 
-<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI Dialog" title="Custom Theme: Hacker Terminal" width="49%"> <img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/List.png" alt="List editor" title="Custom Theme: Hacker Terminal" width="49%" align="top">
+<table border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td rowspan="2" valign="top" style="border: none; background: transparent;"><img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI" title="GUI"></td>
+<td valign="top" style="border: none; background: transparent;"><img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/List.png" alt="List" title="List"></td>
+</tr>
+<tr>
+<td valign="top" style="border: none; background: transparent;"><img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/Theme.png" alt="Theme" title="Theme"></td>
+</tr>
+</table>
 
 ## Key Features
 
