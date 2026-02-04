@@ -8,7 +8,7 @@ A Windows Sandbox (**WSB**) testing tool for easily testing applications, script
 
 Test software safely before installing on your main system with automatic WinGet installation, customizable test scenarios, and an easy-to-use interface.
 
-<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI" title="GUI" width="48%" align="left" /><img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/ListTheme.png" alt="List+Theme" title="List+Theme" width="48%" align="top" />
+<img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/GUI.png" alt="GUI" title="GUI" width="49%" align="left" /><img src="https://github.com/KnifMelti/SandboxStart/blob/master/Source/assets/ListTheme.png" alt="List+Theme" title="List+Theme" width="49%" align="top" />
 <br clear="all" />
 
 ## Key Features
