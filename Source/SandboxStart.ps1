@@ -15,6 +15,7 @@
 	Windows Sandbox feature must be enabled
 #>
 
+# Version: v1.0.9.51
 #Requires -Version 5.1
 
 param(
