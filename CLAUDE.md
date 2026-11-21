@@ -121,7 +121,7 @@ When sandbox launches, the following occurs (inside sandbox):
 1. **Pre-Install Initialization** (embedded in bootstrap script)
    - Syncs dark mode settings from host
    - Enables clipboard history
-   - Creates desktop shortcuts (CMTrace, Sysinternals Live, NirSoft Utilities, CTT Windows Utility)
+   - Creates desktop shortcuts (TraceIT, Sysinternals Live, NirSoft Utilities, CTT Windows Utility)
    - Configures Explorer settings (show file extensions, hidden files)
    - Sets execution policy to Bypass
 

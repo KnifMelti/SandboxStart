@@ -19,7 +19,7 @@ Test software safely before installing on your main system with automatic WinGet
 - **Package Lists** - Install predefined sets of applications via WinGet
 - **Dark Mode Support** - UI and WSB adapts to Windows theme automatically
 - **Network-Only Mode** - Enable internet access without WinGet installation (~20-30s faster)
-- **WSB Desktop Shortcuts** - Useful downloadable tools (CMTrace, Sysinternals, NirSoft, etc.) pre-configured
+- **WSB Desktop Shortcuts** - Useful downloadable tools (TraceIT, Sysinternals, NirSoft, etc.) pre-configured
 -  **Right-click context menu**:
     -  **Explorer Integration** - Right-click files/folders to test in sandbox
     -  **Theme Settings** - Custom Theme editor
@@ -137,7 +137,7 @@ Contributions are (maybe) welcome! See [CLAUDE.md](CLAUDE.md) for developer info
 ## Credits
 
 - Based on Microsoft's [SandboxTest](https://github.com/microsoft/winget-pkgs/blob/master/Tools/SandboxTest.ps1)
-- Provides downloadable tools in WSB: CMTrace, IntuneWinAppUtilDecoder, CTT Windows Utility, AdvancedRun, UninstallView
+- Provides downloadable tools in WSB: TraceIT, IntuneWinAppUtilDecoder, CTT Windows Utility, AdvancedRun, UninstallView
 
 ## Show Your Support
 
