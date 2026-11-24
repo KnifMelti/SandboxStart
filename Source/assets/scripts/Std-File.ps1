@@ -43,7 +43,7 @@ switch ($extension) {
 			$downloadUrl = "https://github.com/KnifMelti/SandboxStart/raw/master/Source/assets/IntuneWinAppUtilDecoder.exe"
 			
 			try {
-				Invoke-WebRequest -Uri $downloadUrl -OutFile $decoderPath -UseBasicParsing -ErrorAction Stop
+				(New-Object Net.WebClient).DownloadFile($downloadUrl, $decoderPath)
 			} catch {
 				Write-Warning "Failed to download IntuneWinAppUtilDecoder.exe: $_"
 				Write-Warning "Internet connection required. Aborting .intunewin extraction."
@@ -150,7 +150,7 @@ try {
             
             $downloadUrl = $asset.browser_download_url
             Write-Host "Downloading AHK-Hacker from: $downloadUrl"
-            Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
+            (New-Object Net.WebClient).DownloadFile($downloadUrl, $zipPath)
             
             # Extract zip to temp folder
             $tempExtractPath = Join-Path $env:TEMP "AHK-Hacker_Extract"
@@ -297,7 +297,7 @@ try {
         Write-Host "Downloading AutoIt-Decompiler from GitHub..."
         try {
             Write-Host "Downloading mATE from: $downloadUrl"
-            Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing -ErrorAction Stop
+            (New-Object Net.WebClient).DownloadFile($downloadUrl, $zipPath)
             
             # Extract to temp folder first
             $tempExtractPath = Join-Path $env:TEMP "mATE_Extract"
